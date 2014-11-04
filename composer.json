@@ -1,0 +1,32 @@
+{
+	"name" : "appserver-io/doppelgaenger",
+	"description" : "Creates proxy classes with identical signatures",
+	"keywords" : [
+		"remote proxy",
+		"twin",
+		"doppelgaenger",
+		"proxy",
+		"remote method call"
+	],
+	"license" : "OSL 3.0",
+	"authors" : [{
+			"name" : "Bernhard Wick",
+			"email" : "b.wick@techdivision.com"
+		}
+	],
+	"require" : {
+		"php" : ">=5.4.0",
+        "techdivision/php-by-contract" : "~0.3"
+	},
+	"require-dev" : {
+		"appserver-io/build" : "0.1.*"
+	},
+	"autoload" : {
+		"psr-0" : {
+			"AppserverIo\\Doppelgaenger" : [
+				"src/",
+				"tests/"
+			]
+		}
+	}
+}
