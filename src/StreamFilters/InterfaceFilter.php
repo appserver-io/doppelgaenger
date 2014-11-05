@@ -15,9 +15,9 @@
 
 namespace AppserverIo\Doppelgaenger\StreamFilters;
 
-use TechDivision\PBC\Entities\Definitions\FunctionDefinition;
-use TechDivision\PBC\Exceptions\GeneratorException;
-use TechDivision\PBC\StreamFilters\AbstractFilter;
+use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
+use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
+use AppserverIo\Doppelgaenger\StreamFilters\AbstractFilter;
 
 /**
  * AppserverIo\Doppelgaenger\StreamFilters\InterfaceFilter
@@ -52,7 +52,7 @@ class InterfaceFilter extends AbstractFilter
      * @param integer $consumed The count of altered characters as buckets pass the filter
      * @param boolean $closing Is the stream about to close?
      *
-     * @throws \TechDivision\PBC\Exceptions\GeneratorException
+     * @throws \AppserverIo\Doppelgaenger\Exceptions\GeneratorException
      *
      * @return integer
      *

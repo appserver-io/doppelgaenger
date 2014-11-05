@@ -1,0 +1,29 @@
+{
+    "environment": "production",
+
+    "cache": {
+
+        "dir": "./cache"
+    },
+
+    "autoloader": {
+
+        "dirs": [
+            "."
+        ]
+    },
+
+    "enforcement": {
+        "dirs": [],
+        "enforce-default-type-safety": true,
+        "processing": "exception",
+        "level": 7,
+        "contract-inheritance": false,
+
+        "omit": [
+            "PHPUnit",
+            "Psr\\Log",
+            "PHP"
+        ]
+    }
+}
