@@ -9,7 +9,7 @@
  * PHP version 5
  *
  * @category   Doppelgaenger
- * @package    TechDivision_PBC
+ * @package    AppserverIo\Doppelgaenger
  * @subpackage Utils
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -24,8 +24,8 @@ namespace AppserverIo\Doppelgaenger\Utils;
  *
  * Provides a static container to provide instances we want to inject into generated code
  *
- * @category   Php-by-contract
- * @package    TechDivision_PBC
+ * @category   Doppelgaenger
+ * @package    AppserverIo\Doppelgaenger
  * @subpackage Utils
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>

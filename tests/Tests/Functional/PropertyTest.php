@@ -63,7 +63,7 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("TechDivision\\PBC\\Exceptions\\MissingPropertyException", $e);
+        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\MissingPropertyException", $e);
 
         $e = null;
         try {
@@ -74,7 +74,7 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("TechDivision\\PBC\\Exceptions\\MissingPropertyException", $e);
+        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\MissingPropertyException", $e);
     }
 
     /**
@@ -190,6 +190,6 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("TechDivision\\PBC\\Exceptions\\BrokenInvariantException", $e);
+        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenInvariantException", $e);
     }
 }

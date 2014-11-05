@@ -254,6 +254,9 @@ class Generator
         // Append all configured filters
         $this->appendDefaultFilters($res, $structureDefinition);
 
+        // TODO remove this after testing
+        $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\InterfaceFilter', '\TechDivision\PersistenceContainerProtocol\RemoteObject');
+
         $tmp = fwrite(
             $res,
             file_get_contents($structureDefinition->getPath(), time())

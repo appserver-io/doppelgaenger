@@ -4,8 +4,8 @@
  *
  * PHP version 5
  *
- * @category   Php-by-contract
- * @package    PBC
+ * @category   AppserverIo
+ * @package    AppserverIo\Doppelgaenger
  * @subpackage Tests
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -23,8 +23,8 @@ use AppserverIo\Doppelgaenger\Utils\InstanceContainer;
  *
  * This test will test the configuration class AppserverIo\Doppelgaenger\Config
  *
- * @category   Php-by-contract
- * @package    PBC
+ * @category   AppserverIo
+ * @package    AppserverIo\Doppelgaenger
  * @subpackage Tests
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>

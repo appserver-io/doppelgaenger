@@ -23,7 +23,7 @@ if (realpath(__DIR__ . "/../../../../../../vendor")) {
 
 // Include the composer autoloader as a fallback
 $loader = require $vendorDir . DIRECTORY_SEPARATOR . 'autoload.php';
-$loader->add('TechDivision\\PBC\\', $vendorDir . DIRECTORY_SEPARATOR . 'techdivision/php-by-contract/src');
+$loader->add('AppserverIo\\Doppelgaenger\\', $vendorDir . DIRECTORY_SEPARATOR . 'appserver-io/doppelgaenger/src');
 
 // We have to register our autoLoader to put our proxies in place
 $autoLoader = new AppserverIo\Doppelgaenger\AutoLoader();

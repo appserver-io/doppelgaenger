@@ -245,7 +245,7 @@ class ClassParser extends AbstractStructureParser
             $fileEntry = $this->structureMap->getEntry($dependency);
             if (!$fileEntry instanceof Structure) {
 
-                // Continue, don't fail as we might have dependencies which are not under PBC surveillance
+                // Continue, don't fail as we might have dependencies which are not under Doppelgaenger surveillance
                 continue;
             }
 

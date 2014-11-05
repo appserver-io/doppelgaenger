@@ -42,7 +42,7 @@ interface ConfigInterface
     public function load($file);
 
     /**
-     * Will validate a potential configuration file. Returns false if file is no valid PBC configuration, true otherwise
+     * Will validate a potential configuration file. Returns false if file is no valid Doppelgaenger configuration, true otherwise
      *
      * @param string $file Path of the potential configuration file
      *

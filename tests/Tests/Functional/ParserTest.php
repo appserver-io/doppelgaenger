@@ -69,7 +69,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("TechDivision\\PBC\\Exceptions\\BrokenPreconditionException", $e);
+        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPreconditionException", $e);
 
         // Get the object to test
         $annotationTestClass = new AnnotationTestClass();
@@ -94,7 +94,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("TechDivision\\PBC\\Exceptions\\BrokenPostconditionException", $e);
+        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPostconditionException", $e);
 
         $e = null;
         try {
@@ -117,7 +117,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("TechDivision\\PBC\\Exceptions\\BrokenPreconditionException", $e);
+        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPreconditionException", $e);
     }
 
     /**

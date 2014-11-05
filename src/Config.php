@@ -282,7 +282,7 @@ class Config implements ConfigInterface
     }
 
     /**
-     * Will validate a potential configuration file. Returns false if file is no valid PBC configuration, true otherwise
+     * Will validate a potential configuration file. Returns false if file is no valid Doppelgaenger configuration, true otherwise
      *
      * @param string $file Path of the potential configuration file
      *
@@ -378,7 +378,7 @@ class Config implements ConfigInterface
     }
 
     /**
-     * Will validate a potential configuration file. Returns false if file is no valid PBC configuration.
+     * Will validate a potential configuration file. Returns false if file is no valid Doppelgaenger configuration.
      * Will return the validated configuration on success
      *
      * @param string $file Path of the potential configuration file

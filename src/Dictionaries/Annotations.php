@@ -9,7 +9,7 @@
  * PHP version 5
  *
  * @category   Appserver
- * @package    TechDivision_PBC
+ * @package    AppserverIo\Doppelgaenger
  * @subpackage Dictionaries
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -25,7 +25,7 @@ namespace AppserverIo\Doppelgaenger\Dictionaries;
  * Contains keywords used as annotations
  *
  * @category   Appserver
- * @package    TechDivision_PBC
+ * @package    AppserverIo\Doppelgaenger
  * @subpackage Dictionaries
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>

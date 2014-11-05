@@ -9,7 +9,7 @@
  * PHP version 5
  *
  * @category   Appserver
- * @package    TechDivision_PBC
+ * @package    AppserverIo\Doppelgaenger
  * @subpackage Dictionaries
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -17,12 +17,15 @@
  * @link       http://www.techdivision.com/
  */
 
-namespace AppserverIo\Doppelgaenger\Dictionaries;AppserverIo\Doppelgaengerision\PBC\Dictionaries\ReservedKeywords
+namespace AppserverIo\Doppelgaenger\Dictionaries;
+
+/**
+ * AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords
  *
  * Contains reserved variable, property and function names on which basic design by contract functionality relies
  *
  * @category   Appserver
- * @package    TechDivision_PBC
+ * @package    AppserverIo\Doppelgaenger
  * @subpackage Dictionaries
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -57,7 +60,7 @@ class ReservedKeywords
      *
      * @var string DIR_SUBSTITUTE
      */
-    const DIR_SUBSTITUTE = 'PBC_DIR_SUBSTITUTE';
+    const DIR_SUBSTITUTE = 'DOPPELGAENGER_DIR_SUBSTITUTE';
 
     /**
      * Reserved local variable which is used to build up messages regarding failed contracts
@@ -71,14 +74,14 @@ class ReservedKeywords
      *
      * @var string FILE_SUBSTITUTE
      */
-    const FILE_SUBSTITUTE = 'PBC_FILE_SUBSTITUTE';
+    const FILE_SUBSTITUTE = 'DOPPELGAENGER_FILE_SUBSTITUTE';
 
     /**
      * Reserved local variable containing a flag which indications if we currently are within a contract
      *
      * @var string LOGGER_CONTAINER_ENTRY
      */
-    const LOGGER_CONTAINER_ENTRY = 'PBC_LOGGER_CONTAINER_ENTRY';
+    const LOGGER_CONTAINER_ENTRY = 'DOPPELGAENGER_LOGGER_CONTAINER_ENTRY';
 
     /**
      * Placeholder for inserting the invariant checks
@@ -99,7 +102,7 @@ class ReservedKeywords
      *
      * @var string ORIGINAL_FUNCTION_SUFFIX
      */
-    const ORIGINAL_FUNCTION_SUFFIX = 'PBCOriginal';
+    const ORIGINAL_FUNCTION_SUFFIX = 'DOPPELGAENGEROriginal';
 
     /**
      * Reserved local variable containing the result of the actual function execution

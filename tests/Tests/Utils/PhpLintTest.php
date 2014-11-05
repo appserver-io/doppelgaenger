@@ -8,8 +8,8 @@
  *
  * PHP version 5
  *
- * @category   Php-by-contract
- * @package    PBC
+ * @category   AppserverIo
+ * @package    AppserverIo\Doppelgaenger
  * @subpackage Tests
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -26,8 +26,8 @@ use AppserverIo\Doppelgaenger\Utils\PhpLint;
  *
  * Unit test of PhpLint class
  *
- * @category   Php-by-contract
- * @package    PBC
+ * @category   AppserverIo
+ * @package    AppserverIo\Doppelgaenger
  * @subpackage Tests
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>

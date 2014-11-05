@@ -56,7 +56,7 @@ class InheritanceTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("TechDivision\\PBC\\Exceptions\\BrokenPreconditionException", $e);
+        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPreconditionException", $e);
 
     }
 

@@ -63,7 +63,7 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("TechDivision\\PBC\\Exceptions\\BrokenPreconditionException", $e);
+        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPreconditionException", $e);
 
         $e = null;
         try {
@@ -74,7 +74,7 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("TechDivision\\PBC\\Exceptions\\BrokenPreconditionException", $e);
+        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPreconditionException", $e);
 
         $e = null;
         try {
@@ -85,7 +85,7 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("TechDivision\\PBC\\Exceptions\\BrokenPreconditionException", $e);
+        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPreconditionException", $e);
 
         $e = null;
         try {
@@ -138,7 +138,7 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("TechDivision\\PBC\\Exceptions\\BrokenPostconditionException", $e);
+        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPostconditionException", $e);
 
         $e = null;
         try {
@@ -149,7 +149,7 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("TechDivision\\PBC\\Exceptions\\BrokenPostconditionException", $e);
+        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPostconditionException", $e);
 
         $e = null;
         try {
@@ -160,7 +160,7 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("TechDivision\\PBC\\Exceptions\\BrokenPostconditionException", $e);
+        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPostconditionException", $e);
 
         $e = null;
         try {

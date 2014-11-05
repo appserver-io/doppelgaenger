@@ -8,8 +8,8 @@
  *
  * PHP version 5
  *
- * @category   Php-by-contract
- * @package    TechDivision_PBC
+ * @category   Doppelgaenger
+ * @package    AppserverIo\Doppelgaenger
  * @subpackage Tests
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -27,8 +27,8 @@ use AppserverIo\Doppelgaenger\StructureMap;
  *
  * Some functional tests for the
  *
- * @category   Php-by-contract
- * @package    TechDivision_PBC
+ * @category   Doppelgaenger
+ * @package    AppserverIo\Doppelgaenger
  * @subpackage Tests
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>

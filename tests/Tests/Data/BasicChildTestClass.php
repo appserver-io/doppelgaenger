@@ -4,8 +4,8 @@
  *
  * PHP version 5
  *
- * @category   Php-by-contract
- * @package    TechDivision_PBC
+ * @category   Doppelgaenger
+ * @package    AppserverIo\Doppelgaenger
  * @subpackage Tests
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -22,8 +22,8 @@ namespace AppserverIo\Doppelgaenger\Tests\Data;
  * This class has the sole purpose of checking if overwritten methods with different signatures will be handled
  * correctly
  *
- * @category   Php-by-contract
- * @package    TechDivision_PBC
+ * @category   Doppelgaenger
+ * @package    AppserverIo\Doppelgaenger
  * @subpackage Tests
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>

@@ -3,7 +3,7 @@
 	{
 		"dirs": 
 		[
-			"./../../../tests/TechDivision/PBC/Tests/Data"
+			"./../../../tests/Tests/Data"
 		],
 
 		"contract-inheritance": true

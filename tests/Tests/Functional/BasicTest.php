@@ -56,7 +56,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("TechDivision\\PBC\\Exceptions\\BrokenInvariantException", $e);
+        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenInvariantException", $e);
     }
 
     /**
@@ -85,7 +85,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("TechDivision\\PBC\\Exceptions\\BrokenPreconditionException", $e);
+        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPreconditionException", $e);
 
         $e = null;
         try {
@@ -96,7 +96,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("TechDivision\\PBC\\Exceptions\\BrokenPreconditionException", $e);
+        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPreconditionException", $e);
 
         $e = null;
         try {
@@ -107,6 +107,6 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("TechDivision\\PBC\\Exceptions\\BrokenPreconditionException", $e);
+        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPreconditionException", $e);
     }
 }

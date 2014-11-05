@@ -52,8 +52,6 @@ class AnnotationParser extends AbstractParser
      */
     protected $config;
 
-
-
     /**
      * The annotations which the parser will look for
      *
@@ -133,7 +131,7 @@ class AnnotationParser extends AbstractParser
             $annotationString = '@' . $annotationString;
         }
 
-        $this->parsedAnnotations[] = $annotationString;
+        $this->searchedAnnotations[] = $annotationString;
     }
 
     /**
@@ -675,7 +673,7 @@ class AnnotationParser extends AbstractParser
 
                 // If we found something private we can end here
                 if ($functionDefinition instanceof FunctionDefinition &&
-                    $functionDefinition->visibility === 'private'
+                    $functionDefinition->getVisibility() === 'private'
                 ) {
 
                     // Set the private context to true and return it
