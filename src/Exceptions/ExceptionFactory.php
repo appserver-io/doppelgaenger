@@ -72,17 +72,17 @@ class ExceptionFactory
 
             case 'precondition':
 
-                $name = 'BrokenPreconditionException';
+                $name = 'TechDivision\PBC\BrokenPreconditionException';
                 break;
 
             case 'postcondition':
 
-                $name = 'BrokenPostconditionException';
+                $name = 'TechDivision\PBC\BrokenPostconditionException';
                 break;
 
             case 'invariant':
 
-                $name = 'BrokenInvariantException';
+                $name = 'TechDivision\PBC\BrokenInvariantException';
                 break;
 
             default:
@@ -104,7 +104,7 @@ class ExceptionFactory
         } else {
             // Otherwise we will return the most basic thing
 
-            return '\Exception';
+            return 'Exception';
         }
 
     }

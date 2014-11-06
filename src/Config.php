@@ -273,7 +273,7 @@ class Config implements ConfigInterface
         $configCandidate = $this->validate($file);
         if ($configCandidate === false) {
 
-            throw new ConfigException('Attempt to load invalid configuration file.');
+            throw new ConfigException('Attempt to load invalid configuration file ' . $file);
         }
 
         $this->config = array_replace_recursive($this->config, $configCandidate);

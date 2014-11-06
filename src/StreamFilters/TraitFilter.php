@@ -15,14 +15,13 @@
 
 namespace AppserverIo\Doppelgaenger\StreamFilters;
 
-use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
-use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
 use AppserverIo\Doppelgaenger\StreamFilters\AbstractFilter;
+use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
 
 /**
- * AppserverIo\Doppelgaenger\StreamFilters\InterfaceFilter
+ * AppserverIo\Doppelgaenger\StreamFilters\TraitFilter
  *
- * This filter will add given interfaces to already defined classes
+ * This filter will add the usage of given traits to a class
  *
  * @category   Appserver
  * @package    Doppelgaenger
@@ -32,8 +31,14 @@ use AppserverIo\Doppelgaenger\StreamFilters\AbstractFilter;
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
  */
-class InterfaceFilter extends AbstractFilter
+class TraitFilter extends AbstractFilter
 {
+    /**
+     * Other filters on which we depend
+     *
+     * @var array $dependencies
+     */
+    protected $dependencies = array('Skeletonfilter');
 
     /**
      * Order number if filters are used as a stack, higher means below others
@@ -61,76 +66,39 @@ class InterfaceFilter extends AbstractFilter
     public function filter($in, $out, & $consumed, $closing)
     {
         // get a clean list of interfaces
-        $interfaces = $this->filterParams();
+        $traits = $this->filterParams();
 
-        // only do something if we got interfaces to implement
-        if (empty($interfaces)) {
+        // only do something if we got traits to use
+        if (empty($traits)) {
 
             return PSFS_PASS_ON;
         }
 
         // Get our buckets from the stream
-        $interfaceHook = '';
-        $abortNow = false;
-        $keywordNeeded = true;
+        $finished = false;
         while ($bucket = stream_bucket_make_writeable($in)) {
 
             // Has to be done only once at the beginning of the definition
-            if (empty($interfaceHook)) {
+            $placeholderHook = Placeholders::FUNCTION_HOOK . Placeholders::PLACEHOLDER_CLOSE;
+            if (strpos($bucket->data, $placeholderHook)) {
 
-                // Get the tokens
-                $tokens = token_get_all($bucket->data);
+                // iterate all traits and build up their use statements
+                $code = '';
+                foreach ($traits as $trait) {
 
-                // Go through the tokens and check what we found
-                $tokensCount = count($tokens);
-                for ($i = 0; $i < $tokensCount; $i++) {
-
-                    // We need something to hook into, right after class header seems fine
-                    if (is_array($tokens[$i]) && $tokens[$i][0] === T_CLASS) {
-
-                        for ($j = $i; $j < $tokensCount; $j++) {
-
-                            // If we got the opening bracket we can break
-                            if ($tokens[$j] === '{' || $tokens[$j][0] === T_CURLY_OPEN) {
-
-                                break;
-                            }
-
-                            if (is_array($tokens[$j])) {
-
-                                // we have to check if there already are interfaces
-                                if ($tokens[$j][0] === T_IMPLEMENTS) {
-
-                                    $keywordNeeded = false;
-                                }
-
-                                $interfaceHook .= $tokens[$j][1];
-                            } else {
-
-                                $interfaceHook .= $tokens[$j];
-                            }
-                        }
-
-                        // build up the injected code and make the injection
-                        if ($keywordNeeded) {
-
-                            $code = ' implements ' . implode(', ', $interfaces);
-
-                        } else {
-
-                            $code = ', ' . implode(', ', $interfaces);
-                        }
-                        $bucket->data = str_replace(
-                            $interfaceHook,
-                            $interfaceHook . $code,
-                            $bucket->data
-                        );
-                    }
+                    $code .= 'use ' . $trait . ';
+                    ';
                 }
 
-            } else {
+                // add the use code
+                $bucket->data = str_replace(
+                    $placeholderHook,
+                    $placeholderHook . $code,
+                    $bucket->data
+                );
 
-                $abortNow = true;
+                // tell them we are finished
+                $finished = true;
             }
 
             // Tell them how much we already processed, and stuff it back into the output
@@ -138,7 +106,7 @@ class InterfaceFilter extends AbstractFilter
             stream_bucket_append($out, $bucket);
 
             // if we already reached our goal we can proceed to the next filter
-            if ($abortNow === true) {
+            if ($finished === true) {
 
                 return PSFS_PASS_ON;
             }

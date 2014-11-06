@@ -15,7 +15,7 @@
 
 namespace AppserverIo\Doppelgaenger\StreamFilters;
 
-use AppserverIo\Doppelgaenger\Interfaces\StreamFilterInterface;
+use AppserverIo\Doppelgaenger\Interfaces\StreamFilter;
 
 /**
  * AppserverIo\Doppelgaenger\StreamFilters\AbstractFilter
@@ -30,7 +30,7 @@ use AppserverIo\Doppelgaenger\Interfaces\StreamFilterInterface;
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
  */
-abstract class AbstractFilter extends \php_user_filter implements StreamFilterInterface
+abstract class AbstractFilter extends \php_user_filter implements StreamFilter
 {
     /**
      * Other filters on which we depend

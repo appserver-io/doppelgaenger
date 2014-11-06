@@ -245,17 +245,19 @@ class Generator
         $targetFileName,
         ClassDefinition $structureDefinition
     ) {
+        // TODO, do we really use the filters only once?
 
         $res = fopen(
             $this->createFilePath($structureDefinition->getQualifiedName()),
             'w+'
         );
 
-        // Append all configured filters
-        $this->appendDefaultFilters($res, $structureDefinition);
+        // Append all configured filters but collect them for easier handling
+        $appendedFilters = $this->appendDefaultFilters($res, $structureDefinition);
 
         // TODO remove this after testing
-        $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\InterfaceFilter', '\TechDivision\PersistenceContainerProtocol\RemoteObject');
+        $appendedFilters['Traitfilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\Traitfilter', '\AppserverIo\Doppelgaenger\Traits\RemoteObjectTrait');
+        $appendedFilters['InterfaceFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\InterfaceFilter', '\TechDivision\PersistenceContainerProtocol\RemoteObject');
 
         $tmp = fwrite(
             $res,
@@ -294,12 +296,15 @@ class Generator
      *                                                                                       providing needed
      *                                                                                       information
      *
-     * @return boolean
+     * @return array
      */
     protected function appendDefaultFilters(
         & $res,
         StructureDefinitionInterface $structureDefinition
     ) {
+        // resulting array with resources of appended filters
+        $filters = array();
+
         // Lets get the enforcement level
         $levelArray = array();
         if ($this->config->hasValue('enforcement/level')) {
@@ -309,7 +314,7 @@ class Generator
 
         // Whatever the enforcement level is, we will always need the skeleton filter.
         stream_filter_register('SkeletonFilter', 'AppserverIo\Doppelgaenger\StreamFilters\SkeletonFilter');
-        stream_filter_append(
+        $filters['SkeletonFilter'] = stream_filter_append(
             $res,
             'SkeletonFilter',
             STREAM_FILTER_WRITE,
@@ -335,7 +340,7 @@ class Generator
             if ($filterNeeded) {
 
                 stream_filter_register('PreconditionFilter', 'AppserverIo\Doppelgaenger\StreamFilters\PreconditionFilter');
-                stream_filter_append(
+                $filters['PreconditionFilter'] = stream_filter_append(
                     $res,
                     'PreconditionFilter',
                     STREAM_FILTER_WRITE,
@@ -362,7 +367,7 @@ class Generator
             if ($filterNeeded) {
 
                 stream_filter_register('PostconditionFilter', 'AppserverIo\Doppelgaenger\StreamFilters\PostconditionFilter');
-                stream_filter_append(
+                $filters['PostconditionFilter'] = stream_filter_append(
                     $res,
                     'PostconditionFilter',
                     STREAM_FILTER_WRITE,
@@ -378,16 +383,15 @@ class Generator
             if ($structureDefinition->getInvariants()->count(true) !== 0) {
 
                 stream_filter_register('InvariantFilter', 'AppserverIo\Doppelgaenger\StreamFilters\InvariantFilter');
-                stream_filter_append($res, 'InvariantFilter', STREAM_FILTER_WRITE, $structureDefinition);
+                $filters['InvariantFilter'] = stream_filter_append($res, 'InvariantFilter', STREAM_FILTER_WRITE, $structureDefinition);
             }
         }
 
         // We ALWAYS need the processing filter. Everything else would not make any sense
         stream_filter_register('ProcessingFilter', 'AppserverIo\Doppelgaenger\StreamFilters\ProcessingFilter');
-        stream_filter_append($res, 'ProcessingFilter', STREAM_FILTER_WRITE, $this->config);
+        $filters['ProcessingFilter'] = stream_filter_append($res, 'ProcessingFilter', STREAM_FILTER_WRITE, $this->config);
 
-        // We arrived here without any thrown exceptions, return true
-        return true;
+        return $filters;
     }
 
     /**
@@ -399,7 +403,7 @@ class Generator
      * @param string   $filterClass The fully qualified name of the filter class
      * @param mixed    $params      Whatever params the filter might need
      *
-     * @return boolean
+     * @return resource
      */
     public function appendFilter(& $res, $filterClass, $params)
     {
@@ -412,15 +416,12 @@ class Generator
         // append the filter to the given resource
         $filterName = substr(strrchr($filterClass, '\\'), 1);
         stream_filter_register($filterName, $filterClass);
-        stream_filter_append(
+        return stream_filter_append(
             $res,
             $filterName,
             STREAM_FILTER_WRITE,
             $params
         );
-
-        // We arrived here without any thrown exceptions, return true
-        return true;
     }
 
     /**

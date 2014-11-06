@@ -17,7 +17,8 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "techdivision/php-by-contract" : "~0.3"
+        "techdivision/php-by-contract" : "~0.3",
+        "techdivision/persistencecontainerprotocol" : "0.2.*"
     },
     "require-dev": {
         "appserver-io/build": "0.1.*"
