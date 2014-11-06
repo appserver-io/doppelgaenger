@@ -97,7 +97,7 @@ class Generator
      * Will also add it to the cache map
      *
      * @param \AppserverIo\Doppelgaenger\Entities\Definitions\Structure $mapEntry        Entry of a StructureMap we want created
-     * @param boolean                                          $createRecursive If contract inheritance is enabled
+     * @param boolean                                                   $createRecursive If contract inheritance is enabled
      *
      * @throws \AppserverIo\Doppelgaenger\Exceptions\GeneratorException
      *
@@ -169,7 +169,7 @@ class Generator
     /**
      * Will create a file containing the altered definition
      *
-     * @param string                                                    $targetFileName      The intended name of the
+     * @param string                                                             $targetFileName      The intended name of the
      *                                                                                       new file
      * @param \AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface $structureDefinition The definition of the
      *                                                                                       structure we will alter
@@ -202,7 +202,7 @@ class Generator
      * Will create a file for a given interface definition.
      * We will just copy the file here until the autoloader got refactored.
      *
-     * @param string                                                     $targetFileName      The intended name of the
+     * @param string                                                              $targetFileName      The intended name of the
      *                                                                                        new file
      * @param \AppserverIo\Doppelgaenger\Entities\Definitions\InterfaceDefinition $structureDefinition The definition of the
      *                                                                                        structure we will alter
@@ -234,7 +234,7 @@ class Generator
     /**
      * Will create a file with the altered class definition as it's content
      *
-     * @param string                                                 $targetFileName      The intended name of the
+     * @param string                                                          $targetFileName      The intended name of the
      *                                                                                    new file
      * @param \AppserverIo\Doppelgaenger\Entities\Definitions\ClassDefinition $structureDefinition The definition of the
      *                                                                                    structure we will alter
@@ -288,7 +288,7 @@ class Generator
     /**
      * Will append all needed filters based on the enforcement level stated in the configuration file.
      *
-     * @param resource                                                  $res                 The resource we will append
+     * @param resource                                                           $res                 The resource we will append
      *                                                                                       the filters to
      * @param \AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface $structureDefinition Structure definition
      *                                                                                       providing needed

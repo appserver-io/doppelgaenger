@@ -12,9 +12,9 @@
  * @link      http://www.techdivision.com/
  */
 $vendorDir = '';
-if (realpath(__DIR__ . "/../../../../../../vendor")) {
+if (realpath(__DIR__ . "/../../../../vendor")) {
 
-    $vendorDir = realpath(__DIR__ . "/../../../../../../vendor");
+    $vendorDir = realpath(__DIR__ . "/../../../../vendor");
 
 } else {
 

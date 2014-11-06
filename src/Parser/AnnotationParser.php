@@ -119,7 +119,7 @@ class AnnotationParser extends AbstractParser
      *
      * @return null|false
      */
-    public function addAnnotation ($annotationString)
+    public function addAnnotation($annotationString)
     {
         // we rely on a leading "@" symbol, so sanitize the input
         if (!is_string($annotationString)) {
@@ -141,7 +141,7 @@ class AnnotationParser extends AbstractParser
      *
      * @return null
      */
-    public function addAnnotations (array $annotationStrings)
+    public function addAnnotations(array $annotationStrings)
     {
         foreach ($annotationStrings as $annotationString) {
 
@@ -233,16 +233,6 @@ class AnnotationParser extends AbstractParser
         }
 
         return $result;
-    }
-
-    /**
-     * 
-     *
-     * @param $docBlock
-     */
-    public function parse ($docBlock)
-    {
-        
     }
 
     /**

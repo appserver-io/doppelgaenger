@@ -249,9 +249,14 @@ class SkeletonFilter extends AbstractFilter
      */
     protected function generateBeforeCode($injectNeeded, FunctionDefinition $functionDefinition)
     {
-        $suffix = ReservedKeywords::ORIGINAL_FUNCTION_SUFFIX . str_replace('.', '', microtime(true));
+        // first of all: the "before" joinpoint
+        $code = Placeholders::BEFORE_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
 
-        $code = ReservedKeywords::CONTRACT_CONTEXT . ' = \AppserverIo\Doppelgaenger\ContractContext::open();';
+        // we have to build up the placeholders for the around advice, first of all the beginning of the wrapper
+        $code .= Placeholders::AROUND_JOINPOINT_START . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
+        ';
+
+        $code .= ReservedKeywords::CONTRACT_CONTEXT . ' = \AppserverIo\Doppelgaenger\ContractContext::open();';
 
         // Invariant is not needed in private or static functions.
         // Also make sure that there is none in front of the constructor check
@@ -265,24 +270,32 @@ class SkeletonFilter extends AbstractFilter
         $code .= Placeholders::PRECONDITION . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE .
             Placeholders::OLD_SETUP . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
 
-        // If we inject something we might need a try ... catch around the original call.
-        if ($injectNeeded === true) {
-
-            $code .= 'try {';
-        }
+        // we will wrap code execution in order to provide a "finally" and "after throwing" placeholder hook
+        $code .= 'try {';
 
         // Build up the placeholder for the call to the original function.
         $code .= Placeholders::ORIGINAL_CALL . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
-        //$code .= ReservedKeywords::RESULT . ' = ' . $functionDefinition->getHeader('call', $suffix) . ';';
 
-        // Finish the try ... catch and place the inject marker
+        // add the second part of the try/catch/finally block
+        $code .= '} catch (\Exception $e) {
+        ' . Placeholders::AFTER_THROWING_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
+
+            // rethrow the exception
+            throw $e;
+        } finally {
+        ';
+
+        // if we have to inject additional code, we might do so here
         if ($injectNeeded === true) {
 
-            $code .= '} catch (\Exception $e) {}' . Placeholders::METHOD_INJECT .
-                $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
+            $code .= Placeholders::METHOD_INJECT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
         }
 
-        // No just place all the other placeholder for other filters to come
+        // finish of the block
+        $code .= Placeholders::FINALLY_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
+        }';
+
+        // now just place all the other placeholder for other filters to come
         $code .= Placeholders::POSTCONDITION . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
 
         // Invariant is not needed in private or static functions
@@ -291,10 +304,19 @@ class SkeletonFilter extends AbstractFilter
             $code .= Placeholders::INVARIANT . Placeholders::PLACEHOLDER_CLOSE;
         }
 
-        $code .= 'if (' . ReservedKeywords::CONTRACT_CONTEXT . ') {\AppserverIo\Doppelgaenger\ContractContext::close();}
+        // close of the contract context
+        $code .= 'if (' . ReservedKeywords::CONTRACT_CONTEXT . ') {\AppserverIo\Doppelgaenger\ContractContext::close();}';
+
+        // we have to build up the placeholders for the around advice, lets close the wrapper here
+        $code .= Placeholders::AROUND_JOINPOINT_END . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
+        ';
+
+        // last of all: the "after" joinpoint and the final return from the proxy
+        $code .= Placeholders::AFTER_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
             return ' . ReservedKeywords::RESULT . ';}';
 
-        $code .= $functionDefinition->getHeader('definition', $suffix, true) . '{';
+        // now finish the injected code with the new header of the original method, same signature but different name
+        $code .= $functionDefinition->getHeader('definition', ReservedKeywords::ORIGINAL_FUNCTION_SUFFIX, true) . '{';
 
         return $code;
     }

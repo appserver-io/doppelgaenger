@@ -199,7 +199,7 @@ class PlaceholderFilter extends AbstractFilter
      * We will provide an empty implementation here, to not force the hook on filter classes.
      * So override if needed.
      *
-     * @param resource &$out Outgoing bucket brigade with already filtered content
+     * @param resource $out Outgoing bucket brigade with already filtered content
      *
      * @return void
      */

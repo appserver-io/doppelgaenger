@@ -116,7 +116,7 @@ class AutoLoader
      * @return bool
      */
     public function loadClass($className)
-    {
+    {error_log('Did load from Doppelgaenger: ' . $className);
         // There was no file in our cache dir, so lets hope we know the original path of the file.
         $autoLoaderConfig = $this->config->getConfig('autoloader');
 
@@ -239,7 +239,7 @@ class AutoLoader
      * @return null
      */
     public function register($throw = true, $prepend = true)
-    {
+    {error_log('WE GOT REGISTERED');
         // Now we have a config no matter what, we can store any instance we might need
         $this->config->storeInstances();
 

@@ -1,6 +1,6 @@
 <phpunit bootstrap="${php-target.dir}/${unique.name}/src/bootstrap.php">
     <testsuites>
-	    <testsuite name="php-by-contract Unit Tests">
+	    <testsuite name="Doppelgaenger Unit Tests">
 	        <directory suffix="Test.php">${php-target.dir}/${unique.name}/src</directory>
 	    </testsuite>
 	</testsuites>

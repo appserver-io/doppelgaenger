@@ -56,7 +56,7 @@ class BeautifyFilter extends AbstractFilter
      * As we depend on a fully buffered bucket brigade we will do all the work here.
      * We will pretty-print the buffer and write the result as one big bucket into the stream
      *
-     * @param resource &$out Outgoing bucket brigade with already filtered content
+     * @param resource $out Outgoing bucket brigade with already filtered content
      *
      * @return void
      * @throws \AppserverIo\Doppelgaenger\Exceptions\GeneratorException

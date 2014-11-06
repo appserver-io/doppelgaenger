@@ -5,20 +5,20 @@
  *
  * PHP version 5
  *
- * @category  Php-by-contract
+ * @category  Doppelgaenger
  * @author    Bernhard Wick <b.wick@techdivision.com>
  * @copyright 2014 TechDivision GmbH - <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.techdivision.com/
  */
 
-use \AppserverIo\Doppelgaenger\Config;
+use AppserverIo\Doppelgaenger\Config;
 
 // Get the vendor dir
 $vendorDir = '';
-if (realpath(__DIR__ . "/../../../../vendor")) {
+if (realpath(__DIR__ . "/../../vendor")) {
 
-    $vendorDir = realpath(__DIR__ . "/../../../../vendor");
+    $vendorDir = realpath(__DIR__ . "/../../vendor");
 
 } else {
 

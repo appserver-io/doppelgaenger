@@ -35,6 +35,13 @@ namespace AppserverIo\Doppelgaenger\Dictionaries;
 class ReservedKeywords
 {
     /**
+     * The result the around advice has, which helps determining if the original code gets executed or not
+     *
+     * @var string AROUND_ADVICE_RESULT
+     */
+    const AROUND_ADVICE_RESULT = '$doppelgaengerAroundAdviceResult';
+
+    /**
      * Reserved property name which is used as a storage for contracted attributes/properties
      *
      * @var string ATTRIBUTE_STORAGE
@@ -110,4 +117,11 @@ class ReservedKeywords
      * @var string RESULT
      */
     const RESULT = '$pbcResult';
+
+    /**
+     * Reserved local variable containing a backup of the result to reset it after unwanted changes
+     *
+     * @var string RESULT_BACKUP
+     */
+    const RESULT_BACKUP = '$pbcResultBackup';
 }

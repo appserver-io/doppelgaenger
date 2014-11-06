@@ -119,10 +119,10 @@ abstract class AbstractFilter extends \php_user_filter implements StreamFilterIn
      * Implemented according to \php_user_filter class. Will loop over all stream buckets, buffer them and perform
      * the needed actions by calling the child's filterContent() method.
      *
-     * @param resource $in        Incoming bucket brigade we need to filter
-     * @param resource $out       Outgoing bucket brigade with already filtered content
-     * @param integer  &$consumed The count of altered characters as buckets pass the filter
-     * @param boolean  $closing   Is the stream about to close?
+     * @param resource $in       Incoming bucket brigade we need to filter
+     * @param resource $out      Outgoing bucket brigade with already filtered content
+     * @param integer  $consumed The count of altered characters as buckets pass the filter
+     * @param boolean  $closing  Is the stream about to close?
      *
      * @throws \Exception
      * @throws \PHPParser_Error
@@ -213,7 +213,7 @@ abstract class AbstractFilter extends \php_user_filter implements StreamFilterIn
      * We will provide an empty implementation here, to not force the hook on filter classes.
      * So override if needed.
      *
-     * @param resource &$out Outgoing bucket brigade with already filtered content
+     * @param resource $out Outgoing bucket brigade with already filtered content
      *
      * @return void
      */

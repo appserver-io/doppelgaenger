@@ -122,7 +122,7 @@ class PostconditionFilter extends AbstractFilter
     /**
      * Will change code to create an entry for the old object state.
      *
-     * @param string                                                    $bucketData         Payload of the currently
+     * @param string                                                             $bucketData         Payload of the currently
      *                                                                                       filtered bucket
      * @param \AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition $functionDefinition Currently handled function
      *

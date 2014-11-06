@@ -42,11 +42,39 @@ class Placeholders
     const AFTER_JOINPOINT = '/* DOPPELGAENGER_AFTER_JOINPOINT ';
 
     /**
+     * Placeholder for any "after throwing" advices which might be weaved in
+     *
+     * @var string AFTER_THROWING_JOINPOINT
+     */
+    const AFTER_THROWING_JOINPOINT = '/* DOPPELGAENGER_AFTER_THROWING_JOINPOINT ';
+
+    /**
+     * Placeholder for the start of any "around" advice which might be weaved in
+     *
+     * @var string AROUND_JOINPOINT_START
+     */
+    const AROUND_JOINPOINT_START = '/* DOPPELGAENGER_AROUND_JOINPOINT_START ';
+
+    /**
+     * Placeholder for the end of any "around" advice which might be weaved in
+     *
+     * @var string AROUND_JOINPOINT_END
+     */
+    const AROUND_JOINPOINT_END = '/* DOPPELGAENGER_AROUND_JOINPOINT_END ';
+
+    /**
      * Placeholder for any "before" advices which might be weaved in
      *
      * @var string BEFORE_JOINPOINT
      */
     const BEFORE_JOINPOINT = '/* DOPPELGAENGER_BEFORE_JOINPOINT ';
+
+    /**
+     * Placeholder for any "finally" advices which might be weaved in
+     *
+     * @var string FINALLY_JOINPOINT
+     */
+    const FINALLY_JOINPOINT = '/* DOPPELGAENGER_FINALLY_JOINPOINT ';
 
     /**
      * Placeholder for a hook right after the structure head at which functions might be inserted
@@ -96,7 +124,8 @@ class Placeholders
      *
      * @var string PLACEHOLDER_CLOSE
      */
-    const PLACEHOLDER_CLOSE = ' */';
+    const PLACEHOLDER_CLOSE = ' */
+    ';
 
     /**
      * Placeholder for inserting the postcondition checks

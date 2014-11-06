@@ -77,12 +77,12 @@ abstract class AbstractParser implements ParserInterface
     /**
      * Default constructor
      *
-     * @param string                              $file                         The path of the file we want to parse
+     * @param string                                       $file                         The path of the file we want to parse
      * @param \AppserverIo\Doppelgaenger\Config            $config                       Configuration
-     * @param StructureDefinitionHierarchy        $structureDefinitionHierarchy List of already parsed structures
+     * @param StructureDefinitionHierarchy                 $structureDefinitionHierarchy List of already parsed structures
      * @param \AppserverIo\Doppelgaenger\StructureMap|null $structureMap                 Our structure map instance
-     * @param StructureDefinitionInterface|null   $currentDefinition            The current definition we are working on
-     * @param array                               $tokens                       The array of tokens taken from the file
+     * @param StructureDefinitionInterface|null            $currentDefinition            The current definition we are working on
+     * @param array                                        $tokens                       The array of tokens taken from the file
      *
      * @throws \AppserverIo\Doppelgaenger\Exceptions\ParserException
      */

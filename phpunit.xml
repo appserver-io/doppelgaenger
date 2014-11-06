@@ -7,10 +7,10 @@
     <filter>
         <whitelist>
             <directory suffix=".php">src</directory>
-		    <exclude>
-		        <directory prefix="Mock">src</directory>
-		        <directory suffix="Test.php">src</directory>
-		    </exclude>
+            <exclude>
+                <directory prefix="Mock">src</directory>
+                <directory suffix="Test.php">src</directory>
+            </exclude>
         </whitelist>
     </filter>
     <!-- Code coverage report, optional -->

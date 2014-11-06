@@ -47,10 +47,10 @@ class InterfaceFilter extends AbstractFilter
      * Implemented according to \php_user_filter class. Will loop over all stream buckets, buffer them and perform
      * the needed actions.
      *
-     * @param resource $in Incoming bucket brigade we need to filter
-     * @param resource $out Outgoing bucket brigade with already filtered content
-     * @param integer $consumed The count of altered characters as buckets pass the filter
-     * @param boolean $closing Is the stream about to close?
+     * @param resource $in       Incoming bucket brigade we need to filter
+     * @param resource $out      Outgoing bucket brigade with already filtered content
+     * @param integer  $consumed The count of altered characters as buckets pass the filter
+     * @param boolean  $closing  Is the stream about to close?
      *
      * @throws \AppserverIo\Doppelgaenger\Exceptions\GeneratorException
      *

@@ -12,6 +12,8 @@
  * @link      http://www.techdivision.com/
  */
 
+namespace AppserverIo\Doppelgaenger;
+
 /**
  * AppserverIo\Doppelgaenger\ContractContext
  *
