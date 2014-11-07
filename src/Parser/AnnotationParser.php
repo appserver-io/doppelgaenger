@@ -15,20 +15,31 @@
 
 namespace AppserverIo\Doppelgaenger\Parser;
 
+use AppserverIo\Doppelgaenger\Entities\Advice;
+use AppserverIo\Doppelgaenger\Entities\AdviceFactory;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Process;
 use AppserverIo\Doppelgaenger\Entities\Assertions\RawAssertion;
 use AppserverIo\Doppelgaenger\Entities\Assertions\TypedCollectionAssertion;
 use AppserverIo\Doppelgaenger\Entities\Definitions\AttributeDefinition;
 use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
 use AppserverIo\Doppelgaenger\Entities\Definitions\StructureDefinitionHierarchy;
+use AppserverIo\Doppelgaenger\Entities\Joinpoint;
+use AppserverIo\Doppelgaenger\Entities\Lists\AdviceList;
 use AppserverIo\Doppelgaenger\Entities\Lists\AssertionList;
 use AppserverIo\Doppelgaenger\Entities\Assertions\ChainedAssertion;
 use AppserverIo\Doppelgaenger\Config;
+use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
+use AppserverIo\Doppelgaenger\Entities\Pointcut;
 use AppserverIo\Doppelgaenger\Exceptions\ParserException;
 use AppserverIo\Doppelgaenger\Interfaces\AssertionInterface;
 use AppserverIo\Doppelgaenger\StructureMap;
 use AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface;
 use AppserverIo\Doppelgaenger\Dictionaries\Annotations;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
+use Herrera\Annotations\Tokenizer;
+use Herrera\Annotations\Tokens;
+use Herrera\Annotations\Convert\ToArray;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Before;
 
 /**
  * AppserverIo\Doppelgaenger\Parser\AnnotationParser
@@ -147,6 +158,76 @@ class AnnotationParser extends AbstractParser
 
             $this->addAnnotation($annotationString);
         }
+    }
+
+    /**
+     * Will return one pointcut which does specifically only match the joinpoints of the structure
+     * which this docblock belongs to
+     *
+     * @param string $docBlock The DocBlock to search in
+     * @param string $targetType Type of the target any resulting joinpoints have, e.g. Joinpoint::TARGET_METHOD
+     * @param string $targetName Name of the target any resulting joinpoints have
+     *
+     * @return boolean|\AppserverIo\Doppelgaenger\Entities\Pointcut
+     */
+    public function getPointcut($docBlock, $targetType, $targetName)
+    {
+        // collect advices and joinpoints into the pointcut entity which specified them
+        $pointcut = new Pointcut();
+
+        // get our tokenizer and parse the doc Block
+        $tokenizer = new Tokenizer();
+
+        $tokenizer->ignore(
+            array(
+                'param',
+                'return',
+                'throws',
+                Process::ANNOTATION,
+            )
+        );
+        $tokens = new Tokens($tokenizer->parse($docBlock));
+
+        // convert to array and run it through our advice factory
+        $toArray = new ToArray();
+        $annotations = $toArray->convert($tokens);
+
+        // create the entities for the joinpoints and advices the pointcut describes
+        foreach ($annotations as $annotation) {
+
+            // filter out the annotations which are no proper joinpoints
+            if (!class_exists('\AppserverIo\Doppelgaenger\Entities\Annotations\\' . $annotation->name)) {
+
+                continue;
+            }
+
+            // build the joinpoint
+            $joinpoint = new Joinpoint();
+            $joinpoint->target = $targetType;
+            $joinpoint->codeHook = $annotation->name;
+            $joinpoint->structure = $this->currentDefinition->getQualifiedName();
+            $joinpoint->targetName = $targetName;
+            $joinpoint->lock();
+            $pointcut->joinpoints->add($joinpoint);
+
+            // build the advice(s)
+            $adviceFactory = new AdviceFactory();
+            foreach ($annotation->values as $rawAdvice) {
+
+                // as it might be an array we have to sanitize it first
+                if (!is_array($rawAdvice)) {
+
+                    $rawAdvice = array($rawAdvice);
+                }
+                foreach ($rawAdvice as $adviceString) {
+
+                    $advice = $adviceFactory->getInstance($adviceString);
+                    $advice->lock();
+                }
+            }
+        }
+
+        return $pointcut;
     }
 
     /**

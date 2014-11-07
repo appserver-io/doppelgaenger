@@ -37,37 +37,11 @@ use AppserverIo\Doppelgaenger\Exceptions\IllegalAccessException;
 abstract class AbstractLockableEntity
 {
     /**
-     * @var bool $isLocked Flag for locking the entity to make it immutable
+     * Flag for locking the entity to make it immutable
+     *
+     * @var bool $isLocked
      */
     protected $isLocked = false;
-
-    /**
-     * Will set the child classes properties if the entity is not locked
-     *
-     * @param string $attribute The name of the attribute we want to set
-     * @param mixed  $value     The value we want to assign to it
-     *
-     * @return null
-     * @throws \InvalidArgumentException
-     * @throws IllegalAccessException
-     */
-    public function __set($attribute, $value)
-    {
-        // If we are locked tell them
-        if ($this->isLocked) {
-
-            throw new IllegalAccessException('The entity ' . get_called_class() . ' is in a locked state');
-        }
-
-        // If we do not have this property we should tell them
-        if (!property_exists($this, $attribute)) {
-
-            throw new \InvalidArgumentException('There is no attribute called ' . $attribute);
-        }
-
-        // Still here? Set it then
-        $this->$attribute = $value;
-    }
 
     /**
      * Will call the child's method with the passed arguments as long as the entity is not locked
@@ -98,6 +72,25 @@ abstract class AbstractLockableEntity
     }
 
     /**
+     * Will return the child classes property if it exists
+     *
+     * @param string $attribute The name of the attribute we want to set
+     *
+     * @return mixed
+     * @throws \InvalidArgumentException
+     */
+    public function __get($attribute)
+    {
+        // If we do not have this property we should tell them
+        if (!property_exists($this, $attribute)) {
+
+            throw new \InvalidArgumentException('There is no attribute called ' . $attribute);
+        }
+
+        // Still here? Get it then
+        return $this->$attribute;
+    }
+    /**
      * Will lock the child entity and make it immutable (if there are no other means of access)
      *
      * @return null
@@ -105,5 +98,33 @@ abstract class AbstractLockableEntity
     public function lock()
     {
         $this->isLocked = true;
+    }
+
+    /**
+     * Will set the child classes properties if the entity is not locked
+     *
+     * @param string $attribute The name of the attribute we want to set
+     * @param mixed  $value     The value we want to assign to it
+     *
+     * @return null
+     * @throws \InvalidArgumentException
+     * @throws IllegalAccessException
+     */
+    public function __set($attribute, $value)
+    {
+        // If we are locked tell them
+        if ($this->isLocked) {
+
+            throw new IllegalAccessException('The entity ' . get_called_class() . ' is in a locked state');
+        }
+
+        // If we do not have this property we should tell them
+        if (!property_exists($this, $attribute)) {
+
+            throw new \InvalidArgumentException('There is no attribute called ' . $attribute);
+        }
+
+        // Still here? Set it then
+        $this->$attribute = $value;
     }
 }

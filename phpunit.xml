@@ -1,7 +1,7 @@
 <phpunit bootstrap="bootstrap.php">
     <testsuites>
 	    <testsuite name="appserver-io/doppelgaenger PHPUnit testsuite">
-	        <directory suffix="BasicTest.php">tests</directory>
+	        <directory suffix="ParserTest.php">tests</directory>
 	    </testsuite>
 	</testsuites>
     <filter>

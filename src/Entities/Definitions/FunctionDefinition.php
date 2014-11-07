@@ -17,6 +17,7 @@ namespace AppserverIo\Doppelgaenger\Entities\Definitions;
 
 use AppserverIo\Doppelgaenger\Entities\Lists\AssertionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
+use AppserverIo\Doppelgaenger\Entities\Lists\PointcutList;
 use AppserverIo\Doppelgaenger\Interfaces\AssertionInterface;
 
 /**
@@ -72,6 +73,13 @@ class FunctionDefinition extends AbstractDefinition
     protected $parameterDefinitions;
 
     /**
+     * Lists of pointcuts
+     *
+     * @var \AppserverIo\Doppelgaenger\Entities\Lists\PointcutList $pointcuts
+     */
+    protected $pointcuts;
+
+    /**
      * @var \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList $preconditions Preconditions of this function
      */
     protected $preconditions;
@@ -120,6 +128,7 @@ class FunctionDefinition extends AbstractDefinition
         $this->body = '';
         $this->postconditions = new AssertionList();
         $this->ancestralPostconditions = new TypedListList();
+        $this->pointcuts = new PointcutList();
     }
 
     /**
@@ -230,6 +239,16 @@ class FunctionDefinition extends AbstractDefinition
     public function getBody()
     {
         return $this->body;
+    }
+
+    /**
+     * Getter method for attribute $pointcuts
+     *
+     * @return AssertionList
+     */
+    public function getPointcuts()
+    {
+        return $this->pointcuts;
     }
 
     /**
