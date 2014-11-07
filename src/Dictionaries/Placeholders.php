@@ -42,6 +42,13 @@ class Placeholders
     const AFTER_JOINPOINT = '/* DOPPELGAENGER_AFTER_JOINPOINT ';
 
     /**
+     * Placeholder for any "after returning" advices which might be weaved in
+     *
+     * @var string AFTER_RETURNING_JOINPOINT
+     */
+    const AFTER_RETURNING_JOINPOINT = '/* DOPPELGAENGER_AFTER_RETURNING_JOINPOINT ';
+
+    /**
      * Placeholder for any "after throwing" advices which might be weaved in
      *
      * @var string AFTER_THROWING_JOINPOINT
@@ -68,13 +75,6 @@ class Placeholders
      * @var string BEFORE_JOINPOINT
      */
     const BEFORE_JOINPOINT = '/* DOPPELGAENGER_BEFORE_JOINPOINT ';
-
-    /**
-     * Placeholder for any "finally" advices which might be weaved in
-     *
-     * @var string FINALLY_JOINPOINT
-     */
-    const FINALLY_JOINPOINT = '/* DOPPELGAENGER_FINALLY_JOINPOINT ';
 
     /**
      * Placeholder for a hook right after the structure head at which functions might be inserted

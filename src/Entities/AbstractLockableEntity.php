@@ -15,6 +15,8 @@
 
 namespace AppserverIo\Doppelgaenger\Entities;
 
+use AppserverIo\Doppelgaenger\Exceptions\IllegalAccessException;
+
 /**
  * AppserverIo\Doppelgaenger\Entities\AbstractLockableEntity
  *
@@ -46,21 +48,21 @@ abstract class AbstractLockableEntity
      * @param mixed  $value     The value we want to assign to it
      *
      * @return null
-     * @throws \IllegalArgumentException
-     * @throws \IllegalAccessException
+     * @throws \InvalidArgumentException
+     * @throws IllegalAccessException
      */
     public function __set($attribute, $value)
     {
         // If we are locked tell them
         if ($this->isLocked) {
 
-            throw new \IllegalAccessException('The entity ' . get_called_class() . ' is in a locked state');
+            throw new IllegalAccessException('The entity ' . get_called_class() . ' is in a locked state');
         }
 
         // If we do not have this property we should tell them
         if (!property_exists($this, $attribute)) {
 
-            throw new \IllegalArgumentException('There is no attribute called ' . $attribute);
+            throw new \InvalidArgumentException('There is no attribute called ' . $attribute);
         }
 
         // Still here? Set it then
@@ -74,21 +76,21 @@ abstract class AbstractLockableEntity
      * @param array  $arguments The arguments to the method
      *
      * @return null
-     * @throws \IllegalArgumentException
-     * @throws \IllegalAccessException
+     * @throws \InvalidArgumentException
+     * @throws IllegalAccessException
      */
     public function __call($name, array $arguments)
     {
         // If we are locked tell them
         if ($this->isLocked) {
 
-            throw new \IllegalAccessException('The entity ' . get_called_class() . ' is in a locked state');
+            throw new IllegalAccessException('The entity ' . get_called_class() . ' is in a locked state');
         }
 
         // If we do not have this method we should tell them
         if (!method_exists($this, $name)) {
 
-            throw new \IllegalArgumentException('There is no method called ' . $name);
+            throw new \InvalidArgumentException('There is no method called ' . $name);
         }
 
         // Still here? call the method then

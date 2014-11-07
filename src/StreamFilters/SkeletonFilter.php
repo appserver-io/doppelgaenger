@@ -270,8 +270,10 @@ class SkeletonFilter extends AbstractFilter
         $code .= Placeholders::PRECONDITION . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE .
             Placeholders::OLD_SETUP . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
 
-        // we will wrap code execution in order to provide a "finally" and "after throwing" placeholder hook
-        $code .= 'try {';
+        // we will wrap code execution in order to provide a "finally" and "after throwing" placeholder hook.
+        // we will also predefine the result as NULL to avoid warnings
+        $code .= ReservedKeywords::RESULT . ' = null;
+        try {';
 
         // Build up the placeholder for the call to the original function.
         $code .= Placeholders::ORIGINAL_CALL . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
@@ -292,7 +294,7 @@ class SkeletonFilter extends AbstractFilter
         }
 
         // finish of the block
-        $code .= Placeholders::FINALLY_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
+        $code .= Placeholders::AFTER_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
         }';
 
         // now just place all the other placeholder for other filters to come
@@ -311,8 +313,8 @@ class SkeletonFilter extends AbstractFilter
         $code .= Placeholders::AROUND_JOINPOINT_END . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
         ';
 
-        // last of all: the "after" joinpoint and the final return from the proxy
-        $code .= Placeholders::AFTER_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
+        // last of all: the "after returning" joinpoint and the final return from the proxy
+        $code .= Placeholders::AFTER_RETURNING_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
             return ' . ReservedKeywords::RESULT . ';}';
 
         // now finish the injected code with the new header of the original method, same signature but different name

@@ -122,27 +122,27 @@ class TraitFilter extends AbstractFilter
      */
     protected function filterParams()
     {
-        $interfaces = array();
+        $traits = array();
 
         // filter the params
         if (is_array($this->params)) {
 
-            $interfaces = $this->params;
+            $traits = $this->params;
 
         } else {
 
-            $interfaces[] = $this->params;
+            $traits[] = $this->params;
         }
 
         // filter out everything which might not be right
-        foreach ($interfaces as $key => $interfaceCandidate) {
+        foreach ($traits as $key => $traitCandidate) {
 
-            if (!is_string($interfaceCandidate)) {
+            if (!is_string($traitCandidate)) {
 
-                unset($interfaces[$key]);
+                unset($traits[$key]);
             }
         }
 
-        return $interfaces;
+        return $traits;
     }
 }

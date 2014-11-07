@@ -58,13 +58,6 @@ trait RemoteProxyTrait
     protected $session = null;
 
     /**
-     * The class name to proxy.
-     *
-     * @var string
-     */
-    protected $className = null;
-
-    /**
      * The name of the original object.
      *
      * @return string The name of the original object
@@ -72,7 +65,7 @@ trait RemoteProxyTrait
      */
     public function getClassName()
     {
-        return $this->className;
+        return __CLASS__;
     }
 
     /**
@@ -97,5 +90,22 @@ trait RemoteProxyTrait
     public function getSession()
     {
         return $this->session;
+    }
+
+    /**
+     * Invokes the remote execution of the passed remote method.
+     *
+     * @param string $method The remote method to call
+     * @param array  $params The parameters for the method call
+     *
+     * @return mixed The result of the remote method call
+     */
+    public function remoteCall($method, $params)
+    {
+        $methodCall = new RemoteMethodCall($this->getClassName(), $method, $this->getSession()->getSessionId());
+        foreach ($params as $key => $value) {
+            $methodCall->addParameter($key, $value);
+        }
+        return $this->__invoke($methodCall, $this->getSession());
     }
 }

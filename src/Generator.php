@@ -256,8 +256,9 @@ class Generator
         $appendedFilters = $this->appendDefaultFilters($res, $structureDefinition);
 
         // TODO remove this after testing
-        $appendedFilters['Traitfilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\Traitfilter', '\AppserverIo\Doppelgaenger\Traits\RemoteObjectTrait');
+        $appendedFilters['Traitfilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\Traitfilter', '\AppserverIo\Doppelgaenger\Traits\RemoteProxyTrait');
         $appendedFilters['InterfaceFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\InterfaceFilter', '\TechDivision\PersistenceContainerProtocol\RemoteObject');
+        $appendedFilters['ProcessingFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\ProcessingFilter', $structureDefinition->getFunctionDefinitions());
 
         $tmp = fwrite(
             $res,
@@ -388,8 +389,8 @@ class Generator
         }
 
         // We ALWAYS need the processing filter. Everything else would not make any sense
-        stream_filter_register('ProcessingFilter', 'AppserverIo\Doppelgaenger\StreamFilters\ProcessingFilter');
-        $filters['ProcessingFilter'] = stream_filter_append($res, 'ProcessingFilter', STREAM_FILTER_WRITE, $this->config);
+        stream_filter_register('EnforcementFilter', 'AppserverIo\Doppelgaenger\StreamFilters\EnforcementFilter');
+        $filters['EnforcementFilter'] = stream_filter_append($res, 'EnforcementFilter', STREAM_FILTER_WRITE, $this->config);
 
         return $filters;
     }

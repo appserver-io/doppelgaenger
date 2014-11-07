@@ -15,7 +15,8 @@
 
 namespace AppserverIo\Doppelgaenger\StreamFilters;
 
-use AppserverIo\Doppelgaenger\Exceptions\ExceptionFactory;
+use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
+use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
 use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
 use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
@@ -23,10 +24,10 @@ use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 /**
  * AppserverIo\Doppelgaenger\StreamFilters\ProcessingFilter
  *
- * This filter will buffer the input stream and add the processing information into the prepared assertion checks
+ * This filter will buffer the input stream and add all postcondition related information at prepared locations
  * (see $dependencies)
  *
- * @category   Php-by-contract
+ * @category   Doppelgaenger
  * @package    AppserverIo\Doppelgaenger
  * @subpackage StreamFilters
  * @author     Bernhard Wick <b.wick@techdivision.com>
@@ -36,20 +37,15 @@ use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
  */
 class ProcessingFilter extends AbstractFilter
 {
+    /**
+     * @const integer FILTER_ORDER Order number if filters are used as a stack, higher means below others
+     */
+    const FILTER_ORDER = 00;
 
     /**
-     * Order number if filters are used as a stack, higher means below others
-     *
-     * @const integer FILTER_ORDER
+     * @var array $dependencies Other filters on which we depend
      */
-    const FILTER_ORDER = 4;
-
-    /**
-     * Other filters on which we depend
-     *
-     * @var array $dependencies
-     */
-    protected $dependencies = array('PreconditionFilter', 'PostconditionFilter', 'InvariantFilter');
+    protected $dependencies = array('SkeletonFilter');
 
     /**
      * The main filter method.
@@ -69,36 +65,48 @@ class ProcessingFilter extends AbstractFilter
      */
     public function filter($in, $out, &$consumed, $closing)
     {
-        // Lets check if we got the config we wanted
-        $config = $this->params->getConfig('enforcement');
-
-        if (!is_array($config) || !isset($config['processing'])) {
-
-            throw new GeneratorException();
-        }
-
-        // Get the code for the processing
-        $preconditionCode = $this->generateCode($config, 'precondition');
-        $postconditionCode = $this->generateCode($config, 'postcondition');
-        $invariantCode = $this->generateCode($config, 'invariant');
-        $invalidCode = $this->generateCode($config, 'InvalidArgumentException');
-        $missingCode = $this->generateCode($config, 'MissingPropertyException');
-
         // Get our buckets from the stream
         while ($bucket = stream_bucket_make_writeable($in)) {
 
-            // Insert the code for the static processing placeholders
-            $bucket->data = str_replace(
-                array(
-                    Placeholders::PROCESSING . 'precondition' . Placeholders::PLACEHOLDER_CLOSE,
-                    Placeholders::PROCESSING . 'postcondition' . Placeholders::PLACEHOLDER_CLOSE,
-                    Placeholders::PROCESSING . 'invariant' . Placeholders::PLACEHOLDER_CLOSE,
-                    Placeholders::PROCESSING . 'InvalidArgumentException' . Placeholders::PLACEHOLDER_CLOSE,
-                    Placeholders::PROCESSING . 'MissingPropertyException' . Placeholders::PLACEHOLDER_CLOSE
-                ),
-                array($preconditionCode, $postconditionCode, $invariantCode, $invalidCode, $missingCode),
-                $bucket->data
-            );
+            // Get the tokens
+            $tokens = token_get_all($bucket->data);
+
+            // Go through the tokens and check what we found
+            $tokensCount = count($tokens);
+            for ($i = 0; $i < $tokensCount; $i++) {
+
+                // Did we find a function? If so check if we know that thing and insert the code of its preconditions.
+                if (is_array($tokens[$i]) && $tokens[$i][0] === T_FUNCTION && is_array($tokens[$i + 2])) {
+
+                    // Get the name of the function
+                    $functionName = $tokens[$i + 2][1];
+
+                    // Check if we got the function in our list, if not continue
+                    $functionDefinition = $this->params->get($functionName);
+
+                    if (!$functionDefinition instanceof FunctionDefinition) {
+
+                        continue;
+
+                    } else {
+
+                        // Get the code for the needed call
+                        $code = $this->generateCode();
+
+                        // Insert the code
+                        $bucket->data = str_replace(
+                            Placeholders::ORIGINAL_CALL . $functionDefinition->getName() .
+                            Placeholders::PLACEHOLDER_CLOSE,
+                            $code,
+                            $bucket->data
+                        );
+
+                        // "Destroy" code and function definition
+                        $code = null;
+                        $functionDefinition = null;
+                    }
+                }
+            }
 
             // Tell them how much we already processed, and stuff it back into the output
             $consumed += $bucket->datalen;
@@ -109,55 +117,14 @@ class ProcessingFilter extends AbstractFilter
     }
 
     /**
-     * /**
-     * Will generate the code needed to enforce any broken assertion checks
-     *
-     * @param array  $config The configuration aspect which holds needed information for us
-     * @param string $for    For which kind of assertion do wee need the processing
+     * Will generate the code to call the original method logic
      *
      * @return string
      */
-    private function generateCode($config, $for)
+    protected function generateCode()
     {
-        $code = '';
-
-        // Code defining the place the error happened
-        $place = '__METHOD__';
-
-        // If we are in an invariant we should tell them about the method we got called from
-        if ($for === 'invariant') {
-
-            $place = '$callingMethod';
-        }
-
-        // What kind of reaction should we create?
-        switch ($config['processing']) {
-
-            case 'exception':
-
-                $exceptionFactory = new ExceptionFactory();
-                $exception = $exceptionFactory->getClassName($for);
-
-                // Create the code
-                $code .= '\AppserverIo\Doppelgaenger\ContractContext::close();
-                throw new \\' . $exception . '("Failed ' . ReservedKeywords::FAILURE_VARIABLE . ' in " . ' . $place . ');';
-
-                break;
-
-            case 'logging':
-
-                // Create the code
-                $code .= '$container = new \AppserverIo\Doppelgaenger\Utils\InstanceContainer();
-                $logger = $container[' . ReservedKeywords::LOGGER_CONTAINER_ENTRY . '];
-                $logger->error("Failed ' . $for .
-                    ReservedKeywords::FAILURE_VARIABLE . ' in " . ' . $place . ');';
-                break;
-
-            default:
-
-                break;
-        }
-
-        return $code;
+        return ReservedKeywords::RESULT . ' = ' . ReservedKeywords::RESULT_BACKUP .
+            ' = $this->remoteCall(__FUNCTION__, func_get_args());
+            ';
     }
 }

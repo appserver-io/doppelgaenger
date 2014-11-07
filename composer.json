@@ -18,17 +18,18 @@
     "require": {
         "php": ">=5.4.0",
         "techdivision/php-by-contract" : "~0.3",
-        "techdivision/persistencecontainerprotocol" : "0.2.*"
+        "techdivision/persistencecontainerprotocol" : "0.2.*",
+        "herrera-io/annotations": "~1.0"
     },
     "require-dev": {
         "appserver-io/build": "0.1.*"
     },
     "autoload": {
         "psr-4": {
-            "AppserverIo\\Doppelgaenger\\": [
-                "src/",
-                "tests/"
-            ]
+            "AppserverIo\\Doppelgaenger\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": { "AppserverIo\\Doppelgaenger\\": "tests/" }
     }
 }
