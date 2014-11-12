@@ -16,11 +16,7 @@
 namespace AppserverIo\Doppelgaenger\StreamFilters;
 
 use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
-use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
-use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
 use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
-use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
-use AppserverIo\Doppelgaenger\Entities\Annotations\Before;
 
 /**
  * AppserverIo\Doppelgaenger\StreamFilters\PostconditionFilter
@@ -62,8 +58,6 @@ class AdviceFilter extends AbstractFilter
      * @param integer  $consumed The count of altered characters as buckets pass the filter
      * @param boolean  $closing  Is the stream about to close?
      *
-     * @throws \AppserverIo\Doppelgaenger\Exceptions\GeneratorException
-     *
      * @return integer
      *
      * @link http://www.php.net/manual/en/php-user-filter.filter.php
@@ -95,20 +89,11 @@ class AdviceFilter extends AbstractFilter
 
                     } else {
 
-                        // Get the code for the assertions
-                        $code = $this->generateCode($functionDefinition->getAdvices(Before::ANNOTATION));
-
-                        // Insert the code
-                        $placeholderHook = Placeholders::BEFORE_JOINPOINT . $functionDefinition->getName() .
-                            Placeholders::PLACEHOLDER_CLOSE;
-                        $bucket->data = str_replace(
-                            $placeholderHook,
-                            $code . $placeholderHook,
-                            $bucket->data
-                        );
+                        // get the pointcuts which are associated with this function already and inject the code
+                        $sortedFunctionPointcuts = $this->sortPointcutExpressions($functionDefinition->getPointcutExpressions());
+                        $tmp = $this->injectAdviceCode($bucket->data, $sortedFunctionPointcuts, $functionName);
 
                         // "Destroy" code and function definition
-                        $code = null;
                         $functionDefinition = null;
                     }
                 }
@@ -123,70 +108,56 @@ class AdviceFilter extends AbstractFilter
     }
 
     /**
-     * Will generate the code needed to enforce made postcondition assertions
+     * Will inject the advice code for the different joinpoints based on sorted joinpoints
      *
-     * @param \AppserverIo\Doppelgaenger\Entities\Lists\TypedListList $assertionLists List of assertion lists
+     * @param string $bucketData                Reference on the current bucket's data
+     * @param array  $sortedPointcutExpressions Array of pointcut expressions sorted by joinpoints
+     * @param string $functionName              Name of the function to inject the advices into
      *
-     * @return string
+     * @return boolean
      */
-    private function generateCode(TypedListList $assertionLists)
+    protected function injectAdviceCode(& $bucketData, array $sortedPointcutExpressions, $functionName)
     {
-        // We only use contracting if we're not inside another contract already
-        $code = '/* BEGIN OF POSTCONDITION ENFORCEMENT */
-        if (' . ReservedKeywords::CONTRACT_CONTEXT . ') {';
+        // iterate over the sorted pointcuts and insert the code
+        foreach ($sortedPointcutExpressions as $joinpoint => $pointcutExpressions) {
 
-        // We need a counter to check how much conditions we got
-        $conditionCounter = 0;
-        $listIterator = $assertionLists->getIterator();
-        for ($i = 0; $i < $listIterator->count(); $i++) {
+            foreach ($pointcutExpressions as $pointcutExpression) {
 
-            // Create the inner loop for the different assertions
-            $assertionIterator = $listIterator->current()->getIterator();
-
-            // Only act if we got actual entries
-            if ($assertionIterator->count() === 0) {
-
-                // increment the outer loop
-                $listIterator->next();
-                continue;
+                // Insert the code
+                $placeholderName = strtoupper($joinpoint) . '_JOINPOINT';
+                $placeholderHook = constant('\AppserverIo\Doppelgaenger\Dictionaries\Placeholders::' . $placeholderName) .
+                    $functionName . Placeholders::PLACEHOLDER_CLOSE;
+                $bucketData = str_replace(
+                    $placeholderHook,
+                    $pointcutExpression->getString() . $placeholderHook,
+                    $bucketData
+                );
             }
-
-            $codeFragment = array();
-            for ($j = 0; $j < $assertionIterator->count(); $j++) {
-
-                $codeFragment[] = $assertionIterator->current()->getString();
-
-                // Forward the iterator and tell them we got a condition
-                $assertionIterator->next();
-                $conditionCounter++;
-            }
-
-            // Lets insert the condition check (if there have been any)
-            if (!empty($codeFragment)) {
-
-                $code .= 'if (!((' . implode(') && (', $codeFragment) . '))){' .
-                    ReservedKeywords::FAILURE_VARIABLE . ' = \'(' . str_replace(
-                        '\'',
-                        '"',
-                        implode(') && (', $codeFragment)
-                    ) . ')\';' .
-                    Placeholders::PROCESSING . 'postcondition' . Placeholders::PLACEHOLDER_CLOSE . '}';
-            }
-
-            // increment the outer loop
-            $listIterator->next();
         }
 
-        // Closing bracket for contract depth check
-        $code .= '}' .
-            '/* END OF POSTCONDITION ENFORCEMENT */';
+        return true;
+    }
 
-        // Did we get anything at all? If not only give back a comment.
-        if ($conditionCounter === 0) {
+    /**
+     * Will sort a list of given pointcut expressions based on the joinpoints associated with them
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\Lists\PointcutExpressionList $pointcutExpressions List of pointcut
+     *          expressions
+     *
+     * @return array
+     */
+    protected function sortPointcutExpressions($pointcutExpressions)
+    {
+        // sort by joinpoint code hooks
+        $sortedPointcutExpressions = array();
+        foreach ($pointcutExpressions as $pointcutExpression) {
 
-            $code = '/* No postconditions for this function/method */';
+            foreach ($pointcutExpression->getJoinpoints() as $joinpoint) {
+
+                $sortedPointcutExpressions[$joinpoint->codeHook][] = $pointcutExpression;
+            }
         }
 
-        return $code;
+        return $sortedPointcutExpressions;
     }
 }

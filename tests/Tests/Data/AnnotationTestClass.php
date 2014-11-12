@@ -55,15 +55,8 @@ class AnnotationTestClass
     }
 
     /**
-     * @Before(execute="Logger->log(__METHOD__)")
-     */
-    public function iHaveDoctrineAnnotations($param1)
-    {
-
-    }
-
-    /**
-     * @Before(execute={"Logger->error(__METHOD__)","Logger->debug(__METHOD__)"})
+     * @Before("weave(Logger->error(__METHOD__))")
+     * @Before("if($param1===1) && weave(Logger->error(__METHOD__))")
      */
     public function iHaveDoctrineSeveralAnnotations($param1)
     {
@@ -71,9 +64,9 @@ class AnnotationTestClass
     }
 
     /**
-     * @Process(execute""$this->remoteCall(__FUNCTION__, func_get_args())")
+     * @Before("weave(Logger->log(__METHOD__)")
      */
-    public function iHaveADifferentProcessing($param1)
+    public function iHaveDoctrineAnnotations($param1)
     {
 
     }

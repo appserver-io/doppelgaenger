@@ -28,13 +28,13 @@ namespace AppserverIo\Doppelgaenger\Entities\Lists;
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
  */
-class PointcutList extends AbstractTypedList
+class PointcutExpressionList extends AbstractTypedList
 {
     /**
      * Default constructor
      */
     public function __construct()
     {
-        $this->itemType = 'AppserverIo\Doppelgaenger\Entities\Pointcut';
+        $this->itemType = 'AppserverIo\Doppelgaenger\Entities\PointcutExpression';
     }
 }

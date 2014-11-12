@@ -15,6 +15,7 @@
 
 namespace AppserverIo\Doppelgaenger\Entities\Definitions;
 
+use AppserverIo\Doppelgaenger\Entities\AbstractLockableEntity;
 use AppserverIo\Doppelgaenger\Interfaces\DefinitionInterface;
 
 /**
@@ -30,32 +31,39 @@ use AppserverIo\Doppelgaenger\Interfaces\DefinitionInterface;
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
  */
-class AttributeDefinition implements DefinitionInterface
+class AttributeDefinition extends AbstractLockableEntity implements DefinitionInterface
 {
     /**
      * @var string $visibility Visibility of the attribute
      */
-    public $visibility;
+    protected $visibility;
 
     /**
      * @var boolean $isStatic Is this attribute static?
      */
-    public $isStatic;
+    protected $isStatic;
 
     /**
      * @var string $name Name of the class attribute
      */
-    public $name;
+    protected $name;
 
     /**
      * @var mixed $defaultValue Default value (if any)
      */
-    public $defaultValue;
+    protected $defaultValue;
 
     /**
      * @var bool $inInvariant Is this attribute part of the invariant?
      */
-    public $inInvariant;
+    protected $inInvariant;
+
+    /**
+     * Name of the structure containing this attribute
+     *
+     * @var string $structureName
+     */
+    protected $structureName;
 
     /**
      * Default constructor
@@ -67,6 +75,7 @@ class AttributeDefinition implements DefinitionInterface
         $this->name = '';
         $this->defaultValue = null;
         $this->inInvariant = false;
+        $this->structureName = '';
     }
 
     /**
@@ -98,5 +107,15 @@ class AttributeDefinition implements DefinitionInterface
 
         // And don't forget the trailing semicolon
         return implode(' ', $stringParts) . ';';
+    }
+
+    /**
+     * Getter method for attribute $structureName
+     *
+     * @return string
+     */
+    public function getStructureName()
+    {
+        return $this->structureName;
     }
 }

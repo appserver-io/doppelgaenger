@@ -22,7 +22,7 @@ use AppserverIo\Doppelgaenger\Interfaces\TypedListInterface;
  *
  * Abstract parent class for type safe list structures
  *
- * @category   Php-by-contract
+ * @category   Doppelgaenger
  * @package    AppserverIo\Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
@@ -30,121 +30,53 @@ use AppserverIo\Doppelgaenger\Interfaces\TypedListInterface;
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
  */
-abstract class AbstractTypedList implements TypedListInterface
+abstract class AbstractTypedList implements TypedListInterface, \Iterator
 {
-    /**
-     * @var string $itemType Type of the contained elements
-     */
-    protected $itemType;
 
     /**
-     * @var array $container The actual container holding the entries
+     * The actual container holding the entries
+     *
+     * @var array $container
      */
     protected $container = array();
 
     /**
-     * @var string $defaultOffset Default member of an entity which will be used as offset e.g. "name"
+     * Keeps track of the currently iterated position to make this class iterateable
+     *
+     * @var int $position
+     */
+    protected $currentPosition = 0;
+
+    /**
+     * Default member of an entity which will be used as offset e.g. "name"
+     *
+     * @var string $defaultOffset
      */
     protected $defaultOffset = '';
 
     /**
-     * Checks if the list is empty
+     * Type of the contained elements
      *
-     * @return bool
+     * @var string $itemType
      */
-    public function isEmpty()
-    {
-        return empty($this->container);
-    }
+    protected $itemType;
 
     /**
-     * Will return an entry for a certain offset
+     * Internally used array which provides a mapping for associative offset keys to integer ones, which allows
+     * for a more easy iteration process
      *
-     * @param mixed $value The offset of the entry
-     *
-     * @return mixed
+     * @var array $keyTracker
      */
-    public function getOffset($value)
-    {
-        $iterator = $this->getIterator();
-        for ($i = 0; $i < $iterator->count(); $i++) {
-
-            if ($iterator->current() === $value) {
-
-                return true;
-            }
-
-            // Move the iterator
-            $iterator->next();
-        }
-
-        // We found nothing
-        return false;
-    }
+    protected $keyTracker = array();
 
     /**
-     * Checks if an offset exists.
-     *
-     * @param mixed $offset The offset to check for
-     *
-     * @return bool
+     * Default constructor
      */
-    public function entryExists($offset)
+    public function __construct()
     {
-        return isset($this->container[$offset]);
-    }
-
-    /**
-     * Will delete an entry at a certain offset
-     *
-     * @param mixed $offset The offset to delete at
-     *
-     * @return void
-     */
-    public function delete($offset)
-    {
-        unset($this->container[$offset]);
-    }
-
-    /**
-     * Will return a certain entry
-     *
-     * @param mixed $offset The offset to get
-     *
-     * @return mixed
-     */
-    public function get($offset)
-    {
-        if (isset($this->container[$offset])) {
-
-            return $this->container[$offset];
-
-        } else {
-
-            return false;
-        }
-    }
-
-    /**
-     * Will set an entry at a certain offset. Existing entries will be overwritten
-     *
-     * @param mixed $offset The offset on which we will set
-     * @param mixed $value  The value to set
-     *
-     * @throws \UnexpectedValueException
-     *
-     * @return void
-     */
-    public function set($offset, $value)
-    {
-        if (!is_a($value, $this->itemType)) {
-
-            throw new \UnexpectedValueException();
-
-        } else {
-
-            $this->container[$offset] = $value;
-        }
+        $this->currentPosition = 0;
+        $this->container = array();
+        $this->keyTracker = array();
     }
 
     /**
@@ -195,6 +127,9 @@ abstract class AbstractTypedList implements TypedListInterface
                 // Still here? Then add the value to the container
                 $this->container[] = $value;
             }
+
+            // update the key tracking
+            $this->keyTracker = array_keys($this->container);
         }
     }
 
@@ -226,6 +161,69 @@ abstract class AbstractTypedList implements TypedListInterface
     }
 
     /**
+     * Will return the entry count
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->container);
+    }
+
+    /**
+     * Will return the container entry at the current iteration position
+     *
+     * @return mixed
+     */
+    public function current() {
+
+        return $this->container[$this->keyTracker[$this->currentPosition]];
+    }
+
+    /**
+     * Will delete an entry at a certain offset
+     *
+     * @param mixed $offset The offset to delete at
+     *
+     * @return void
+     */
+    public function delete($offset)
+    {
+        unset($this->container[$offset]);
+    }
+
+    /**
+     * Checks if an offset exists.
+     *
+     * @param mixed $offset The offset to check for
+     *
+     * @return bool
+     */
+    public function entryExists($offset)
+    {
+        return isset($this->container[$offset]);
+    }
+
+    /**
+     * Will return a certain entry
+     *
+     * @param mixed $offset The offset to get
+     *
+     * @return mixed
+     */
+    public function get($offset)
+    {
+        if (isset($this->container[$offset])) {
+
+            return $this->container[$offset];
+
+        } else {
+
+            return false;
+        }
+    }
+
+    /**
      * Will return an ArrayIterator object for this list
      *
      * @return \ArrayIterator
@@ -236,12 +234,101 @@ abstract class AbstractTypedList implements TypedListInterface
     }
 
     /**
-     * Will return the entry count
+     * Will return an entry for a certain offset
      *
-     * @return int
+     * @param mixed $value The offset of the entry
+     *
+     * @return mixed
      */
-    public function count()
+    public function getOffset($value)
     {
-        return count($this->container);
+        $iterator = $this->getIterator();
+        for ($i = 0; $i < $iterator->count(); $i++) {
+
+            if ($iterator->current() === $value) {
+
+                return true;
+            }
+
+            // Move the iterator
+            $iterator->next();
+        }
+
+        // We found nothing
+        return false;
+    }
+
+    /**
+     * Checks if the list is empty
+     *
+     * @return boolean
+     */
+    public function isEmpty()
+    {
+        return empty($this->container);
+    }
+
+    /**
+     * Will return the key for the current iteration cycle
+     *
+     * @return string|integer
+     */
+    public function key() {
+
+        return $this->keyTracker[$this->currentPosition];
+    }
+
+    /**
+     * Will iterate the current position key
+     *
+     * @return null
+     */
+    public function next() {
+
+        ++$this->currentPosition;
+    }
+
+    /**
+     * Will rewind the current iteration key so next iteration will start with the first element
+     *
+     * @return null
+     */
+    public function rewind() {
+
+        $this->currentPosition = 0;
+    }
+
+    /**
+     * Will set an entry at a certain offset. Existing entries will be overwritten
+     *
+     * @param mixed $offset The offset on which we will set
+     * @param mixed $value  The value to set
+     *
+     * @throws \UnexpectedValueException
+     *
+     * @return void
+     */
+    public function set($offset, $value)
+    {
+        if (!is_a($value, $this->itemType)) {
+
+            throw new \UnexpectedValueException();
+
+        } else {
+
+            $this->container[$offset] = $value;
+
+            // update the key tracking
+            $this->keyTracker = array_keys($this->container);
+        }
+    }
+
+    /**
+     * @return boolean
+     */
+    public function valid() {
+
+        return (isset($this->keyTracker[$this->currentPosition]) &&
+            isset($this->container[$this->keyTracker[$this->currentPosition]]));
     }
 }

@@ -17,10 +17,10 @@
  * @link       http://www.techdivision.com/
  */
 
-namespace AppserverIo\Doppelgaenger\Entities;
+namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\AdviceFactory
+ * AppserverIo\Doppelgaenger\Entities\Pointcuts\CallPointcut
  *
  * <TODO CLASS DESCRIPTION>
  *
@@ -32,28 +32,9 @@ namespace AppserverIo\Doppelgaenger\Entities;
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
  */
-class AdviceFactory
+class CallPointcut
 {
-    /**
-     * Will return an instance of the exception fitting the error type we specified
-     *
-     * @param string $name   The type of exception we need
-     * @param array  $params Parameter array we will pass to the exception's constructor
-     *
-     * @return \Exception
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function getInstance($name, array $params = array())
-    {
-        // if we do not know this advice we will throw an exception
-        if (!class_exists()) {
 
-            throw new \InvalidArgumentException('We do not support advices ');
-        }
-
-        return call_user_func_array($name->__construct(), $params);
-    }
 }
 
  

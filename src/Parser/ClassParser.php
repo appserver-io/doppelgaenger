@@ -508,6 +508,7 @@ class ClassParser extends AbstractStructureParser
         // possible static keyword
         $attribute = new AttributeDefinition();
         $attribute->name = $tokens[$attributePosition][1];
+        $attribute->structureName = $this->currentDefinition->getQualifiedName();
 
         for ($i = $attributePosition; $i > $attributePosition - 6; $i--) {
 

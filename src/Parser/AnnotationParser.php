@@ -16,7 +16,6 @@
 namespace AppserverIo\Doppelgaenger\Parser;
 
 use AppserverIo\Doppelgaenger\Entities\Advice;
-use AppserverIo\Doppelgaenger\Entities\AdviceFactory;
 use AppserverIo\Doppelgaenger\Entities\Annotations\Process;
 use AppserverIo\Doppelgaenger\Entities\Assertions\RawAssertion;
 use AppserverIo\Doppelgaenger\Entities\Assertions\TypedCollectionAssertion;
@@ -28,8 +27,9 @@ use AppserverIo\Doppelgaenger\Entities\Lists\AdviceList;
 use AppserverIo\Doppelgaenger\Entities\Lists\AssertionList;
 use AppserverIo\Doppelgaenger\Entities\Assertions\ChainedAssertion;
 use AppserverIo\Doppelgaenger\Config;
+use AppserverIo\Doppelgaenger\Entities\Lists\PointcutExpressionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
-use AppserverIo\Doppelgaenger\Entities\Pointcut;
+use AppserverIo\Doppelgaenger\Entities\PointcutExpression;
 use AppserverIo\Doppelgaenger\Exceptions\ParserException;
 use AppserverIo\Doppelgaenger\Interfaces\AssertionInterface;
 use AppserverIo\Doppelgaenger\StructureMap;
@@ -46,7 +46,7 @@ use AppserverIo\Doppelgaenger\Entities\Annotations\Before;
  *
  * The AnnotationParser class which is used to get all usable parts from within DocBlock annotation
  *
- * @category   Php-by-contract
+ * @category   Appserver
  * @package    AppserverIo\Doppelgaenger
  * @subpackage Parser
  * @author     Bernhard Wick <b.wick@techdivision.com>
@@ -168,12 +168,11 @@ class AnnotationParser extends AbstractParser
      * @param string $targetType Type of the target any resulting joinpoints have, e.g. Joinpoint::TARGET_METHOD
      * @param string $targetName Name of the target any resulting joinpoints have
      *
-     * @return boolean|\AppserverIo\Doppelgaenger\Entities\Pointcut
+     * @return AppserverIo\Doppelgaenger\Entities\Lists\PointcutExpressionList
      */
-    public function getPointcut($docBlock, $targetType, $targetName)
+    public function getPointcutExpressions($docBlock, $targetType, $targetName)
     {
-        // collect advices and joinpoints into the pointcut entity which specified them
-        $pointcut = new Pointcut();
+        $pointcutExpressions = new PointcutExpressionList();
 
         // get our tokenizer and parse the doc Block
         $tokenizer = new Tokenizer();
@@ -208,10 +207,8 @@ class AnnotationParser extends AbstractParser
             $joinpoint->structure = $this->currentDefinition->getQualifiedName();
             $joinpoint->targetName = $targetName;
             $joinpoint->lock();
-            $pointcut->joinpoints->add($joinpoint);
 
-            // build the advice(s)
-            $adviceFactory = new AdviceFactory();
+            // build the pointcut(s)
             foreach ($annotation->values as $rawAdvice) {
 
                 // as it might be an array we have to sanitize it first
@@ -221,13 +218,17 @@ class AnnotationParser extends AbstractParser
                 }
                 foreach ($rawAdvice as $adviceString) {
 
-                    $advice = $adviceFactory->getInstance($adviceString);
-                    $advice->lock();
+                    // create the pointcut
+                    $pointcutExpression = new PointcutExpression($adviceString);
+                    $pointcutExpression->joinpoints->add($joinpoint);
+                    $pointcutExpression->lock();
+
+                    $pointcutExpressions->add($pointcutExpression);
                 }
             }
         }
 
-        return $pointcut;
+        return $pointcutExpressions;
     }
 
     /**

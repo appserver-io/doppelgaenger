@@ -258,7 +258,8 @@ class Generator
         // TODO remove this after testing
         $appendedFilters['Traitfilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\Traitfilter', '\AppserverIo\Doppelgaenger\Traits\RemoteProxyTrait');
         $appendedFilters['InterfaceFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\InterfaceFilter', '\TechDivision\PersistenceContainerProtocol\RemoteObject');
-        $appendedFilters['ProcessingFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\ProcessingFilter', $structureDefinition->getFunctionDefinitions());
+        //$appendedFilters['ProcessingFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\ProcessingFilter', $structureDefinition->getFunctionDefinitions());
+        $appendedFilters['AdviceFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\AdviceFilter', $structureDefinition->getFunctionDefinitions());
 
         $tmp = fwrite(
             $res,

@@ -159,6 +159,7 @@ class FunctionParser extends AbstractParser
         $functionDefinition->visibility = $this->getFunctionVisibility($tokens);
         $functionDefinition->isStatic = $this->hasSignatureToken($tokens, T_STATIC, T_FUNCTION);
         $functionDefinition->name = $this->getFunctionName($tokens);
+        $functionDefinition->structureName = $this->currentDefinition->getQualifiedName();
 
         // Lets also get out parameters
         $functionDefinition->parameterDefinitions = $this->getParameterDefinitionList($tokens);
@@ -179,12 +180,12 @@ class FunctionParser extends AbstractParser
         );
 
         // get the advices
-        $functionDefinition->getPointcuts()->add($annotationParser->getPointcut(
+        $functionDefinition->getPointcutExpressions()->attach($annotationParser->getPointcutExpressions(
             $functionDefinition->getDocBlock(),
             Joinpoint::TARGET_METHOD,
             $functionDefinition->getName()
         ));
-error_log(var_export($functionDefinition->getPointcuts(), true));
+
         // Does this method require the use of our "old" mechanism?
         $functionDefinition->usesOld = $this->usesKeyword($functionDefinition->getDocBlock(), ReservedKeywords::OLD);
 

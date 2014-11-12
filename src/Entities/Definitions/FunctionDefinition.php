@@ -16,6 +16,7 @@
 namespace AppserverIo\Doppelgaenger\Entities\Definitions;
 
 use AppserverIo\Doppelgaenger\Entities\Lists\AssertionList;
+use AppserverIo\Doppelgaenger\Entities\Lists\PointcutExpressionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
 use AppserverIo\Doppelgaenger\Entities\Lists\PointcutList;
 use AppserverIo\Doppelgaenger\Interfaces\AssertionInterface;
@@ -75,9 +76,9 @@ class FunctionDefinition extends AbstractDefinition
     /**
      * Lists of pointcuts
      *
-     * @var \AppserverIo\Doppelgaenger\Entities\Lists\PointcutList $pointcuts
+     * @var \AppserverIo\Doppelgaenger\Entities\Lists\PointcutExpressionList $pointcuts
      */
-    protected $pointcuts;
+    protected $pointcutExpressions;
 
     /**
      * @var \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList $preconditions Preconditions of this function
@@ -111,6 +112,13 @@ class FunctionDefinition extends AbstractDefinition
     protected $ancestralPostconditions;
 
     /**
+     * Name of the structure containing that function
+     *
+     * @var string $structureName
+     */
+    protected $structureName;
+
+    /**
      * Default constructor
      */
     public function __construct()
@@ -128,7 +136,8 @@ class FunctionDefinition extends AbstractDefinition
         $this->body = '';
         $this->postconditions = new AssertionList();
         $this->ancestralPostconditions = new TypedListList();
-        $this->pointcuts = new PointcutList();
+        $this->pointcutExpressions = new PointcutExpressionList();
+        $this->structureName = '';
     }
 
     /**
@@ -246,9 +255,9 @@ class FunctionDefinition extends AbstractDefinition
      *
      * @return AssertionList
      */
-    public function getPointcuts()
+    public function getPointcutExpressions()
     {
-        return $this->pointcuts;
+        return $this->pointcutExpressions;
     }
 
     /**
@@ -269,6 +278,16 @@ class FunctionDefinition extends AbstractDefinition
     public function getAncestralPostconditions()
     {
         return $this->ancestralPreconditions;
+    }
+
+    /**
+     * Getter method for attribute $structureName
+     *
+     * @return string
+     */
+    public function getStructureName()
+    {
+        return $this->structureName;
     }
 
     /**
