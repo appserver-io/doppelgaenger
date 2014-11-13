@@ -67,7 +67,7 @@ class SkeletonFilter extends AbstractFilter
      */
     public function filter($in, $out, &$consumed, $closing)
     {
-        $structureDefinition = $this->params;error_log($structureDefinition->getQualifiedName());
+        $structureDefinition = $this->params;
         // Get our buckets from the stream
         $functionHook = '';
         $firstIteration = true;

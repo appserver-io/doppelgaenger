@@ -75,14 +75,16 @@ abstract class AbstractConnectorPointcut extends AbstractPointcut
     /**
      * Default constructor
      *
-     * @param string  $expression String representing the expression defining this pointcut
-     * @param boolean $isNegated  If any match made against this pointcut's expression has to be negated in its result
+     * @param string $leftExpression  String representing the expression defining this pointcut left of the connector
+     * @param string $rightExpression String representing the expression defining this pointcut right of the connector
      */
-    public function __construct($expression, $isNegated)
+    public function __construct($leftExpression, $rightExpression)
     {
-        parent::__construct($expression, $isNegated);
+        parent::__construct($leftExpression . $this->getConnector() . $rightExpression, false);
 
-        //TODO
+        $pointcutFactory = new PointcutFactory();
+        $this->leftPointcut = $pointcutFactory->getInstance($leftExpression);
+        $this->rightPointcut = $pointcutFactory->getInstance($rightExpression);
     }
 
     /**
@@ -93,8 +95,8 @@ abstract class AbstractConnectorPointcut extends AbstractPointcut
      */
     public function getConditionString()
     {
-        return $this->leftPointcut->getConditionString() . $this->getConnector().
-            $this->rightPointcut->getConditionString();
+        return '(' . $this->leftPointcut->getConditionString() . $this->getConnector().
+            $this->rightPointcut->getConditionString() . ')';
     }
 
     /**
@@ -104,7 +106,7 @@ abstract class AbstractConnectorPointcut extends AbstractPointcut
      */
     protected function getConnector()
     {
-        return self::CONNECTOR;
+        return static::CONNECTOR;
     }
 
     /**

@@ -175,7 +175,8 @@ abstract class AbstractTypedList implements TypedListInterface, \Iterator
      *
      * @return mixed
      */
-    public function current() {
+    public function current()
+    {
 
         return $this->container[$this->keyTracker[$this->currentPosition]];
     }
@@ -273,7 +274,8 @@ abstract class AbstractTypedList implements TypedListInterface, \Iterator
      *
      * @return string|integer
      */
-    public function key() {
+    public function key()
+    {
 
         return $this->keyTracker[$this->currentPosition];
     }
@@ -283,7 +285,8 @@ abstract class AbstractTypedList implements TypedListInterface, \Iterator
      *
      * @return null
      */
-    public function next() {
+    public function next()
+    {
 
         ++$this->currentPosition;
     }
@@ -293,7 +296,8 @@ abstract class AbstractTypedList implements TypedListInterface, \Iterator
      *
      * @return null
      */
-    public function rewind() {
+    public function rewind()
+    {
 
         $this->currentPosition = 0;
     }
@@ -324,9 +328,12 @@ abstract class AbstractTypedList implements TypedListInterface, \Iterator
     }
 
     /**
+     * Checks if there is a valid value at the current cursor position
+     *
      * @return boolean
      */
-    public function valid() {
+    public function valid()
+    {
 
         return (isset($this->keyTracker[$this->currentPosition]) &&
             isset($this->container[$this->keyTracker[$this->currentPosition]]));

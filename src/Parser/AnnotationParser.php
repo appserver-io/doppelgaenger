@@ -164,7 +164,7 @@ class AnnotationParser extends AbstractParser
      * Will return one pointcut which does specifically only match the joinpoints of the structure
      * which this docblock belongs to
      *
-     * @param string $docBlock The DocBlock to search in
+     * @param string $docBlock   The DocBlock to search in
      * @param string $targetType Type of the target any resulting joinpoints have, e.g. Joinpoint::TARGET_METHOD
      * @param string $targetName Name of the target any resulting joinpoints have
      *

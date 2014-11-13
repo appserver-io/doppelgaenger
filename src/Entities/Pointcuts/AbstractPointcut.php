@@ -9,8 +9,8 @@
  * PHP version 5
  *
  * @category   Appserver
- * @package    $package
- * @subpackage $subPackage
+ * @package    Doppelgaenger
+ * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -28,15 +28,15 @@ use AppserverIo\Doppelgaenger\Interfaces\Pointcut;
  * Definition of a pointcut as a combination of a joinpoint and advices
  *
  * @category   Appserver
- * @package    AppserverIo\Doppelgaenger
+ * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
  *
- * @see https://www.eclipse.org/aspectj/doc/next/progguide/quick.html
- * @see https://www.eclipse.org/aspectj/doc/next/progguide/semantics-pointcuts.html
+ * @see        https://www.eclipse.org/aspectj/doc/next/progguide/quick.html
+ * @see        https://www.eclipse.org/aspectj/doc/next/progguide/semantics-pointcuts.html
  */
 abstract class AbstractPointcut extends AbstractLockableEntity implements Pointcut
 {
@@ -86,7 +86,7 @@ abstract class AbstractPointcut extends AbstractLockableEntity implements Pointc
      */
     public function getMatchPattern()
     {
-        return self::MATCH_PATTERN;
+        return static::MATCH_PATTERN;
     }
 
     /**
@@ -96,7 +96,7 @@ abstract class AbstractPointcut extends AbstractLockableEntity implements Pointc
      */
     public function getType()
     {
-        return self::TYPE;
+        return static::TYPE;
     }
 
     /**
@@ -107,7 +107,7 @@ abstract class AbstractPointcut extends AbstractLockableEntity implements Pointc
      */
     public function isStatic()
     {
-        return self::IS_STATIC;
+        return static::IS_STATIC;
     }
 
     /**

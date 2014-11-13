@@ -90,11 +90,9 @@ interface Pointcut
     /**
      * Whether or not the pointcut matches a given candidate
      *
-     * @param mixed $candidate
+     * @param mixed $candidate Candidate to match against the pointcuts match pattern (getMatchPattern() for information)
      *
      * @return boolean
      */
     public function matches($candidate);
 }
-
- 

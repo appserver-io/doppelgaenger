@@ -17,12 +17,12 @@
  * @link       http://www.techdivision.com/
  */
 
-namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
+namespace AppserverIo\Doppelgaenger\Entities\Annotations;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Pointcuts\AndPointcut
+ * AppserverIo\Doppelgaenger\Entities\Annotations\Around
  *
- * Pointcut to and-connect two other pointcuts logically
+ * Annotation class which is used to specify "around" advice usage
  *
  * @category   Appserver
  * @package    AppserverIo_Doppelgaenger
@@ -31,26 +31,26 @@ namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
+ *
+ * @Annotation
+ * @Target({"METHOD","PROPERTY"})
  */
-class AndPointcut extends AbstractConnectorPointcut
+class Around
 {
     /**
-     * Connector which connects two pointcuts in a logical manner
+     * The annotation which identifies this annotation class
      *
-     * @var string CONNECTOR
+     * @var string
      */
-    const CONNECTOR = self::CONNECTOR_AND;
+    const ANNOTATION = 'Around';
 
     /**
-     * Whether or not the pointcut matches a given candidate.
-     * For connector pointcuts this mostly depends on the connected pointcuts
+     * This method returns the class name as a string
      *
-     * @param mixed $candidate Candidate to match against the pointcuts match pattern (getMatchPattern())
-     *
-     * @return boolean
+     * @return string
      */
-    public function matches($candidate)
+    public static function __getClass()
     {
-        return ($this->leftPointcut->matches($candidate) && $this->rightPointcut->matches($candidate));
+        return __CLASS__;
     }
 }

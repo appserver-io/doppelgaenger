@@ -55,8 +55,10 @@ class AnnotationTestClass
     }
 
     /**
-     * @Before("weave(Logger->error(__METHOD__))")
+     * @Before("weave(Logger->error(__FUNCTION__))")
      * @Before("if($param1===1) && weave(Logger->error(__METHOD__))")
+     * @Before("(if($param1===1) || if($param1===2)) && weave(Logger->error(__METHOD__))")
+     * @After("(if($param1===1) || (if($param1 > 2) && if($param1 < 5))) && weave(Logger->error(__METHOD__))")
      */
     public function iHaveDoctrineSeveralAnnotations($param1)
     {
@@ -64,7 +66,7 @@ class AnnotationTestClass
     }
 
     /**
-     * @Before("weave(Logger->log(__METHOD__)")
+     * @Before("weave(Logger->log(__METHOD__))")
      */
     public function iHaveDoctrineAnnotations($param1)
     {

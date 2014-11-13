@@ -95,7 +95,7 @@ class ExecutePointcut extends AbstractSignaturePointcut
      * Whether or not the pointcut matches a given candidate.
      * Will always return true as execute pointcuts can only be evaluated during runtime
      *
-     * @param mixed $candidate
+     * @param mixed $candidate Candidate to match against the pointcuts match pattern (getMatchPattern())
      *
      * @return boolean
      */

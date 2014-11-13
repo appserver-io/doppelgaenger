@@ -52,11 +52,22 @@ class WeavePointcut extends AbstractSignaturePointcut
     const TYPE = 'weave';
 
     /**
-     * Returns a string representation of the pointcut
+     * Returns a string representing a boolean condition which can be used to determine if
+     * the pointcut has to be executed
      *
      * @return string
      */
-    public function getString()
+    public function getConditionString()
+    {
+        return 'true';
+    }
+
+    /**
+     * Returns a string representing the actual execution of the pointcut logic
+     *
+     * @return string
+     */
+    public function getExecutionString()
     {
         // we have to test whether or not we need an instance of the used class first.
         // if the call is not static then we do
@@ -84,7 +95,7 @@ class WeavePointcut extends AbstractSignaturePointcut
      * Whether or not the pointcut matches a given candidate.
      * Weave pointcuts will always return true, as they do not pose any condition
      *
-     * @param mixed $candidate
+     * @param mixed $candidate Candidate to match against the pointcuts match pattern (getMatchPattern())
      *
      * @return boolean
      */

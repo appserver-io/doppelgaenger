@@ -42,22 +42,10 @@ class OrPointcut extends AbstractConnectorPointcut
     const CONNECTOR = self::CONNECTOR_OR;
 
     /**
-     * Returns a string representing a boolean condition which can be used to determine if
-     * the pointcut has to be executed.
-     * Just use the parent but wrap it in brackets too
-     *
-     * @return string
-     */
-    public function getConditionString()
-    {
-        return '(' . parent::getConditionString() . ')';
-    }
-
-    /**
      * Whether or not the pointcut matches a given candidate.
      * For connector pointcuts this mostly depends on the connected pointcuts
      *
-     * @param mixed $candidate
+     * @param mixed $candidate Candidate to match against the pointcuts match pattern (getMatchPattern())
      *
      * @return boolean
      */

@@ -85,7 +85,7 @@ class IfPointcut extends AbstractPointcut
      * Whether or not the pointcut matches a given candidate.
      * If pointcuts will always return true as they have to be evaluated at runtime
      *
-     * @param mixed $candidate
+     * @param mixed $candidate Candidate to match against the pointcuts match pattern (getMatchPattern())
      *
      * @return boolean
      */
