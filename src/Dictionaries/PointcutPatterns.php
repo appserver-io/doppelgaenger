@@ -8,8 +8,8 @@
  *
  * PHP version 5
  *
- * @category   Appserver
- * @package    AppserverIo_Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Dictionaries
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -24,8 +24,8 @@ namespace AppserverIo\Doppelgaenger\Dictionaries;
  *
  * Dictionary class for the possible match patterns of pointcuts
  *
- * @category   Appserver
- * @package    AppserverIo_Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Dictionaries
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>

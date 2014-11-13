@@ -8,8 +8,8 @@
  *
  * PHP version 5
  *
- * @category   Appserver
- * @package    AppserverIo_Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -25,8 +25,8 @@ namespace AppserverIo\Doppelgaenger\Entities;
  * Definition of a joinpoint.
  * Specifies a certain point within a code structure where an advice might be weaved in
  *
- * @category   Appserver
- * @package    AppserverIo_Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>

@@ -8,8 +8,8 @@
  *
  * PHP version 5
  *
- * @category   Appserver
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -24,8 +24,8 @@ namespace AppserverIo\Doppelgaenger\Entities;
  *
  * Basic entity class which holds an advice representation
  *
- * @category   Appserver
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>

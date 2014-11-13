@@ -8,7 +8,7 @@
  *
  * PHP version 5
  *
- * @category   Appserver
+ * @category   Library
  * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
@@ -27,13 +27,15 @@ use AppserverIo\Doppelgaenger\Dictionaries\PointcutPatterns;
  * Pointcut for runtime checking of certain conditions.
  * Can be used as "if" condition on which the activation of other pointcuts might depend
  *
- * @category   Appserver
+ * @category   Library
  * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
+ *
+ * @Target({"ADVICE", "METHOD","PROPERTY"})
  */
 class IfPointcut extends AbstractPointcut
 {

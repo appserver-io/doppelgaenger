@@ -8,8 +8,8 @@
  *
  * PHP version 5
  *
- * @category   Appserver
- * @package    AppserverIo_Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -26,8 +26,8 @@ use AppserverIo\Doppelgaenger\Dictionaries\PointcutPatterns;
  *
  * Abstract parent class for pointcuts which accept expressions which express a signature like pattern
  *
- * @category   Appserver
- * @package    AppserverIo_Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>

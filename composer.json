@@ -6,7 +6,9 @@
         "twin",
         "doppelgaenger",
         "proxy",
-        "remote method call"
+        "remote method call",
+        "AOP",
+        "aspect oriented"
     ],
     "license": "OSL 3.0",
     "authors": [

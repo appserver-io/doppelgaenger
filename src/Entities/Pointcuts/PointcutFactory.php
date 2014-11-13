@@ -8,7 +8,7 @@
  *
  * PHP version 5
  *
- * @category   Appserver
+ * @category   Library
  * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
@@ -24,7 +24,7 @@ namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
  *
  * Factory which will produce instances of specific pointcut classes based on their type and expression
  *
- * @category   Appserver
+ * @category   Library
  * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>

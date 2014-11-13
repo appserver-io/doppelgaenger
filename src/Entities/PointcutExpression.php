@@ -8,8 +8,8 @@
  *
  * PHP version 5
  *
- * @category   Appserver
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -27,8 +27,8 @@ use AppserverIo\Doppelgaenger\Entities\Pointcuts\PointcutFactory;
  *
  * Definition of a pointcut as a combination of a joinpoint and advices
  *
- * @category   Appserver
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
