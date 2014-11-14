@@ -10,47 +10,34 @@
  *
  * @category   Library
  * @package    Doppelgaenger
- * @subpackage Entities
+ * @subpackage Tests
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
  */
 
-namespace AppserverIo\Doppelgaenger\Entities\Annotations;
+namespace AppserverIo\Doppelgaenger\Tests\Data\Annotations;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Annotations\AfterThrowing
+ * AppserverIo\Doppelgaenger\Tests\Data\Annotations\SingleIntroductionTestClass
  *
- * Annotation class which is used to specify "after throwing" advice usage
+ * Test class which is used to test single introduction
  *
  * @category   Library
  * @package    Doppelgaenger
- * @subpackage Entities
+ * @subpackage Tests
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
  *
- * @Annotation
- * @Target({"METHOD"})
+ * @Introduce(interface="\AppserverIo\Doppelgaenger\Tests\Data\Annotations\TestInterface1",
+ *      implementation="\AppserverIo\Doppelgaenger\Tests\Data\Annotations\TestTrait1")
  */
-class AfterThrowing
+class SingleIntroductionTestClass
 {
-    /**
-     * The annotation which identifies this annotation class
-     *
-     * @var string
-     */
-    const ANNOTATION = 'AfterThrowing';
 
-    /**
-     * This method returns the class name as a string
-     *
-     * @return string
-     */
-    public static function __getClass()
-    {
-        return __CLASS__;
-    }
 }
+
+ 

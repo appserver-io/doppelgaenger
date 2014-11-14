@@ -192,8 +192,8 @@ class AutoLoader
             return false;
         }
 
-        // We are still here, so we know the class and it is not omitted. Does it contain contracts then?
-        if (!$file->hasContracts() || !$file->isEnforced()) {
+        // We are still here, so we know the class and it is not omitted. Does it contain annotations then?
+        if (!$file->hasAnnotations() || !$file->isEnforced()) {
 
             require $file->getPath();
 

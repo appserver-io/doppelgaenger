@@ -17,12 +17,12 @@
  * @link       http://www.techdivision.com/
  */
 
-namespace AppserverIo\Doppelgaenger\Entities\Annotations;
+namespace AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Annotations\Before
+ * AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\After
  *
- * Annotation class which is used to specify "before" advice usage
+ * Annotation class which is used to specify "after" advice usage
  *
  * @category   Library
  * @package    Doppelgaenger
@@ -35,14 +35,14 @@ namespace AppserverIo\Doppelgaenger\Entities\Annotations;
  * @Annotation
  * @Target({"METHOD","PROPERTY"})
  */
-class Before
+class After
 {
     /**
      * The annotation which identifies this annotation class
      *
      * @var string
      */
-    const ANNOTATION = 'Before';
+    const ANNOTATION = 'After';
 
     /**
      * This method returns the class name as a string

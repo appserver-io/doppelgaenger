@@ -10,60 +10,59 @@
  *
  * @category   Library
  * @package    Doppelgaenger
- * @subpackage Entities
+ * @subpackage Tests
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
  */
 
-namespace AppserverIo\Doppelgaenger\Tests\Data;
+namespace AppserverIo\Doppelgaenger\Tests\Data\Annotations;
 
 /**
- * AppserverIo\Doppelgaenger\Tests\Data\AnnotationTestClass
+ * AppserverIo\Doppelgaenger\Tests\Data\Annotations\SingleTestClass
  *
- * Pointcut for specifying functions into which a certain advice has to be weaved.
- * Can only be used with a qualified method signature e.g. \AppserverIo\Doppelgaenger\Logger->log()
+ * Test class containing directly annotated methods with one advice each, covering all possible joinpoints
  *
  * @category   Library
  * @package    Doppelgaenger
- * @subpackage Entities
+ * @subpackage Tests
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
  */
-class AnnotationTestClass
+class SingleTestClass
 {
+
     /**
-     * @param array<\Exception>   $value
+     * @Before("weave(Logger->error($param1))")
      */
-    public function typeCollection($value)
+    public function iHaveABeforeAdvice($param1)
     {
 
     }
 
     /**
-     * @return array<\Exception>
+     * @After("weave(Logger->error($param1))")
      */
-    public function typeCollectionReturn($value)
-    {
-        return $value;
-    }
-
-    /**
-     * @param null|\Exception|string $value
-     */
-    public function orCombinator($value)
+    public function iHaveAnAfterAdvice($param1)
     {
 
     }
 
     /**
-     * @param
-     *          $param1
+     * @AfterThrowing("weave(Logger->error($param1))")
      */
-    private function iHaveBadAnnotations($param1)
+    public function iHaveAnAfterThrowingAdvice($param1)
+    {
+
+    }
+
+    /**
+     * @AfterReturning("weave(Logger->error($param1))")
+     */
+    public function iHaveAnAfterReturningAdvice($param1)
     {
 
     }

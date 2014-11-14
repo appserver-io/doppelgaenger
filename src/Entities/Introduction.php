@@ -17,13 +17,12 @@
  * @link       http://www.techdivision.com/
  */
 
-namespace AppserverIo\Doppelgaenger\Tests\Data;
+namespace AppserverIo\Doppelgaenger\Entities;
 
 /**
- * AppserverIo\Doppelgaenger\Tests\Data\AnnotationTestClass
+ * AppserverIo\Doppelgaenger\Entities\Introduction
  *
- * Pointcut for specifying functions into which a certain advice has to be weaved.
- * Can only be used with a qualified method signature e.g. \AppserverIo\Doppelgaenger\Logger->log()
+ * Class which represents the introduction of additional characteristics to a target class
  *
  * @category   Library
  * @package    Doppelgaenger
@@ -33,38 +32,30 @@ namespace AppserverIo\Doppelgaenger\Tests\Data;
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
  */
-class AnnotationTestClass
+class Introduction extends AbstractLockableEntity
 {
-    /**
-     * @param array<\Exception>   $value
-     */
-    public function typeCollection($value)
-    {
-
-    }
 
     /**
-     * @return array<\Exception>
+     * Name of a trait which is used to provide an implementation of the introduces interface.
+     * Must be fully qualified or already known to the target's namespace
+     *
+     * @var string $implementation
      */
-    public function typeCollectionReturn($value)
-    {
-        return $value;
-    }
+    protected $implementation;
 
     /**
-     * @param null|\Exception|string $value
+     * Name of the interface which is used to extend the target's characteristics.
+     * Must be fully qualified or already known to the target's namespace
+     *
+     * @var string $interface
      */
-    public function orCombinator($value)
-    {
-
-    }
+    protected $interface;
 
     /**
-     * @param
-     *          $param1
+     * Name of the target class which gets new characteristics introduced
+     * Might also be a PCRE which will match several classes
+     *
+     * @var  $target <REPLACE WITH FIELD COMMENT>
      */
-    private function iHaveBadAnnotations($param1)
-    {
-
-    }
+    protected $target;
 }

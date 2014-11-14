@@ -15,7 +15,6 @@
 
 namespace AppserverIo\Doppelgaenger\Parser;
 
-use AppserverIo\Doppelgaenger\Entities\Advice;
 use AppserverIo\Doppelgaenger\Entities\Annotations\Process;
 use AppserverIo\Doppelgaenger\Entities\Assertions\RawAssertion;
 use AppserverIo\Doppelgaenger\Entities\Assertions\TypedCollectionAssertion;
@@ -23,23 +22,19 @@ use AppserverIo\Doppelgaenger\Entities\Definitions\AttributeDefinition;
 use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
 use AppserverIo\Doppelgaenger\Entities\Definitions\StructureDefinitionHierarchy;
 use AppserverIo\Doppelgaenger\Entities\Joinpoint;
-use AppserverIo\Doppelgaenger\Entities\Lists\AdviceList;
 use AppserverIo\Doppelgaenger\Entities\Lists\AssertionList;
 use AppserverIo\Doppelgaenger\Entities\Assertions\ChainedAssertion;
 use AppserverIo\Doppelgaenger\Config;
 use AppserverIo\Doppelgaenger\Entities\Lists\PointcutExpressionList;
-use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
 use AppserverIo\Doppelgaenger\Entities\PointcutExpression;
 use AppserverIo\Doppelgaenger\Exceptions\ParserException;
 use AppserverIo\Doppelgaenger\Interfaces\AssertionInterface;
-use AppserverIo\Doppelgaenger\StructureMap;
 use AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface;
 use AppserverIo\Doppelgaenger\Dictionaries\Annotations;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 use Herrera\Annotations\Tokenizer;
 use Herrera\Annotations\Tokens;
 use Herrera\Annotations\Convert\ToArray;
-use AppserverIo\Doppelgaenger\Entities\Annotations\Before;
 
 /**
  * AppserverIo\Doppelgaenger\Parser\AnnotationParser
@@ -161,6 +156,39 @@ class AnnotationParser extends AbstractParser
     }
 
     /**
+     * Will return an array containing all annotations of a certain type which where found within a given string
+     * DocBlock syntax is prefered
+     *
+     * @param string $string         String to search in
+     * @param string $annotationType Name of the annotation (without the leading "@") to search for
+     *
+     * @return array<\stdClass>
+     */
+    public function getAnnotationsByType($string, $annotationType)
+    {
+        $collectedAnnotations = array();
+
+        // get our tokenizer and parse the doc Block
+        $tokenizer = new Tokenizer();
+        $tokens = new Tokens($tokenizer->parse($string));
+
+        // convert to array and run it through our advice factory
+        $toArray = new ToArray();
+        $annotations = $toArray->convert($tokens);
+
+        // only collect annotations we want
+        foreach ($annotations as $annotation) {
+
+            if ($annotation->name === $annotationType) {
+error_log(var_export($annotation, true));
+                $collectedAnnotations[] = $annotation;
+            }
+        }
+
+        return $collectedAnnotations;
+    }
+
+    /**
      * Will return one pointcut which does specifically only match the joinpoints of the structure
      * which this docblock belongs to
      *
@@ -168,7 +196,7 @@ class AnnotationParser extends AbstractParser
      * @param string $targetType Type of the target any resulting joinpoints have, e.g. Joinpoint::TARGET_METHOD
      * @param string $targetName Name of the target any resulting joinpoints have
      *
-     * @return AppserverIo\Doppelgaenger\Entities\Lists\PointcutExpressionList
+     * @return \AppserverIo\Doppelgaenger\Entities\Lists\PointcutExpressionList
      */
     public function getPointcutExpressions($docBlock, $targetType, $targetName)
     {
@@ -195,7 +223,7 @@ class AnnotationParser extends AbstractParser
         foreach ($annotations as $annotation) {
 
             // filter out the annotations which are no proper joinpoints
-            if (!class_exists('\AppserverIo\Doppelgaenger\Entities\Annotations\\' . $annotation->name)) {
+            if (!class_exists('\AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\\' . $annotation->name)) {
 
                 continue;
             }

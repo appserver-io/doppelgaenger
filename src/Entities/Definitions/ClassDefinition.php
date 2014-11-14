@@ -18,6 +18,7 @@ namespace AppserverIo\Doppelgaenger\Entities\Definitions;
 use AppserverIo\Doppelgaenger\Entities\Lists\AssertionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\FunctionDefinitionList;
+use AppserverIo\Doppelgaenger\Entities\Lists\IntroductionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
 
 /**
@@ -55,6 +56,13 @@ class ClassDefinition extends AbstractStructureDefinition
      * @var string $docBlock The initial class docblock header
      */
     protected $docBlock;
+
+    /**
+     * List of introductions which are used to extend the class's characteristics
+     *
+     * @var \AppserverIo\Doppelgaenger\Entities\Lists\IntroductionList
+     */
+    protected $introductions;
 
     /**
      * @var boolean $isFinal Is this a final class
@@ -118,6 +126,7 @@ class ClassDefinition extends AbstractStructureDefinition
      * @param string $namespace            The namespace the class belongs to
      * @param array  $usedNamespaces       All classes which are referenced by the "use" keyword
      * @param string $docBlock             The initial class docblock header
+     * @param null   $introductions        List of introductions defined in the docblock
      * @param bool   $isFinal              Is this a final class
      * @param bool   $isAbstract           Is this class abstract
      * @param string $name                 Name of the class
@@ -134,6 +143,7 @@ class ClassDefinition extends AbstractStructureDefinition
         $namespace = '',
         $usedNamespaces = array(),
         $docBlock = '',
+        $introductions = null,
         $isFinal = false,
         $isAbstract = false,
         $name = '',
@@ -149,6 +159,7 @@ class ClassDefinition extends AbstractStructureDefinition
         $this->namespace = $namespace;
         $this->usedNamespaces = $usedNamespaces;
         $this->docBlock = $docBlock;
+        $this->introductions = is_null($introductions) ? new IntroductionList() : $introductions;;
         $this->isFinal = $isFinal;
         $this->isAbstract = $isAbstract;
         $this->name = $name;
@@ -233,6 +244,16 @@ class ClassDefinition extends AbstractStructureDefinition
     public function getImplements()
     {
         return $this->implements;
+    }
+
+    /**
+     * Getter method for attribute $introductions
+     *
+     * @return null|\AppserverIo\Doppelgaenger\Entities\Lists\IntroductionList
+     */
+    public function getIntroductions()
+    {
+        return $this->introductions;
     }
 
     /**

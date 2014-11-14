@@ -17,13 +17,12 @@
  * @link       http://www.techdivision.com/
  */
 
-namespace AppserverIo\Doppelgaenger\Tests\Data;
+namespace AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints;
 
 /**
- * AppserverIo\Doppelgaenger\Tests\Data\AnnotationTestClass
+ * AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\AfterThrowing
  *
- * Pointcut for specifying functions into which a certain advice has to be weaved.
- * Can only be used with a qualified method signature e.g. \AppserverIo\Doppelgaenger\Logger->log()
+ * Annotation class which is used to specify "after throwing" advice usage
  *
  * @category   Library
  * @package    Doppelgaenger
@@ -32,39 +31,26 @@ namespace AppserverIo\Doppelgaenger\Tests\Data;
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
+ *
+ * @Annotation
+ * @Target({"METHOD"})
  */
-class AnnotationTestClass
+class AfterThrowing
 {
     /**
-     * @param array<\Exception>   $value
+     * The annotation which identifies this annotation class
+     *
+     * @var string
      */
-    public function typeCollection($value)
-    {
-
-    }
+    const ANNOTATION = 'AfterThrowing';
 
     /**
-     * @return array<\Exception>
+     * This method returns the class name as a string
+     *
+     * @return string
      */
-    public function typeCollectionReturn($value)
+    public static function __getClass()
     {
-        return $value;
-    }
-
-    /**
-     * @param null|\Exception|string $value
-     */
-    public function orCombinator($value)
-    {
-
-    }
-
-    /**
-     * @param
-     *          $param1
-     */
-    private function iHaveBadAnnotations($param1)
-    {
-
+        return __CLASS__;
     }
 }

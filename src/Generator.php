@@ -133,7 +133,7 @@ class Generator
 
         if ($tmp === false) {
 
-            throw new GeneratorException('Could not create contracted definition for ' . $qualifiedName);
+            throw new GeneratorException('Could not create altered definition for ' . $qualifiedName);
         }
         // Now get our new file into the cacheMap
         $this->cache->add(
@@ -158,7 +158,7 @@ class Generator
      *
      * TODO implement this somewhere more accessible, others might need it too (e.g. autoloader)
      */
-    private function createFilePath($className)
+    protected function createFilePath($className)
     {
         // As a file can contain multiple classes we will substitute the filename with the class name
         $tmpFileName = ltrim(str_replace('\\', '_', $className), '_');
@@ -178,7 +178,7 @@ class Generator
      *
      * @return boolean
      */
-    private function createFileFromDefinition(
+    protected function createFileFromDefinition(
         $targetFileName,
         StructureDefinitionInterface $structureDefinition
     ) {
@@ -211,7 +211,7 @@ class Generator
      *
      * TODO remove when autoloader is able to recognize and skip interfaces
      */
-    private function createFileFromInterfaceDefinition(
+    protected function createFileFromInterfaceDefinition(
         $targetFileName,
         InterfaceDefinition $structureDefinition
     ) {
@@ -241,7 +241,7 @@ class Generator
      *
      * @return bool
      */
-    private function createFileFromClassDefinition(
+    protected function createFileFromClassDefinition(
         $targetFileName,
         ClassDefinition $structureDefinition
     ) {
@@ -256,9 +256,8 @@ class Generator
         $appendedFilters = $this->appendDefaultFilters($res, $structureDefinition);
 
         // TODO remove this after testing
-        $appendedFilters['Traitfilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\Traitfilter', '\AppserverIo\Doppelgaenger\Traits\RemoteProxyTrait');
-        $appendedFilters['InterfaceFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\InterfaceFilter', '\TechDivision\PersistenceContainerProtocol\RemoteObject');
-        //$appendedFilters['ProcessingFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\ProcessingFilter', $structureDefinition->getFunctionDefinitions());
+        $appendedFilters['IntroductionFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\IntroductionFilter', $structureDefinition->getIntroductions());
+        $appendedFilters['ProcessingFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\ProcessingFilter', $structureDefinition->getFunctionDefinitions());
         $appendedFilters['AdviceFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\AdviceFilter', $structureDefinition->getFunctionDefinitions());
 
         $tmp = fwrite(
@@ -406,6 +405,8 @@ class Generator
      * @param mixed    $params      Whatever params the filter might need
      *
      * @return resource
+     *
+     * @throws \AppserverIo\Doppelgaenger\Exceptions\GeneratorException
      */
     public function appendFilter(& $res, $filterClass, $params)
     {

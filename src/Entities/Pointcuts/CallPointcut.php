@@ -19,6 +19,8 @@
 
 namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
 
+use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
+
 /**
  * AppserverIo\Doppelgaenger\Entities\Pointcut\CallPointcut
  *
@@ -44,7 +46,7 @@ class CallPointcut extends AbstractSignaturePointcut
      *
      * @var boolean IS_STATIC
      */
-    const IS_STATIC = true;
+    const IS_STATIC = false;
 
     /**
      * The type of this pointcut
@@ -104,6 +106,14 @@ class CallPointcut extends AbstractSignaturePointcut
      */
     public function matches($candidate)
     {
-        return true;
+        // if we do not get a function definition we can already assume there is no match
+        if (!$candidate instanceof FunctionDefinition) {
+
+            return false;
+        }
+
+        // build up the signature of the candidate function definition and look for a match
+        $candidateSignature = $candidate->getStructureName() . $this->callType . $candidate->getName() . '()';
+        return (preg_match("/" . $this->getExpression() . "/", $candidateSignature) === 1);
     }
 }

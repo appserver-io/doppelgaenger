@@ -5,7 +5,7 @@
  * PHP version 5
  *
  * @category   Library
- * @package    AppserverIo\Doppelgaenger
+ * @package    Doppelgaenger
  * @subpackage Tests
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -14,17 +14,17 @@
  * @link       http://www.techdivision.com/
  */
 
-namespace AppserverIo\Doppelgaenger\Tests;
+namespace AppserverIo\Doppelgaenger\Tests\Unit;
 
 use AppserverIo\Doppelgaenger\Config;
 
 /**
- * AppserverIo\Doppelgaenger\Tests\BasicTest
+ * AppserverIo\Doppelgaenger\Tests\Unit\BasicTest
  *
  * This test will test the configuration class AppserverIo\Doppelgaenger\Config
  *
  * @category   Library
- * @package    AppserverIo\Doppelgaenger
+ * @package    Doppelgaenger
  * @subpackage Tests
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>

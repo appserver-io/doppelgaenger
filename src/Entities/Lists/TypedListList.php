@@ -4,8 +4,8 @@
  *
  * PHP version 5
  *
- * @category   Doppelgaenger
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -22,8 +22,8 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'AbstractTypedList.php';
  *
  * A typed list which is able to contain typed lists by itself
  *
- * @category   Doppelgaenger
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>

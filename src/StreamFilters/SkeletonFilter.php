@@ -280,7 +280,7 @@ class SkeletonFilter extends AbstractFilter
 
         // add the second part of the try/catch/finally block
         $code .= '} catch (\Exception $e) {
-        ' . Placeholders::AFTER_THROWING_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
+        ' . Placeholders::AFTERTHROWING_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
 
             // rethrow the exception
             throw $e;
@@ -314,7 +314,7 @@ class SkeletonFilter extends AbstractFilter
         ';
 
         // last of all: the "after returning" joinpoint and the final return from the proxy
-        $code .= Placeholders::AFTER_RETURNING_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
+        $code .= Placeholders::AFTERRETURNING_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
             return ' . ReservedKeywords::RESULT . ';}';
 
         // now finish the injected code with the new header of the original method, same signature but different name

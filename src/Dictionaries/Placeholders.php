@@ -44,16 +44,16 @@ class Placeholders
     /**
      * Placeholder for any "after returning" advices which might be weaved in
      *
-     * @var string AFTER_RETURNING_JOINPOINT
+     * @var string AFTERRETURNING_JOINPOINT
      */
-    const AFTER_RETURNING_JOINPOINT = '/* DOPPELGAENGER_AFTER_RETURNING_JOINPOINT ';
+    const AFTERRETURNING_JOINPOINT = '/* DOPPELGAENGER_AFTERRETURNING_JOINPOINT ';
 
     /**
      * Placeholder for any "after throwing" advices which might be weaved in
      *
-     * @var string AFTER_THROWING_JOINPOINT
+     * @var string AFTERTHROWING_JOINPOINT
      */
-    const AFTER_THROWING_JOINPOINT = '/* DOPPELGAENGER_AFTER_THROWING_JOINPOINT ';
+    const AFTERTHROWING_JOINPOINT = '/* DOPPELGAENGER_AFTERTHROWING_JOINPOINT ';
 
     /**
      * Placeholder for the start of any "around" advice which might be weaved in

@@ -15,10 +15,13 @@
 
 namespace AppserverIo\Doppelgaenger\Parser;
 
+use AppserverIo\Doppelgaenger\Entities\Annotations\Introduce;
 use AppserverIo\Doppelgaenger\Entities\Definitions\ClassDefinition;
 use AppserverIo\Doppelgaenger\Entities\Definitions\FileDefinition;
 use AppserverIo\Doppelgaenger\Entities\Definitions\Structure;
 use AppserverIo\Doppelgaenger\Entities\Definitions\AttributeDefinition;
+use AppserverIo\Doppelgaenger\Entities\Introduction;
+use AppserverIo\Doppelgaenger\Entities\Lists\IntroductionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\StructureDefinitionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
@@ -169,6 +172,25 @@ class ClassParser extends AbstractStructureParser
             $this->currentDefinition->getDocBlock(),
             Annotations::INVARIANT
         );
+
+        // we would be also interested in introductions
+        $introductions = new IntroductionList();
+        $introductionAnnotations = $annotationParser->getAnnotationsByType(
+            $this->currentDefinition->getDocBlock(),
+            Introduce::ANNOTATION
+        );
+        foreach ($introductionAnnotations as $introductionAnnotation) {
+
+            $introduction = new Introduction();
+            $introduction->target = $this->currentDefinition->getQualifiedName();
+            $introduction->implementation = $introductionAnnotation->values['implementation'];
+            $introduction->interface = $introductionAnnotation->values['interface'];;
+            $introduction->lock();
+
+            $introductions->add($introduction);
+        }
+
+        $this->currentDefinition->introductions = $introductions;
 
         // Get the class identity
         $this->currentDefinition->isFinal = $this->hasSignatureToken($this->tokens, T_FINAL, T_CLASS);

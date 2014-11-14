@@ -56,9 +56,9 @@ class Structure
     protected $type;
 
     /**
-     * @var boolean $hasContracts Does the structure even have contracts
+     * @var boolean $hasAnnotations Does the structure even have contracts
      */
-    protected $hasContracts;
+    protected $hasAnnotations;
 
     /**
      * @var boolean $enforced Do we have to enforce contracts (if any) within this structure?
@@ -68,22 +68,22 @@ class Structure
     /**
      * Default constructor
      *
-     * @param int     $cTime        The manipulation time of the structure file
-     * @param string  $identifier   The identifier (namespace + structure name) of the structure
-     * @param string  $path         Path to the file containing the structure definition
-     * @param string  $type         Type of the structure e.g. "class"
-     * @param boolean $hasContracts Does the structure even have contracts
-     * @param boolean $enforced     Do we have to enforce contracts (if any) within this structure?
+     * @param int     $cTime          The manipulation time of the structure file
+     * @param string  $identifier     The identifier (namespace + structure name) of the structure
+     * @param string  $path           Path to the file containing the structure definition
+     * @param string  $type           Type of the structure e.g. "class"
+     * @param boolean $hasAnnotations Does the structure even have contracts
+     * @param boolean $enforced       Do we have to enforce contracts (if any) within this structure?
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($cTime, $identifier, $path, $type, $hasContracts = false, $enforced = false)
+    public function __construct($cTime, $identifier, $path, $type, $hasAnnotations = false, $enforced = false)
     {
         // Set the attributes.
         $this->cTime = $cTime;
         $this->identifier = $identifier;
         $this->path = $path;
-        $this->hasContracts = $hasContracts;
+        $this->hasAnnotations = $hasAnnotations;
         $this->enforced = $enforced;
         $this->allowedTypes = array('class', 'interface', 'trait');
 
@@ -142,9 +142,9 @@ class Structure
      *
      * @return bool
      */
-    public function hasContracts()
+    public function hasAnnotations()
     {
-        return (bool)$this->hasContracts;
+        return (bool)$this->hasAnnotations;
     }
 
     /**

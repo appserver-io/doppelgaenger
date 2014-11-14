@@ -1,6 +1,6 @@
 <?php
 /**
- * File containing the AssertionList class
+ * File containing the IntroductionList class
  *
  * PHP version 5
  *
@@ -15,12 +15,10 @@
 
 namespace AppserverIo\Doppelgaenger\Entities\Lists;
 
-use AppserverIo\Doppelgaenger\Interfaces\TypedListInterface;
-
 /**
- * AppserverIo\Doppelgaenger\Entities\Lists\AssertionList
+ * AppserverIo\Doppelgaenger\Entities\Lists\IntroductionList
  *
- * A typed list for assertions
+ * Typed list of introductions
  *
  * @category   Library
  * @package    Doppelgaenger
@@ -30,13 +28,13 @@ use AppserverIo\Doppelgaenger\Interfaces\TypedListInterface;
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
  */
-class AssertionList extends AbstractTypedList
+class IntroductionList extends AbstractTypedList
 {
     /**
      * Default constructor
      */
     public function __construct()
     {
-        $this->itemType = 'AppserverIo\Doppelgaenger\Interfaces\AssertionInterface';
+        $this->itemType = 'AppserverIo\Doppelgaenger\Entities\Introduction';
     }
 }

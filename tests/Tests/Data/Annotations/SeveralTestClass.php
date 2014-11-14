@@ -10,47 +10,56 @@
  *
  * @category   Library
  * @package    Doppelgaenger
- * @subpackage Entities
+ * @subpackage Tests
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
  */
 
-namespace AppserverIo\Doppelgaenger\Entities\Annotations;
+namespace AppserverIo\Doppelgaenger\Tests\Data\Annotations;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Annotations\After
+ * AppserverIo\Doppelgaenger\Tests\Data\Annotations\SeveralTestClass
  *
- * Annotation class which is used to specify "after" advice usage
+ * Test class containing directly annotated methods with several advices with the same joinpoint each
  *
  * @category   Library
  * @package    Doppelgaenger
- * @subpackage Entities
+ * @subpackage Tests
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
- *
- * @Annotation
- * @Target({"METHOD","PROPERTY"})
  */
-class After
+class SeveralTestClass
 {
-    /**
-     * The annotation which identifies this annotation class
-     *
-     * @var string
-     */
-    const ANNOTATION = 'After';
 
     /**
-     * This method returns the class name as a string
-     *
-     * @return string
+     * @Before("weave(Logger->error($param1))")
+     * @Before("weave(Logger::error(__METHOD__))")
      */
-    public static function __getClass()
+    public function iHaveSeveralBeforeAdvices($param1)
     {
-        return __CLASS__;
+
+    }
+
+    /**
+     * @After("weave(Logger->log(__METHOD__))")
+     * @After("weave(Logger->log('hello world'))")
+     * @After("weave(Test->testIt())")
+     */
+    public function iHaveSeveralAfterAdvices($param1)
+    {
+
+    }
+
+    /**
+     * @AfterReturning("weave(Logger->error(__FUNCTION__))")
+     * @AfterReturning("weave(Test->testIt())")
+     */
+    public function iHaveSeveralAfterReturningAdvices($param1)
+    {
+
     }
 }

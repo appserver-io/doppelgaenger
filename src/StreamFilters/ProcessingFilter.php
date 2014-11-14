@@ -91,7 +91,7 @@ class ProcessingFilter extends AbstractFilter
                     } else {
 
                         // Get the code for the needed call
-                        $code = $this->generateCode();
+                        $code = $this->generateCode($functionDefinition);
 
                         // Insert the code
                         $bucket->data = str_replace(
@@ -119,10 +119,16 @@ class ProcessingFilter extends AbstractFilter
     /**
      * Will generate the code to call the original method logic
      *
+     * @param \AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition $functionDefinition The function
+     *
      * @return string
      */
-    protected function generateCode()
+    protected function generateCode(FunctionDefinition $functionDefinition)
     {
+        // Build up the call to the original function.
+        return ReservedKeywords::RESULT . ' = ' . $functionDefinition->getHeader('call', ReservedKeywords::ORIGINAL_FUNCTION_SUFFIX) . ';';
+
+
         return ReservedKeywords::RESULT . ' = ' . ReservedKeywords::RESULT_BACKUP .
             ' = $this->remoteCall(__FUNCTION__, func_get_args());
             ';

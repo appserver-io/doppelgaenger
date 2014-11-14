@@ -1,11 +1,11 @@
 <?php
 /**
- * File containing the PointcutList class
+ * File containing the PointcutExpressionList class
  *
  * PHP version 5
  *
- * @category   Doppelgaenger
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -16,12 +16,12 @@
 namespace AppserverIo\Doppelgaenger\Entities\Lists;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Lists\PointcutList
+ * AppserverIo\Doppelgaenger\Entities\Lists\PointcutExpressionList
  *
  * A typed list for pointcuts
  *
- * @category   Doppelgaenger
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>

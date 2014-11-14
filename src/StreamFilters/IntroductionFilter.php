@@ -15,12 +15,10 @@
 
 namespace AppserverIo\Doppelgaenger\StreamFilters;
 
-use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
-use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
-use AppserverIo\Doppelgaenger\StreamFilters\AbstractFilter;
+use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
 
 /**
- * AppserverIo\Doppelgaenger\StreamFilters\InterfaceFilter
+ * AppserverIo\Doppelgaenger\StreamFilters\IntroductionFilter
  *
  * This filter will add given interfaces to already defined classes
  *
@@ -32,7 +30,7 @@ use AppserverIo\Doppelgaenger\StreamFilters\AbstractFilter;
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
  */
-class InterfaceFilter extends AbstractFilter
+class IntroductionFilter extends AbstractFilter
 {
 
     /**
@@ -60,23 +58,16 @@ class InterfaceFilter extends AbstractFilter
      */
     public function filter($in, $out, & $consumed, $closing)
     {
-        // get a clean list of interfaces
-        $interfaces = $this->filterParams();
-
-        // only do something if we got interfaces to implement
-        if (empty($interfaces)) {
-
-            return PSFS_PASS_ON;
-        }
+        // get all the introductions of a structure definition
+        $introductions = $this->params;
 
         // Get our buckets from the stream
         $interfaceHook = '';
-        $abortNow = false;
         $keywordNeeded = true;
         while ($bucket = stream_bucket_make_writeable($in)) {
 
             // Has to be done only once at the beginning of the definition
-            if (empty($interfaceHook)) {
+            if (empty($interfaceHook) && $introductions->count() > 0) {
 
                 // Get the tokens
                 $tokens = token_get_all($bucket->data);
@@ -112,36 +103,44 @@ class InterfaceFilter extends AbstractFilter
                         }
 
                         // build up the injected code and make the injection
+                        $implementsCode = '';
                         if ($keywordNeeded) {
 
-                            $code = ' implements ' . implode(', ', $interfaces);
-
-                        } else {
-
-                            $code = ', ' . implode(', ', $interfaces);
+                            $implementsCode = ' implements ';
                         }
+                        $useCode = '';
+                        $interfaces = array();
+                        foreach ($introductions as $introduction) {
+
+                            $interfaces[] = $introduction->interface;
+
+                            // build up code for the trait usage
+                            $useCode .= 'use ' . $introduction->implementation . ';
+                            ';
+                        }
+                        $implementsCode .= implode(', ', $interfaces);
+
+                        // add the "use" code
+                        $bucket->data = str_replace(
+                            $interfaceHook . '{',
+                            $interfaceHook . '{' . $useCode,
+                            $bucket->data
+                        );
+
+                        // add the "implements" code
                         $bucket->data = str_replace(
                             $interfaceHook,
-                            $interfaceHook . $code,
+                            $interfaceHook . $implementsCode,
                             $bucket->data
                         );
                     }
                 }
 
-            } else {
-
-                $abortNow = true;
             }
 
             // Tell them how much we already processed, and stuff it back into the output
             $consumed += $bucket->datalen;
             stream_bucket_append($out, $bucket);
-
-            // if we already reached our goal we can proceed to the next filter
-            if ($abortNow === true) {
-
-                return PSFS_PASS_ON;
-            }
         }
 
         return PSFS_PASS_ON;

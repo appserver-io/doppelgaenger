@@ -14,8 +14,14 @@
 
 namespace AppserverIo\Doppelgaenger;
 
+use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\After;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\AfterReturning;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\AfterThrowing;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Around;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Before;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Introduce;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Process;
 use AppserverIo\Doppelgaenger\Entities\Definitions\Structure;
-use AppserverIo\Doppelgaenger\Exceptions\CacheException;
 use AppserverIo\Doppelgaenger\Exceptions\ParserException;
 use AppserverIo\Doppelgaenger\Interfaces\MapInterface;
 use AppserverIo\Doppelgaenger\Utils\Formatting;
@@ -154,12 +160,12 @@ class StructureMap implements MapInterface
      * Will return all entries within a map. If needed only entries of contracted
      * structures will be returned.
      *
-     * @param boolean $contracted Do we only want entries containing contracts?
-     * @param boolean $enforced   Do we only want entries which are enforced?
+     * @param boolean $annotated Do we only want entries containing useful annotations?
+     * @param boolean $enforced  Do we only want entries which are enforced?
      *
      * @return mixed
      */
-    public function getEntries($contracted = false, $enforced = false)
+    public function getEntries($annotated = false, $enforced = false)
     {
         // Our structures
         $structures = array();
@@ -167,7 +173,7 @@ class StructureMap implements MapInterface
         foreach ($this->map as $entry) {
 
             // If we only need contracted only
-            if (($contracted === true && $entry['hasContracts'] === false)) {
+            if (($annotated === true && $entry['hasAnnotations'] === false)) {
 
                 continue;
             }
@@ -183,7 +189,7 @@ class StructureMap implements MapInterface
                 $entry['identifier'],
                 $entry['path'],
                 $entry['type'],
-                $entry['hasContracts'],
+                $entry['hasAnnotations'],
                 $entry['enforced']
             );
         }
@@ -207,7 +213,7 @@ class StructureMap implements MapInterface
             'identifier' => $structure->getIdentifier(),
             'path' => $structure->getPath(),
             'type' => $structure->getType(),
-            'hasContracts' => $structure->hasContracts(),
+            'hasAnnotations' => $structure->hasAnnotations(),
             'enforced' => $structure->isEnforced()
         );
 
@@ -289,7 +295,7 @@ class StructureMap implements MapInterface
                 $entry['identifier'],
                 $entry['path'],
                 $entry['type'],
-                $entry['hasContracts'],
+                $entry['hasAnnotations'],
                 $entry['enforced']
             );
 
@@ -589,7 +595,7 @@ class StructureMap implements MapInterface
             if ($identifier !== false) {
 
                 // check if the file has contracts and if it should be enforced
-                $hasContracts = $this->findContracts($file[0]);
+                $hasAnnotations = $this->findAnnotations($file[0]);
 
                 // create the entry
                 $this->map[$identifier[1]] = array(
@@ -597,11 +603,11 @@ class StructureMap implements MapInterface
                     'identifier' => $identifier[1],
                     'path' => $file[0],
                     'type' => $identifier[0],
-                    'hasContracts' => $hasContracts,
+                    'hasAnnotations' => $hasAnnotations,
                     'enforced' => $this->isFileEnforced(
                         $file[0],
                         $identifier[1],
-                        $hasContracts,
+                        $hasAnnotations,
                         $enforcedFiles,
                         $omittedNamespaces
                     )
@@ -621,13 +627,13 @@ class StructureMap implements MapInterface
      *
      * @param string  $file              The path of the file to be tested
      * @param string  $fileIdentifier    The qualified name of the file's structure
-     * @param boolean $hasContracts      Does this file contain contracts (as epr current configuration)
+     * @param boolean $hasAnnotations    Does this file contain contracts (as epr current configuration)
      * @param array   $enforcedFiles     Array of files which need to be enforced
      * @param array   $omittedNamespaces Array of namespaces which are omitted from the enforcement
      *
      * @return boolean
      */
-    protected function isFileEnforced($file, $fileIdentifier, $hasContracts, $enforcedFiles, $omittedNamespaces)
+    protected function isFileEnforced($file, $fileIdentifier, $hasAnnotations, $enforcedFiles, $omittedNamespaces)
     {
         // if the file is within an omitted namespace it most certainly is not
         foreach ($omittedNamespaces as $omittedNamespace) {
@@ -640,7 +646,7 @@ class StructureMap implements MapInterface
 
         // as we are still here we are not within an omitted namespace.
         // if both of the below is true the file needs to be enforced
-        if ($hasContracts === true && isset($enforcedFiles[$file])) {
+        if ($hasAnnotations === true && isset($enforcedFiles[$file])) {
 
             return true;
 
@@ -651,16 +657,27 @@ class StructureMap implements MapInterface
     }
 
     /**
-     * Will return true if the specified file has specified contracts, false if not.
+     * Will return true if the specified file has annotations which might be useful, false if not
      *
      * @param string $file File to check for contracts
      *
      * @return bool
      */
-    protected function findContracts($file)
+    protected function findAnnotations($file)
     {
         // We need to get our array of needles
-        $needles = array(Annotations::INVARIANT, Annotations::POSTCONDITION, Annotations::PRECONDITION);
+        $needles = array(
+            Annotations::INVARIANT,
+            Annotations::POSTCONDITION,
+            Annotations::PRECONDITION,
+            After::ANNOTATION,
+            AfterReturning::ANNOTATION,
+            AfterThrowing::ANNOTATION,
+            Around::ANNOTATION,
+            Before::ANNOTATION,
+            Process::ANNOTATION,
+            Introduce::ANNOTATION
+        );
 
         // If we have to enforce things like @param or @returns, we have to be more sensitive
         if ($this->config->getValue('enforcement/enforce-default-type-safety') === true) {
@@ -705,7 +722,7 @@ class StructureMap implements MapInterface
      * @param string $file The file to check
      *
      * @return array|boolean
-     * @throws \Exceptions|\AppserverIo\Doppelgaenger\Exceptions\ParserException
+     * @throws \Exception|\AppserverIo\Doppelgaenger\Exceptions\ParserException
      */
     protected function findIdentifier($file)
     {

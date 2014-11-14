@@ -4,8 +4,8 @@
  *
  * PHP version 5
  *
- * @category   Doppelgaenger
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -20,8 +20,8 @@ namespace AppserverIo\Doppelgaenger\Entities\Lists;
  *
  * A typed list for joinpoint
  *
- * @category   Doppelgaenger
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
