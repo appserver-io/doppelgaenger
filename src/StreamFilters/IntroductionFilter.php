@@ -15,8 +15,6 @@
 
 namespace AppserverIo\Doppelgaenger\StreamFilters;
 
-use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
-
 /**
  * AppserverIo\Doppelgaenger\StreamFilters\IntroductionFilter
  *

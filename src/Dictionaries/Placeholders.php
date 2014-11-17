@@ -84,6 +84,14 @@ class Placeholders
     const FUNCTION_HOOK = '/* DOPPELGAENGER_FUNCTION_HOOK_PLACEHOLDER ';
 
     /**
+     * Placeholder for injection of additional code, etc.
+     * Placed right after the beginning of the function body
+     *
+     * @var string FUNCTION_BEGIN
+     */
+    const FUNCTION_BEGIN = '/* DOPPELGAENGER_FUNCTION_BEGIN_PLACEHOLDER ';
+
+    /**
      * Placeholder for inserting the invariant checks
      *
      * @var string INVARIANT

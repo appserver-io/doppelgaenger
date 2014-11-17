@@ -15,6 +15,7 @@
 
 namespace AppserverIo\Doppelgaenger\StreamFilters;
 
+use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
 use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
 
@@ -89,9 +90,12 @@ class AdviceFilter extends AbstractFilter
 
                     } else {
 
+                        // before we weave in any advice code we have to make a MethodInvocation object ready
+                        $this->injectInvocationCode($bucket->data, $functionDefinition);
+
                         // get the pointcuts which are associated with this function already and inject the code
                         $sortedFunctionPointcuts = $this->sortPointcutExpressions($functionDefinition->getPointcutExpressions());
-                        $tmp = $this->injectAdviceCode($bucket->data, $sortedFunctionPointcuts, $functionName);
+                        $this->injectAdviceCode($bucket->data, $sortedFunctionPointcuts, $functionName);
 
                         // "Destroy" code and function definition
                         $functionDefinition = null;
@@ -129,11 +133,58 @@ class AdviceFilter extends AbstractFilter
                     $functionName . Placeholders::PLACEHOLDER_CLOSE;
                 $bucketData = str_replace(
                     $placeholderHook,
-                    $pointcutExpression->getString() . $placeholderHook,
+                    $placeholderHook . $pointcutExpression->getString(),
                     $bucketData
                 );
             }
         }
+
+        return true;
+    }
+
+    /**
+     * Will inject invocation code for a given function into a given piece of code.
+     * Invocation code will be the instantiation of a \AppserverIo\Doppelgaenger\Entities\MethodInvocation object
+     * as a basic representation of the given function
+     *
+     * @param string             $bucketData         Reference on the current bucket's data
+     * @param FunctionDefinition $functionDefinition Definition of the function to inject invocation code into
+     *
+     * @return boolean
+     */
+    protected function injectInvocationCode(& $bucketData, FunctionDefinition $functionDefinition)
+    {
+        $code = ReservedKeywords::METHOD_INVOCATION_OBJECT . ' = new \AppserverIo\Doppelgaenger\Entities\MethodInvocation(
+            array($this, \'' . $functionDefinition->getName() . '\'),
+            $this,
+            ' . ($functionDefinition->getIsAbstract() ? 'true' : 'false') . ',
+            ' . ($functionDefinition->getIsFinal() ? 'true' : 'false') . ',
+            ' . ($functionDefinition->getIsStatic() ? 'true' : 'false') . ',
+            ';
+
+        // we have to build up manual parameter collection as func_get_args() only returns copies
+        // @see http://php.net/manual/en/function.func-get-args.php
+        $parametersCode = 'array(';
+        foreach ($functionDefinition->getParameterDefinitions() as $parameterDefinition) {
+
+            $name = $parameterDefinition->name;
+            $parametersCode .= '\'' . substr($name, 1) . '\' => ' . $name . ',';
+        }
+        $parametersCode .= ')';
+
+        $code .= $parametersCode . ',
+            \'' . $functionDefinition->getName() . '\',
+            \'' . $functionDefinition->getStructureName() . '\',
+            \'' . $functionDefinition->getVisibility() . '\'
+            );';
+
+        // Insert the code
+        $placeholder = Placeholders::FUNCTION_BEGIN . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
+        $bucketData = str_replace(
+            $placeholder,
+            $placeholder . $code,
+            $bucketData
+        );
 
         return true;
     }

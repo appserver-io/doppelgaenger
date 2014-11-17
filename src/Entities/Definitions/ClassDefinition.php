@@ -130,7 +130,7 @@ class ClassDefinition extends AbstractStructureDefinition
         $this->namespace = $namespace;
         $this->usedNamespaces = $usedNamespaces;
         $this->docBlock = $docBlock;
-        $this->introductions = is_null($introductions) ? new IntroductionList() : $introductions;;
+        $this->introductions = is_null($introductions) ? new IntroductionList() : $introductions;
         $this->isFinal = $isFinal;
         $this->isAbstract = $isAbstract;
         $this->name = $name;

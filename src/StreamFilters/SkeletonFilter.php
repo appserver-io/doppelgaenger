@@ -249,8 +249,11 @@ class SkeletonFilter extends AbstractFilter
      */
     protected function generateBeforeCode($injectNeeded, FunctionDefinition $functionDefinition)
     {
-        // first of all: the "before" joinpoint
-        $code = Placeholders::BEFORE_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
+        // first of all: the function begin
+        $code = Placeholders::FUNCTION_BEGIN . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
+
+        // right after: the "before" joinpoint
+        $code .= Placeholders::BEFORE_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
 
         // we have to build up the placeholders for the around advice, first of all the beginning of the wrapper
         $code .= Placeholders::AROUND_JOINPOINT_START . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '

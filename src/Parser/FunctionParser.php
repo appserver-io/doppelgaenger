@@ -29,7 +29,7 @@ use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
  *
  * This class implements a parser to find all useful information in function definitions
  *
- * @@category   Library
+ * @category   Library
  * @package    Doppelgaenger
  * @subpackage Parser
  * @author     Bernhard Wick <b.wick@techdivision.com>

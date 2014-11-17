@@ -98,6 +98,13 @@ class ReservedKeywords
     const MARK_CONTRACT_ENTRY = '$pbcContractEntry';
 
     /**
+     * Name of the local variable representing the method invocation within woven advices
+     *
+     * @var string METHOD_INVOCATION_OBJECT
+     */
+    const METHOD_INVOCATION_OBJECT = '$doppelgaengerMethodInvocationObject';
+
+    /**
      * Reserved local variable containing a scope copy before function execution
      *
      * @var string OLD

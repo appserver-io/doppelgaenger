@@ -100,7 +100,7 @@ class ClassParser extends AbstractStructureParser
             $introduction = new Introduction();
             $introduction->target = $this->currentDefinition->getQualifiedName();
             $introduction->implementation = $introductionAnnotation->values['implementation'];
-            $introduction->interface = $introductionAnnotation->values['interface'];;
+            $introduction->interface = $introductionAnnotation->values['interface'];
             $introduction->lock();
 
             $introductions->add($introduction);
