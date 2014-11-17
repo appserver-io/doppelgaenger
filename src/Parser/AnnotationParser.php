@@ -4,8 +4,8 @@
  *
  * PHP version 5
  *
- * @category   Doppelgaenger
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Parser
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -41,8 +41,8 @@ use Herrera\Annotations\Convert\ToArray;
  *
  * The AnnotationParser class which is used to get all usable parts from within DocBlock annotation
  *
- * @category   Appserver
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Parser
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -180,7 +180,7 @@ class AnnotationParser extends AbstractParser
         foreach ($annotations as $annotation) {
 
             if ($annotation->name === $annotationType) {
-error_log(var_export($annotation, true));
+
                 $collectedAnnotations[] = $annotation;
             }
         }

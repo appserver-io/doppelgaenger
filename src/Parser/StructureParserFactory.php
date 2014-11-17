@@ -83,30 +83,16 @@ class StructureParserFactory
      *
      * @return string
      */
-    private function getName($type)
+    protected function getName($type)
     {
         // What kind of exception do we need?
-        switch ($type) {
+        $class = __NAMESPACE__ . '\\' . ucfirst($type) . 'Parser';
 
-            case 'class':
+        if (!class_exists($class)) {
 
-                $name = 'ClassParser';
-                break;
-
-            case 'interface':
-
-                $name = 'InterfaceParser';
-                break;
-
-            default:
-
-                throw new ParserException('Unknown parser type ' . $type);
-                break;
+            throw new ParserException('Unknown parser type ' . $type);
         }
 
-        if (class_exists(__NAMESPACE__ . '\\' . $name)) {
-
-            return __NAMESPACE__ . '\\' . $name;
-        }
+        return $class;
     }
 }

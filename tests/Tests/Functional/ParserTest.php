@@ -17,6 +17,7 @@ namespace AppserverIo\Doppelgaenger\Tests\Functional;
 
 use AppserverIo\Doppelgaenger\Config;
 use AppserverIo\Doppelgaenger\Tests\Data\Annotations\ComplexTestClass;
+use AppserverIo\Doppelgaenger\Tests\Data\Annotations\ExtendedIntroductionTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\Annotations\MixedTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\Annotations\SeveralTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\Annotations\SingleIntroductionTestClass;
@@ -223,6 +224,19 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         $test = new SeveralIntroductionsTestClass();
         $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Tests\Data\Annotations\SeveralIntroductionsTestClass', $test);
+        $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Tests\Data\Annotations\TestInterface1', $test);
+        $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Tests\Data\Annotations\TestInterface2', $test);
+    }
+
+    /**
+     * Will test if classes with an introduction will get their characteristics extended correctly
+     *
+     * @return null
+     */
+    public function testExtendedIntroduction()
+    {
+        $test = new ExtendedIntroductionTestClass();
+        $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Tests\Data\Annotations\ExtendedIntroductionTestClass', $test);
         $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Tests\Data\Annotations\TestInterface1', $test);
         $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Tests\Data\Annotations\TestInterface2', $test);
     }

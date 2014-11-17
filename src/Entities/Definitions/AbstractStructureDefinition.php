@@ -5,7 +5,7 @@
  * PHP version 5
  *
  * @category   Library
- * @package    AppserverIo\Doppelgaenger
+ * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -25,7 +25,7 @@ use AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface;
  * entity for describing class definitions
  *
  * @category   Library
- * @package    AppserverIo\Doppelgaenger
+ * @package    Doppelgaenger
  * @subpackage Entities
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -60,30 +60,10 @@ abstract class AbstractStructureDefinition extends AbstractDefinition implements
     protected $name;
 
     /**
-     * @var string $extends Name of the parent class (if any)
-     */
-    protected $extends;
-
-    /**
-     * @var array $constants Class constants
-     */
-    protected $constants;
-
-    /**
      * @var \AppserverIo\Doppelgaenger\Entities\Lists\FunctionDefinitionList $functionDefinitions List of methods this class
      *          defines
      */
     protected $functionDefinitions;
-
-    /**
-     * Getter method for attribute $constants
-     *
-     * @return array
-     */
-    public function getConstants()
-    {
-        return $this->constants;
-    }
 
     /**
      * Getter method for attribute $docBlock
@@ -93,16 +73,6 @@ abstract class AbstractStructureDefinition extends AbstractDefinition implements
     public function getDocBlock()
     {
         return $this->docBlock;
-    }
-
-    /**
-     * Getter method for attribute $extends
-     *
-     * @return string
-     */
-    public function getExtends()
-    {
-        return $this->extends;
     }
 
     /**
@@ -170,6 +140,16 @@ abstract class AbstractStructureDefinition extends AbstractDefinition implements
 
             return $this->namespace . '\\' . $this->name;
         }
+    }
+
+    /**
+     * Will return the type of the definition.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return static::TYPE;
     }
 
     /**

@@ -103,10 +103,13 @@ class IntroductionFilter extends AbstractFilter
                         }
 
                         // build up the injected code and make the injection
-                        $implementsCode = '';
                         if ($keywordNeeded) {
 
                             $implementsCode = ' implements ';
+
+                        } else {
+
+                            $implementsCode = ', ';
                         }
                         $useCode = '';
                         $interfaces = array();

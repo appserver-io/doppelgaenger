@@ -4,8 +4,8 @@
  *
  * PHP version 5
  *
- * @category   Doppelgaenger
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Parser
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -29,8 +29,8 @@ use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
  *
  * This class implements a parser to find all useful information in function definitions
  *
- * @category   Php-by-contract
- * @package    AppserverIo\Doppelgaenger
+ * @@category   Library
+ * @package    Doppelgaenger
  * @subpackage Parser
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -284,7 +284,7 @@ class FunctionParser extends AbstractParser
      *
      * TODO Does this have to be this long?
      */
-    protected function getParameterDefinitionList(
+    public function getParameterDefinitionList(
         array $tokens
     ) {
         // Check the tokens
@@ -389,7 +389,7 @@ class FunctionParser extends AbstractParser
      *
      * @return string
      */
-    protected function getFunctionName(
+    public function getFunctionName(
         array $tokens
     ) {
         // Check the tokens
@@ -414,7 +414,7 @@ class FunctionParser extends AbstractParser
      *
      * @return string
      */
-    protected function getFunctionBody(
+    public function getFunctionBody(
         array $tokens
     ) {
         // We will iterate over the token array and collect everything
@@ -563,7 +563,7 @@ class FunctionParser extends AbstractParser
      *
      * TODO I am sure this can be done more generally usable
      */
-    protected function getFunctionVisibility(
+    public function getFunctionVisibility(
         array $tokens
     ) {
         // Check out all the tokens and look if we find the right thing. We can do that as these keywords are not valid

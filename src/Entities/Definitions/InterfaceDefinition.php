@@ -33,68 +33,36 @@ use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
- *
- * TODO make us of the lockable entity features
  */
 class InterfaceDefinition extends AbstractStructureDefinition
 {
-    /**
-     * @var string $path The path the definition resides in
-     */
-    public $path;
-
-    /**
-     * @var string $namespace The namespace the definition resides in
-     */
-    public $namespace;
-
-    /**
-     * @var array $usedNamespaces Structure names which are references using the use-statement
-     * TODO namespaces is not the right terminology
-     */
-    public $usedNamespaces;
-
-    /**
-     * @var string $docBlock DocBlock header of the interface
-     */
-    public $docBlock;
-
-    /**
-     * @var string $name Interface name
-     */
-    public $name;
-
-    /**
-     * @var array $extends The parent interfaces (if any)
-     */
-    public $extends;
-
-    /**
-     * @var array $constants Possible constants the interface defines
-     */
-    public $constants;
-
-    /**
-     * @var AssertionList $invariantConditions Invariant conditions
-     * TODO get rid of this as it breaks information hiding
-     */
-    public $invariantConditions;
-
-    /**
-     * @var TypedListList $ancestralInvariants Ancestral invariants
-     * TODO get rid of this as it breaks information hiding
-     */
-    public $ancestralInvariants;
-
-    /**
-     * @var FunctionDefinitionList $functionDefinitions List of functions defined within the interface
-     */
-    public $functionDefinitions;
 
     /**
      * @const string TYPE The structure type
      */
     const TYPE = 'interface';
+
+    /**
+     * @var array $extends The parent interfaces (if any)
+     */
+    protected $extends;
+
+    /**
+     * @var array $constants Possible constants the interface defines
+     */
+    protected $constants;
+
+    /**
+     * @var AssertionList $invariantConditions Invariant conditions
+     * TODO get rid of this as it breaks information hiding
+     */
+    protected $invariantConditions;
+
+    /**
+     * @var TypedListList $ancestralInvariants Ancestral invariants
+     * TODO get rid of this as it breaks information hiding
+     */
+    protected $ancestralInvariants;
 
     /**
      * Default constructor
@@ -130,16 +98,6 @@ class InterfaceDefinition extends AbstractStructureDefinition
         $this->functionDefinitions = is_null(
             $functionDefinitions
         ) ? new FunctionDefinitionList() : $functionDefinitions;
-    }
-
-    /**
-     * Will return the type of the definition.
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return self::TYPE;
     }
 
     /**
