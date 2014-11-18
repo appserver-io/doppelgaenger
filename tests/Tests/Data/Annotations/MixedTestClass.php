@@ -46,7 +46,7 @@ class MixedTestClass
 
     /**
      * @After("weave(Logger->log(__METHOD__))")
-     * @AfterThrowing("advise(Test->testIt())")
+     * @Around("advise(Test->testIt())")
      */
     public function iHaveSeveralAdvices2($param1)
     {

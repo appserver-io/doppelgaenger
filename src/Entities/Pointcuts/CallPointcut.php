@@ -69,10 +69,17 @@ class CallPointcut extends AbstractSignaturePointcut
     /**
      * Returns a string representing the actual execution of the pointcut logic
      *
+     * @param string|null $assignTo Should the result be assigned and stored for later use? If so, to what?
+     *
      * @return string
      */
-    public function getExecutionString()
+    public function getExecutionString($assignTo = null)
     {
+        $assignmentPrefix = '';
+        if (!is_null($assignTo)) {
+
+            $assignmentPrefix = $assignTo . ' = ';
+        }
         // we have to test whether or not we need an instance of the used class first.
         /*/ if the call is not static then we do
         $string = '';

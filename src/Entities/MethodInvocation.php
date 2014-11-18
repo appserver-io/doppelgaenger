@@ -133,7 +133,7 @@ class MethodInvocation
         $isFinal,
         $isStatic,
         $name,
-        $parameters,
+        array $parameters,
         $structureName,
         $visibility
     ) {

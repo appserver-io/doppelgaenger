@@ -44,6 +44,34 @@ class AndPointcut extends AbstractConnectorPointcut
     const CONNECTOR = self::CONNECTOR_AND;
 
     /**
+     * Returns a string representing a boolean condition which can be used to determine if
+     * the pointcut has to be executed
+     *
+     * @return string
+     */
+    public function getConditionString()
+    {
+        // we have to check if any of these conditions can be omitted in terms of boolean algebra
+        if ($this->leftPointcut->getConditionString() === 'true' && $this->rightPointcut->getConditionString() === 'true') {
+
+            return 'true';
+
+        } elseif ($this->leftPointcut->getConditionString() === 'true') {
+
+            return $this->rightPointcut->getConditionString();
+
+        } elseif ($this->rightPointcut->getConditionString() === 'true') {
+
+            return $this->leftPointcut->getConditionString();
+
+        } else {
+
+            return '(' . $this->leftPointcut->getConditionString() . $this->getConnector().
+            $this->rightPointcut->getConditionString() . ')';
+        }
+    }
+
+    /**
      * Whether or not the pointcut matches a given candidate.
      * For connector pointcuts this mostly depends on the connected pointcuts
      *

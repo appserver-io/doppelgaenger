@@ -180,16 +180,5 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
         // Did we get the right $e?
         $this->assertNull($e);
         $this->assertEquals($test, 27.42);
-
-        $e = null;
-        try {
-
-            $this->propertyTestClass->publicCheckedProperty = 27.423;
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenInvariantException", $e);
     }
 }

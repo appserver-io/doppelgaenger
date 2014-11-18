@@ -246,7 +246,6 @@ class Generator
         ClassDefinition $structureDefinition
     ) {
         // TODO, do we really use the filters only once?
-
         $res = fopen(
             $this->createFilePath($structureDefinition->getQualifiedName()),
             'w+'
@@ -257,8 +256,8 @@ class Generator
 
         // TODO remove this after testing
         $appendedFilters['IntroductionFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\IntroductionFilter', $structureDefinition->getIntroductions());
-        $appendedFilters['ProcessingFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\ProcessingFilter', $structureDefinition->getFunctionDefinitions());
         $appendedFilters['AdviceFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\AdviceFilter', $structureDefinition->getFunctionDefinitions());
+        $appendedFilters['ProcessingFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\ProcessingFilter', $structureDefinition->getFunctionDefinitions());
 
         $tmp = fwrite(
             $res,

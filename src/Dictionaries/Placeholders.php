@@ -56,18 +56,11 @@ class Placeholders
     const AFTERTHROWING_JOINPOINT = '/* DOPPELGAENGER_AFTERTHROWING_JOINPOINT ';
 
     /**
-     * Placeholder for the start of any "around" advice which might be weaved in
+     * Placeholder for any "around" advice which might be weaved in
      *
-     * @var string AROUND_JOINPOINT_START
+     * @var string AROUND_JOINPOINT
      */
-    const AROUND_JOINPOINT_START = '/* DOPPELGAENGER_AROUND_JOINPOINT_START ';
-
-    /**
-     * Placeholder for the end of any "around" advice which might be weaved in
-     *
-     * @var string AROUND_JOINPOINT_END
-     */
-    const AROUND_JOINPOINT_END = '/* DOPPELGAENGER_AROUND_JOINPOINT_END ';
+    const AROUND_JOINPOINT = '/* DOPPELGAENGER_AROUND_JOINPOINT ';
 
     /**
      * Placeholder for any "before" advices which might be weaved in

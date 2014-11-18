@@ -248,7 +248,7 @@ class AnnotationParser extends AbstractParser
 
                     // create the pointcut
                     $pointcutExpression = new PointcutExpression($adviceString);
-                    $pointcutExpression->joinpoints->add($joinpoint);
+                    $pointcutExpression->joinpoint = $joinpoint;
                     $pointcutExpression->lock();
 
                     $pointcutExpressions->add($pointcutExpression);

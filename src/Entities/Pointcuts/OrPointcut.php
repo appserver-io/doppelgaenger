@@ -44,6 +44,26 @@ class OrPointcut extends AbstractConnectorPointcut
     const CONNECTOR = self::CONNECTOR_OR;
 
     /**
+     * Returns a string representing a boolean condition which can be used to determine if
+     * the pointcut has to be executed
+     *
+     * @return string
+     */
+    public function getConditionString()
+    {
+        // if one of these conditions is true we can default to 'true'
+        if ($this->leftPointcut->getConditionString() === 'true' || $this->rightPointcut->getConditionString() === 'true') {
+
+            return 'true';
+
+        } else {
+
+            return '(' . $this->leftPointcut->getConditionString() . $this->getConnector().
+            $this->rightPointcut->getConditionString() . ')';
+        }
+    }
+
+    /**
      * Whether or not the pointcut matches a given candidate.
      * For connector pointcuts this mostly depends on the connected pointcuts
      *

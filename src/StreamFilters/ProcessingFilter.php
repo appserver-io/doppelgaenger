@@ -95,7 +95,7 @@ class ProcessingFilter extends AbstractFilter
 
                         // Insert the code
                         $bucket->data = str_replace(
-                            Placeholders::ORIGINAL_CALL . $functionDefinition->getName() .
+                            Placeholders::AROUND_JOINPOINT . $functionDefinition->getName() .
                             Placeholders::PLACEHOLDER_CLOSE,
                             $code,
                             $bucket->data
@@ -127,10 +127,5 @@ class ProcessingFilter extends AbstractFilter
     {
         // Build up the call to the original function.
         return ReservedKeywords::RESULT . ' = ' . $functionDefinition->getHeader('call', ReservedKeywords::ORIGINAL_FUNCTION_SUFFIX) . ';';
-
-
-        return ReservedKeywords::RESULT . ' = ' . ReservedKeywords::RESULT_BACKUP .
-            ' = $this->remoteCall(__FUNCTION__, func_get_args());
-            ';
     }
 }

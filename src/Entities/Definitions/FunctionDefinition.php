@@ -373,13 +373,13 @@ class FunctionDefinition extends AbstractDefinition
      * Will return the header of this function either in calling or in defining manner.
      * String will stop after the closing ")" bracket, so the string can be used for interfaces as well.
      *
-     * @param string $type   Can be either "call" or "definition"
-     * @param string $suffix Suffix for the function name
-     * @param bool   $hideMe Will mark a method as original by extending it with a suffix
+     * @param string  $type   Can be either "call" or "definition"
+     * @param string  $suffix Suffix for the function name
+     * @param boolean $showMe Will mark a method as original by extending it with a suffix
      *
      * @return  string
      */
-    public function getHeader($type, $suffix = '', $hideMe = false)
+    public function getHeader($type, $suffix = '', $showMe = false)
     {
         $header = '';
 
@@ -395,15 +395,15 @@ class FunctionDefinition extends AbstractDefinition
                 $header .= ' abstract ';
             }
 
-            // Do we need to hide this function? If so we will make it protected
-            if ($hideMe === false) {
+            // Do we need to make this function public? If not we will use the original visibility
+            if ($showMe === false) {
 
                 // Prepend visibility
                 $header .= $this->visibility;
 
             } else {
 
-                $header .= 'protected';
+                $header .= 'public';
             }
 
             // Are we static?

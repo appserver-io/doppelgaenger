@@ -19,7 +19,8 @@
 
 namespace AppserverIo\Doppelgaenger\Entities;
 
-use AppserverIo\Doppelgaenger\Entities\Lists\JoinpointList;
+use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Around;
 use AppserverIo\Doppelgaenger\Entities\Pointcuts\PointcutFactory;
 
 /**
@@ -42,11 +43,11 @@ class PointcutExpression extends AbstractLockableEntity
 {
 
     /**
-     * Joinpoints at which the enclosed advices have to be weaved
+     * Joinpoint at which the enclosed advices have to be weaved
      *
-     * @var \AppserverIo\Doppelgaenger\Entities\Lists\JoinpointList $joinpoints
+     * @var \AppserverIo\Doppelgaenger\Entities\Joinpoint $joinpoint
      */
-    protected $joinpoints;
+    protected $joinpoint;
 
     /**
      * Pointcut(tree) representing the logical structure of the given string expression
@@ -69,7 +70,7 @@ class PointcutExpression extends AbstractLockableEntity
      */
     public function __construct($rawString)
     {
-        $this->joinpoints = new JoinpointList();
+        $this->joinpoint = new Joinpoint();
         $this->string = $rawString;
 
         $pointcutFactory = new PointcutFactory();
@@ -81,9 +82,9 @@ class PointcutExpression extends AbstractLockableEntity
      *
      * @return \AppserverIo\Doppelgaenger\Entities\Lists\JoinpointList
      */
-    public function getJoinpoints()
+    public function getJoinpoint()
     {
-        return $this->joinpoints;
+        return $this->joinpoint;
     }
 
     /**
@@ -103,8 +104,24 @@ class PointcutExpression extends AbstractLockableEntity
      */
     public function getString()
     {
-        return 'if (' . $this->getPointcut()->getConditionString() .') {
-            ' . $this->getPointcut()->getExecutionString() . '
+        // around advices need to have their result saved
+        $assignTo = null;
+        if ($this->getJoinpoint()->codeHook === Around::ANNOTATION) {
+
+            $assignTo = ReservedKeywords::RESULT;
+        }
+
+        // do we even have an useful condition?
+        $condition = $this->getPointcut()->getConditionString();
+        if ($condition === 'true' || empty($condition)) {
+
+            return $this->getPointcut()->getExecutionString($assignTo);
+
+        } else {
+
+            return 'if (' . $condition .') {
+            ' . $this->getPointcut()->getExecutionString($assignTo) . '
             }';
+        }
     }
 }

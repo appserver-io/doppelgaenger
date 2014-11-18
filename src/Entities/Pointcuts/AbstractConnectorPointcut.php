@@ -88,18 +88,6 @@ abstract class AbstractConnectorPointcut extends AbstractPointcut
     }
 
     /**
-     * Returns a string representing a boolean condition which can be used to determine if
-     * the pointcut has to be executed
-     *
-     * @return string
-     */
-    public function getConditionString()
-    {
-        return '(' . $this->leftPointcut->getConditionString() . $this->getConnector().
-            $this->rightPointcut->getConditionString() . ')';
-    }
-
-    /**
      * Getter for the pointcut specific connector
      *
      * @return string
@@ -112,9 +100,11 @@ abstract class AbstractConnectorPointcut extends AbstractPointcut
     /**
      * Returns a string representing the actual execution of the pointcut logic
      *
+     * @param string|null $assignTo Should the result be assigned and stored for later use? If so, to what?
+     *
      * @return string
      */
-    public function getExecutionString()
+    public function getExecutionString($assignTo = null)
     {
         return $this->leftPointcut->getExecutionString() . '
         ' . $this->rightPointcut->getExecutionString();

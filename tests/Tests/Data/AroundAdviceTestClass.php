@@ -1,0 +1,179 @@
+<?php
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * PHP version 5
+ *
+ * @category   Library
+ * @package    Doppelgaenger
+ * @subpackage Tests
+ * @author     Bernhard Wick <b.wick@techdivision.com>
+ * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link       http://www.techdivision.com/
+ */
+
+namespace AppserverIo\Doppelgaenger\Tests\Data;
+
+use AppserverIo\Doppelgaenger\Entities\MethodInvocation;
+
+/**
+ * AppserverIo\Doppelgaenger\Tests\Data\AroundAdviceTestClass
+ *
+ * Class used to test the correct workflow of a proceeding or blocking around advice
+ *
+ * @category   Library
+ * @package    Doppelgaenger
+ * @subpackage Tests
+ * @author     Bernhard Wick <b.wick@techdivision.com>
+ * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link       http://www.techdivision.com/
+ *
+ * @Aspect
+ */
+class AroundAdviceTestClass
+{
+    /**
+     * Property used to count invocations and other things
+     *
+     * @var integer $counter
+     */
+    public static $counter;
+
+    /**
+     * Property used to test the state of the class instance
+     *
+     * @var mixed $testableState1
+     */
+    public static $testableState1;
+
+    /**
+     * Property used to test the state of the class instance
+     *
+     * @var mixed $testableState2
+     */
+    public static $testableState2;
+
+    /**
+     * Default constructor
+     */
+    public function __construct()
+    {
+        self::$counter = 0;
+    }
+
+    /**
+     * Method which will be proceeded by advice
+     *
+     * @return null
+     *
+     * @Around("advise(AroundAdviceTestClass->proceedingAdvice)")
+     */
+    public function proceededAdvisedMethod()
+    {
+        self::$testableState2 = true;
+    }
+
+    /**
+     * Advice used to proceed a method and set a property before
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     *
+     * @return null
+     */
+    public static function proceedingAdvice(MethodInvocation $methodInvocation)
+    {
+        self::$testableState1 = true;
+
+        return $methodInvocation->proceed();
+    }
+
+    /**
+     * Method which will be blocked by advice
+     *
+     * @return null
+     *
+     * @Around("advise(AroundAdviceTestClass->blockingAdvice())")
+     */
+    public function blockedAdvisedMethod()
+    {
+        self::$testableState2 = true;
+    }
+
+    /**
+     * Advice used to block a method and set a property before
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     *
+     * @return null
+     */
+    public static function blockingAdvice(MethodInvocation $methodInvocation)
+    {
+        self::$testableState1 = true;
+    }
+
+    /**
+     * Method which will be proceeded by advice while the invocation is counted
+     *
+     * @return null
+     *
+     * @Around("advise(AroundAdviceTestClass->countedAfterAdvice())")
+     */
+    public function countedAfterAdvisedMethod()
+    {
+        self::$counter ++;
+        self::$testableState2 = self::$counter;
+    }
+
+    /**
+     * Advice used to proceed a method and increase an invocation counter.
+     * This is done to test if the advice code gets executed BEFORE proceeding
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     *
+     * @return null
+     */
+    public static function countedAfterAdvice(MethodInvocation $methodInvocation)
+    {
+        self::$counter ++;
+        self::$testableState1 = self::$counter;
+
+        return $methodInvocation->proceed();
+    }
+
+    /**
+     * Method which will be proceeded by advice while the invocation is counted
+     *
+     * @return null
+     *
+     * @Around("advise(AroundAdviceTestClass->countedBeforeAdvice)")
+     */
+    public function countedBeforeAdvisedMethod()
+    {
+        self::$counter ++;
+        self::$testableState1 = self::$counter;
+    }
+
+    /**
+     * Advice used to proceed a method and increase an invocation counter.
+     * This is done to test if the advice code gets executed BEFORE proceeding
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     *
+     * @return null
+     */
+    public static function countedBeforeAdvice(MethodInvocation $methodInvocation)
+    {
+        $result = $methodInvocation->proceed();
+
+        self::$counter ++;
+        self::$testableState2 = self::$counter;
+
+        return $result;
+    }
+}

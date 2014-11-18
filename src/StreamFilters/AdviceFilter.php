@@ -16,6 +16,7 @@
 namespace AppserverIo\Doppelgaenger\StreamFilters;
 
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Around;
 use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
 use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
 
@@ -90,12 +91,16 @@ class AdviceFilter extends AbstractFilter
 
                     } else {
 
-                        // before we weave in any advice code we have to make a MethodInvocation object ready
-                        $this->injectInvocationCode($bucket->data, $functionDefinition);
-
-                        // get the pointcuts which are associated with this function already and inject the code
+                        // get the pointcuts which are associated with this function already and have a look at what we have to do
                         $sortedFunctionPointcuts = $this->sortPointcutExpressions($functionDefinition->getPointcutExpressions());
-                        $this->injectAdviceCode($bucket->data, $sortedFunctionPointcuts, $functionName);
+                        if (!empty($sortedFunctionPointcuts)) {
+
+                            // before we weave in any advice code we have to make a MethodInvocation object ready
+                            $this->injectInvocationCode($bucket->data, $functionDefinition);
+
+                            // inject the advice code
+                            $this->injectAdviceCode($bucket->data, $sortedFunctionPointcuts, $functionName);
+                        }
 
                         // "Destroy" code and function definition
                         $functionDefinition = null;
@@ -125,15 +130,22 @@ class AdviceFilter extends AbstractFilter
         // iterate over the sorted pointcuts and insert the code
         foreach ($sortedPointcutExpressions as $joinpoint => $pointcutExpressions) {
 
+            // get placeholder and replacement prefix based on joinpoint
+            $placeholderName = strtoupper($joinpoint) . '_JOINPOINT';
+            $placeholderHook = constant('\AppserverIo\Doppelgaenger\Dictionaries\Placeholders::' . $placeholderName) .
+                $functionName . Placeholders::PLACEHOLDER_CLOSE;
+
+            $replacementPrefix = $placeholderHook;
+            if ($joinpoint === Around::ANNOTATION) {
+                $replacementPrefix = '';
+            }
+
             foreach ($pointcutExpressions as $pointcutExpression) {
 
                 // Insert the code
-                $placeholderName = strtoupper($joinpoint) . '_JOINPOINT';
-                $placeholderHook = constant('\AppserverIo\Doppelgaenger\Dictionaries\Placeholders::' . $placeholderName) .
-                    $functionName . Placeholders::PLACEHOLDER_CLOSE;
                 $bucketData = str_replace(
                     $placeholderHook,
-                    $placeholderHook . $pointcutExpression->getString(),
+                    $replacementPrefix . $pointcutExpression->getString(),
                     $bucketData
                 );
             }
@@ -154,10 +166,25 @@ class AdviceFilter extends AbstractFilter
      */
     protected function injectInvocationCode(& $bucketData, FunctionDefinition $functionDefinition)
     {
+
+        // start building up the code
         $code = ReservedKeywords::METHOD_INVOCATION_OBJECT . ' = new \AppserverIo\Doppelgaenger\Entities\MethodInvocation(
-            array($this, \'' . $functionDefinition->getName() . '\'),
-            $this,
-            ' . ($functionDefinition->getIsAbstract() ? 'true' : 'false') . ',
+            ';
+
+        // we have to differentiate between static and object calls
+        if ($functionDefinition->getIsStatic()) {
+
+            $code .= 'array(__CLASS__, \'' . $functionDefinition->getName() . ReservedKeywords::ORIGINAL_FUNCTION_SUFFIX . '\'),
+                __CLASS__,';
+
+        } else {
+
+            $code .= 'array($this, \'' . $functionDefinition->getName() . ReservedKeywords::ORIGINAL_FUNCTION_SUFFIX . '\'),
+                $this,';
+        }
+
+        // continue with the access modifiers
+        $code .= ($functionDefinition->getIsAbstract() ? 'true' : 'false') . ',
             ' . ($functionDefinition->getIsFinal() ? 'true' : 'false') . ',
             ' . ($functionDefinition->getIsStatic() ? 'true' : 'false') . ',
             ';
@@ -172,9 +199,9 @@ class AdviceFilter extends AbstractFilter
         }
         $parametersCode .= ')';
 
-        $code .= $parametersCode . ',
-            \'' . $functionDefinition->getName() . '\',
-            \'' . $functionDefinition->getStructureName() . '\',
+        $code .= '\'' . $functionDefinition->getName() . '\',
+            ' .$parametersCode . ',
+             __CLASS__,
             \'' . $functionDefinition->getVisibility() . '\'
             );';
 
@@ -203,10 +230,7 @@ class AdviceFilter extends AbstractFilter
         $sortedPointcutExpressions = array();
         foreach ($pointcutExpressions as $pointcutExpression) {
 
-            foreach ($pointcutExpression->getJoinpoints() as $joinpoint) {
-
-                $sortedPointcutExpressions[$joinpoint->codeHook][] = $pointcutExpression;
-            }
+            $sortedPointcutExpressions[$pointcutExpression->getJoinpoint()->codeHook][] = $pointcutExpression;
         }
 
         return $sortedPointcutExpressions;
