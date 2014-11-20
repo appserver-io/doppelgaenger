@@ -26,14 +26,13 @@ namespace AppserverIo\Doppelgaenger\Tests\Data;
  * This class has the sole purpose of checking if overwritten methods with different signatures will be handled
  * correctly
  *
- * @category   Doppelgaenger
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Tests
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php
- *             Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
+ * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link       http://www.appserver.io/
  */
 final class BasicChildTestClass extends BasicTestClass
 {

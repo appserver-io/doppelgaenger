@@ -21,14 +21,17 @@
 namespace AppserverIo\Doppelgaenger\Tests\Data\RegexTest20;
 
 /**
- * @package     AppserverIo\Doppelgaenger
- * @subpackage  Tests
- * @copyright   Copyright (c) 2013 <info@techdivision.com> - TechDivision GmbH
- * @license     http://opensource.org/licenses/osl-3.0.php
- *              Open Software License (OSL 3.0)
- * @author      Bernhard Wick <b.wick@techdivision.com>
+ * AppserverIo\Doppelgaenger\Tests\Data\RegexTest20\RegexTestClass
  *
- * @invariant   $this->test === 'tesfdgdsfgsst'
+ * @category   Library
+ * @package    Doppelgaenger
+ * @subpackage Tests
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
+ * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link       http://www.appserver.io/
+ *
+ * @invariant   $this->test === 'tesdfgdfgdfgt'
  */
 class RegexTestClass
 {

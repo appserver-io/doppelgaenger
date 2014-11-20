@@ -21,14 +21,18 @@
 namespace AppserverIo\Doppelgaenger\Tests\Data;
 
 /**
- * This is our first trial, the php tag <?php
+ * AppserverIo\Doppelgaenger\Tests\Data\TagPlacementTestClass
  *
- * @package     AppserverIo\Doppelgaenger
- * @subpackage  Tests
- * @copyright   Copyright (c) 2013 <info@techdivision.com> - TechDivision GmbH
- * @license     http://opensource.org/licenses/osl-3.0.php
- *              Open Software License (OSL 3.0)
- * @author      Bernhard Wick <b.wick@techdivision.com>
+ * Class used to test if this tag -------------->>> <?php makes and problems during parsing.
+ * Why? That's why! <?php <? ?>
+ *
+ * @category   Library
+ * @package    Doppelgaenger
+ * @subpackage Tests
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
+ * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link       http://www.appserver.io/
  *
  * @invariant   $this->property === 1
  */

@@ -28,8 +28,8 @@ use AppserverIo\Doppelgaenger\Entities\Lists\StructureDefinitionList;
  *
  * Interface which describes parsers for structures like classes, interfaces and traits.
  *
- * @category   Doppelgaenger
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Interfaces
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>

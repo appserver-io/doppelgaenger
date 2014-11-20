@@ -58,11 +58,11 @@ use AppserverIo\Doppelgaenger\Entities\Definitions\Pointcut as PointcutDefinitio
  * This class initiates the creation of enforced structure definitions.
  *
  * @category  Library
- * @package   AppserverIo\Doppelgaenger
- * @author    Bernhard Wick <b.wick@techdivision.com>
- * @copyright 2014 TechDivision GmbH - <info@techdivision.com>
+ * @package   Doppelgaenger
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2014 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      http://www.techdivision.com/
+ * @link      http://www.appserver.io/
  *
  * TODO we are dealing with structures here, not just classes. Change variables and comments accordingly
  */

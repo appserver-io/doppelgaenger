@@ -21,12 +21,17 @@
 namespace AppserverIo\Doppelgaenger\Tests\Data;
 
 /**
- * @package         AppserverIo\Doppelgaenger
- * @subpackage      Tests
- * @copyright       Copyright (c) 2013 <info@techdivision.com> - TechDivision GmbH
- * @license         http://opensource.org/licenses/osl-3.0.php
- *              Open Software License (OSL 3.0)
- * @author          Tim Wagner <tw@techdivision.com>
+ * AppserverIo\Doppelgaenger\Tests\Data\RealTestClass
+ *
+ * Random piece of code to test with a class body found "in the wild"
+ *
+ * @category   Library
+ * @package    Doppelgaenger
+ * @subpackage Tests
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
+ * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link       http://www.appserver.io/
  */
 class RealTestClass extends AbstractServlet
 {

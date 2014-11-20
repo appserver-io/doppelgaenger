@@ -26,7 +26,7 @@ namespace AppserverIo\Doppelgaenger\Interfaces;
  * An interface defining the functionality of any possible stream filter class
  *
  * @category   Library
- * @package    AppserverIo\Doppelgaenger
+ * @package    Doppelgaenger
  * @subpackage Interfaces
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
