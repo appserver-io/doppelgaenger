@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NOTICE OF LICENSE
  *
@@ -8,8 +9,8 @@
  *
  * PHP version 5
  *
- * @category   Appserver
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Dictionaries
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -24,8 +25,8 @@ namespace AppserverIo\Doppelgaenger\Dictionaries;
  *
  * Contains constants which are used as placeholders during stream filter processing
  *
- * @category   Appserver
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Dictionaries
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>

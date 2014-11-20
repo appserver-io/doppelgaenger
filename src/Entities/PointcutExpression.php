@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NOTICE OF LICENSE
  *
@@ -11,10 +12,10 @@
  * @category   Library
  * @package    Doppelgaenger
  * @subpackage Entities
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities;
@@ -45,7 +46,7 @@ class PointcutExpression extends AbstractLockableEntity
     /**
      * Joinpoint at which the enclosed advices have to be weaved
      *
-     * @var \AppserverIo\Doppelgaenger\Entities\Joinpoint $joinpoint
+     * @var \AppserverIo\Doppelgaenger\Entities\Joinpoint|null $joinpoint
      */
     protected $joinpoint;
 
@@ -70,7 +71,7 @@ class PointcutExpression extends AbstractLockableEntity
      */
     public function __construct($rawString)
     {
-        $this->joinpoint = new Joinpoint();
+        $this->joinpoint = null;
         $this->string = $rawString;
 
         $pointcutFactory = new PointcutFactory();
@@ -80,7 +81,7 @@ class PointcutExpression extends AbstractLockableEntity
     /**
      * Getter for the joinpoints property
      *
-     * @return \AppserverIo\Doppelgaenger\Entities\Lists\JoinpointList
+     * @return \AppserverIo\Doppelgaenger\Entities\Joinpoint|null
      */
     public function getJoinpoint()
     {
@@ -106,7 +107,7 @@ class PointcutExpression extends AbstractLockableEntity
     {
         // around advices need to have their result saved
         $assignTo = null;
-        if ($this->getJoinpoint()->codeHook === Around::ANNOTATION) {
+        if (is_null($this->getJoinpoint()) && $this->getJoinpoint()->codeHook === Around::ANNOTATION) {
 
             $assignTo = ReservedKeywords::RESULT;
         }

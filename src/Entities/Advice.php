@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NOTICE OF LICENSE
  *
@@ -11,10 +12,10 @@
  * @category   Library
  * @package    Doppelgaenger
  * @subpackage Entities
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities;
@@ -43,6 +44,15 @@ class Advice extends AbstractLockableEntity
     protected $aspectName;
 
     /**
+     * The code hook this advice is designed for
+     *
+     * @var string $codeHook
+     *
+     * @Enum({"After", "AfterReturning", "AfterThrowing", "Around", "Before"})
+     */
+    protected $codeHook;
+
+    /**
      * Name of the advice itself
      *
      * @var string $name
@@ -50,9 +60,27 @@ class Advice extends AbstractLockableEntity
     protected $name;
 
     /**
-     * String representation of the advice, basically the method body of the advice method
+     * The
      *
-     * @var string $string
+     * @var  $pointcuts
      */
-    protected $string;
+    protected $pointcuts;
+
+    /**
+     * Will return the qualified name of an advice.
+     * Will have the form or <CONTAINING ASPECT>-><ADVICE NAME>
+     *
+     * @return string
+     */
+    public function getQualifiedName()
+    {
+        if (empty($this->aspectName)) {
+
+            return $this->name;
+
+        } else {
+
+            return $this->aspectName . '->' . $this->name;
+        }
+    }
 }

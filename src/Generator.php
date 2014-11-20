@@ -1,20 +1,40 @@
 <?php
+
 /**
- * File containing the Generator class
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
  *
  * PHP version 5
  *
  * @category  Library
- * @package   AppserverIo\Doppelgaenger
- * @author    Bernhard Wick <b.wick@techdivision.com>
- * @copyright 2014 TechDivision GmbH - <info@techdivision.com>
+ * @package   Doppelgaenger
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2014 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      http://www.techdivision.com/
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger;
 
 use AppserverIo\Doppelgaenger\CacheMap;
+use AppserverIo\Doppelgaenger\Entities\Advice;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Aspect as AspectAnnotation;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\After;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\AfterReturning;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\AfterThrowing;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Around;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Before;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Pointcut as PointcutAnnotation;
+use AppserverIo\Doppelgaenger\Entities\Aspect as Aspect;
+use AppserverIo\Doppelgaenger\Entities\Definitions\AspectDefinition;
+use AppserverIo\Doppelgaenger\Entities\Lists\AdviceList;
+use AppserverIo\Doppelgaenger\Entities\Lists\TypedList;
+use AppserverIo\Doppelgaenger\Entities\PointcutExpression;
+use AppserverIo\Doppelgaenger\Entities\Pointcuts\PointcutFactory;
+use AppserverIo\Doppelgaenger\Entities\Pointcuts\PointcutPointcut;
 use AppserverIo\Doppelgaenger\StructureMap;
 use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
 use AppserverIo\Doppelgaenger\Entities\Definitions\ClassDefinition;
@@ -25,6 +45,12 @@ use AppserverIo\Doppelgaenger\Entities\Definitions\Structure;
 use AppserverIo\Doppelgaenger\Parser\StructureParserFactory;
 use AppserverIo\Doppelgaenger\Config;
 use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
+use Herrera\Annotations\Convert\ToArray;
+use Herrera\Annotations\Tokenizer;
+use Herrera\Annotations\Tokens;
+use PDepend\Source\Language\PHP\PHPTokenizerInternal;
+use TechDivision\PBC\Parser\AnnotationParser;
+use AppserverIo\Doppelgaenger\Entities\Definitions\Pointcut as PointcutDefinition;
 
 /**
  * AppserverIo\Doppelgaenger\Generator
@@ -42,6 +68,14 @@ use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
  */
 class Generator
 {
+
+    /**
+     * The register for any known aspects
+     *
+     * @var \AppserverIo\Doppelgaenger\AspectRegister $aspectRegister
+     */
+    protected $aspectRegister;
+
     /**
      * @var \AppserverIo\Doppelgaenger\CacheMap $cacheMap A cacheMap instance to organize our cache
      */
@@ -65,11 +99,12 @@ class Generator
     /**
      * Default constructor
      *
-     * @param \AppserverIo\Doppelgaenger\StructureMap $structureMap A structureMap instance to organize the known structures
-     * @param \AppserverIo\Doppelgaenger\CacheMap     $cache        A cacheMap instance to organize our cache
-     * @param \AppserverIo\Doppelgaenger\Config       $config       Configuration
+     * @param \AppserverIo\Doppelgaenger\StructureMap   $structureMap   A structureMap instance to organize the known structures
+     * @param \AppserverIo\Doppelgaenger\CacheMap       $cache          A cacheMap instance to organize our cache
+     * @param \AppserverIo\Doppelgaenger\Config         $config         Configuration
+     * @param \AppserverIo\Doppelgaenger\AspectRegister $aspectRegister The register for known aspects
      */
-    public function __construct(StructureMap $structureMap, CacheMap $cache, Config $config)
+    public function __construct(StructureMap $structureMap, CacheMap $cache, Config $config, AspectRegister $aspectRegister)
     {
         $this->cache = $cache;
 
@@ -77,19 +112,117 @@ class Generator
 
         $this->config = $config;
 
+        $this->aspectRegister = $aspectRegister;
+
         $this->structureDefinitionHierarchy = new StructureDefinitionHierarchy();
     }
 
     /**
-     * Method used to update certain structures
+     * @param StructureDefinitionInterface $structureDefinition
      *
-     * @param string $className Name of the structure we want to update
-     *
-     * @return boolean
+     * @return null
      */
-    public function update($className)
+    protected function checkSpecialPurpose(StructureDefinitionInterface $structureDefinition)
     {
-        return $this->create($className, true);
+        // check if we got an aspect
+        if ($structureDefinition instanceof AspectDefinition) {
+
+            if (strpos($structureDefinition->getDocBlock(), AspectAnnotation::ANNOTATION) !== false) {
+
+                $aspect = new Aspect();
+                $aspect->name = $structureDefinition->getName();
+                $aspect->namespace = $structureDefinition->getNamespace();
+
+                $needles = array(
+                    After::ANNOTATION,
+                    AfterReturning::ANNOTATION,
+                    AfterThrowing::ANNOTATION,
+                    Around::ANNOTATION,
+                    Before::ANNOTATION
+                );
+
+                $pointcutFactory = new PointcutFactory();
+
+                // get our tokenizer and parse the doc Block
+                $tokenizer = new Tokenizer();
+                $tokenizer->ignore(
+                    array(
+                        'param',
+                        'return',
+                        'throws'
+                    )
+                );
+
+                // iterate the functions and filter out the ones used as advices
+                $scheduledAdviceDefinitions = array();
+                foreach ($structureDefinition->getFunctionDefinitions() as $functionDefinition) {
+
+                    $foundNeedle = false;
+                    foreach ($needles as $needle) {
+
+                        // create the advice
+                        if (strpos($functionDefinition->getDocBlock(), $needle) !== false) {
+
+                            $foundNeedle = true;
+                            $scheduledAdviceDefinitions[] = $functionDefinition;
+
+                            break;
+                        }
+                    }
+
+                    // create the pointcut
+                    if (!$foundNeedle && strpos($functionDefinition->getDocBlock(), PointcutAnnotation::ANNOTATION) !== false) {
+
+                        $pointcut = new PointcutDefinition();
+                        $pointcut->name = $functionDefinition->getName();
+
+                        $tokens = new Tokens($tokenizer->parse($functionDefinition->getDocBlock()));
+
+                        // convert to array and run it through our advice factory
+                        $toArray = new ToArray();
+                        $annotations = $toArray->convert($tokens);
+
+                        // create the entities for the joinpoints and advices the pointcut describes
+                        $pointcut->pointcutExpression = new PointcutExpression(array_pop(array_pop($annotations)->values));
+                        $aspect->getPointcuts()->add($pointcut);
+                    }
+                }
+                $this->aspectRegister->add($aspect);
+
+                // do the pointcut lookups
+                foreach ($scheduledAdviceDefinitions as $scheduledAdviceDefinition) {
+
+                    $advice = new Advice();
+                    $advice->aspectName = $structureDefinition->getQualifiedName();
+                    $advice->name = $functionDefinition->getName();
+                    $advice->codeHook = $needle;
+                    $advice->pointcuts = new TypedList('\AppserverIo\Doppelgaenger\Interfaces\Pointcut');
+
+                    $tokens = new Tokens($tokenizer->parse($functionDefinition->getDocBlock()));
+
+                    // convert to array and run it through our advice factory
+                    $toArray = new ToArray();
+                    $annotations = $toArray->convert($tokens);
+
+                    // create the entities for the joinpoints and advices the pointcut describes
+                    foreach ($annotations as $annotation) {
+
+                        $pointcut = $pointcutFactory->getInstance(array_pop($annotation->values));
+                        if ($pointcut instanceof PointcutPointcut) {
+
+                            $pointcut->referencedPointcuts = $this->aspectRegister->lookupPointcuts($pointcut->getExpression());
+                        }
+
+                        $advice->pointcuts->add($pointcut);
+                    }
+
+                    $advice->lock();
+                    $aspect->advices->add($advice);
+                }
+
+                $this->aspectRegister->set($aspect->name, $aspect);
+            }
+        }
     }
 
     /**
@@ -122,6 +255,9 @@ class Generator
 
             return false;
         }
+
+        // we got something, now check if this implies further actions for us, e.g. if we got an aspect
+        $this->checkSpecialPurpose($structureDefinition);
 
         $qualifiedName = $structureDefinition->getQualifiedName();
         $filePath = $this->createFilePath(
@@ -189,10 +325,10 @@ class Generator
         $tmp = explode('\\', $definitionType);
         $creationMethod = 'createFileFrom' . array_pop($tmp);
 
-        // Check if we got something
+        // Check if we got something, if not we will default to class
         if (!method_exists($this, $creationMethod)) {
 
-            throw new \InvalidArgumentException();
+            $creationMethod = 'createFileFromClassDefinition';
         }
 
         return $this->$creationMethod($targetFileName, $structureDefinition);
@@ -256,7 +392,11 @@ class Generator
 
         // TODO remove this after testing
         $appendedFilters['IntroductionFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\IntroductionFilter', $structureDefinition->getIntroductions());
-        $appendedFilters['AdviceFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\AdviceFilter', $structureDefinition->getFunctionDefinitions());
+        $appendedFilters['AdviceFilter'] = $this->appendFilter(
+            $res,
+            'AppserverIo\Doppelgaenger\StreamFilters\AdviceFilter',
+            array('functionDefinitions' => $structureDefinition->getFunctionDefinitions(), 'aspectRegister' => $this->aspectRegister)
+            );
         $appendedFilters['ProcessingFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\ProcessingFilter', $structureDefinition->getFunctionDefinitions());
 
         $tmp = fwrite(
@@ -443,5 +583,17 @@ class Generator
         }
 
         return $mapEntry->getPath();
+    }
+
+    /**
+     * Method used to update certain structures
+     *
+     * @param string $className Name of the structure we want to update
+     *
+     * @return boolean
+     */
+    public function update($className)
+    {
+        return $this->create($className, true);
     }
 }

@@ -1,25 +1,32 @@
 <?php
+
 /**
- * File containing the StructureMap class
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
  *
  * PHP version 5
  *
  * @category  Library
- * @package   AppserverIo\Doppelgaenger
- * @author    Bernhard Wick <b.wick@techdivision.com>
- * @copyright 2014 TechDivision GmbH - <info@techdivision.com>
+ * @package   Doppelgaenger
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2014 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      http://www.techdivision.com/
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger;
 
+use AppserverIo\Doppelgaenger\Entities\Annotations\Aspect;
 use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\After;
 use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\AfterReturning;
 use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\AfterThrowing;
 use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Around;
 use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Before;
 use AppserverIo\Doppelgaenger\Entities\Annotations\Introduce;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Pointcut;
 use AppserverIo\Doppelgaenger\Entities\Annotations\Process;
 use AppserverIo\Doppelgaenger\Entities\Definitions\Structure;
 use AppserverIo\Doppelgaenger\Exceptions\ParserException;
@@ -594,8 +601,31 @@ class StructureMap implements MapInterface
             // if we got an identifier we can build up a new map entry
             if ($identifier !== false) {
 
+                // We need to get our array of needles
+                $needles = array(
+                    Annotations::INVARIANT,
+                    Annotations::POSTCONDITION,
+                    Annotations::PRECONDITION,
+                    After::ANNOTATION,
+                    AfterReturning::ANNOTATION,
+                    AfterThrowing::ANNOTATION,
+                    Around::ANNOTATION,
+                    Before::ANNOTATION,
+                    Process::ANNOTATION,
+                    Introduce::ANNOTATION,
+                    Pointcut::ANNOTATION
+                );
+
+                // If we have to enforce things like @param or @returns, we have to be more sensitive
+                if ($this->config->getValue('enforcement/enforce-default-type-safety') === true) {
+
+                    $needles[] = '@var';
+                    $needles[] = '@param';
+                    $needles[] = '@return';
+                }
+
                 // check if the file has contracts and if it should be enforced
-                $hasAnnotations = $this->findAnnotations($file[0]);
+                $hasAnnotations = $this->findAnnotations($file[0], $needles);
 
                 // create the entry
                 $this->map[$identifier[1]] = array(
@@ -659,33 +689,13 @@ class StructureMap implements MapInterface
     /**
      * Will return true if the specified file has annotations which might be useful, false if not
      *
-     * @param string $file File to check for contracts
+     * @param string $file        File to check for contracts
+     * @param array  $annotations Array of annotations to look for
      *
-     * @return bool
+     * @return boolean
      */
-    protected function findAnnotations($file)
+    protected function findAnnotations($file, array $annotations)
     {
-        // We need to get our array of needles
-        $needles = array(
-            Annotations::INVARIANT,
-            Annotations::POSTCONDITION,
-            Annotations::PRECONDITION,
-            After::ANNOTATION,
-            AfterReturning::ANNOTATION,
-            AfterThrowing::ANNOTATION,
-            Around::ANNOTATION,
-            Before::ANNOTATION,
-            Process::ANNOTATION,
-            Introduce::ANNOTATION
-        );
-
-        // If we have to enforce things like @param or @returns, we have to be more sensitive
-        if ($this->config->getValue('enforcement/enforce-default-type-safety') === true) {
-
-            $needles[] = '@var';
-            $needles[] = '@param';
-            $needles[] = '@return';
-        }
 
         // Open the file and search it piece by piece until we find something or the file ends.
         $rsc = fopen($file, 'r');
@@ -697,10 +707,10 @@ class StructureMap implements MapInterface
 
             // We also check the last chunk as well, to avoid cutting the only needle we have in two.
             $haystack = $recent . $current;
-            foreach ($needles as $needle) {
+            foreach ($annotations as $annotation) {
 
                 // If we found something we can return true
-                if (strpos($haystack, $needle) !== false) {
+                if (strpos($haystack, $annotation) !== false) {
 
                     return true;
                 }
@@ -718,6 +728,7 @@ class StructureMap implements MapInterface
      * Will get the identifier of a structure within a name.
      * Identifier will be most likely the qualified name including namespace and structure name.
      * May return false on error.
+     * Will return an ugly array of the sort array(<STRUCTURE_TYPE>, <STRUCTURE_NAME>)
      *
      * @param string $file The file to check
      *
@@ -782,7 +793,15 @@ class StructureMap implements MapInterface
                     && $tokens[$i][0] === T_STRING
                 ) {
 
-                    $type = 'class';
+                    if ($this->findAnnotations($file, array(Aspect::ANNOTATION))) {
+
+                        $type = 'aspect';
+
+                    } else {
+
+                        $type = 'class';
+                    }
+
                     $stuctureName = $tokens[$i][1];
                     break 2;
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NOTICE OF LICENSE
  *
@@ -11,10 +12,10 @@
  * @category   Library
  * @package    Doppelgaenger
  * @subpackage Entities
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
@@ -197,7 +198,6 @@ class PointcutFactory
         }
 
         $pointcut = new $class(substr(trim(str_replace($type, '', $expression), '( '), 0, -1), $isNegated);
-        $pointcut->lock();
 
         return $pointcut;
 

@@ -1,16 +1,21 @@
 <?php
+
 /**
- * File containing the AdviceFilter class
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
  *
  * PHP version 5
  *
- * @category   Doppelgaenger
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage StreamFilters
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\StreamFilters;
@@ -26,8 +31,8 @@ use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
  * This filter will buffer the input stream and add all postcondition related information at prepared locations
  * (see $dependencies)
  *
- * @category   Php-by-contract
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage StreamFilters
  * @author     Bernhard Wick <b.wick@techdivision.com>
  * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
@@ -42,6 +47,11 @@ class AdviceFilter extends AbstractFilter
      * @const integer FILTER_ORDER
      */
     const FILTER_ORDER = 2;
+
+    /**
+     * @var  $aspectRegister
+     */
+    protected $aspectRegister;
 
     /**
      * Other filters on which we depend
@@ -72,6 +82,9 @@ class AdviceFilter extends AbstractFilter
             // Get the tokens
             $tokens = token_get_all($bucket->data);
 
+            $functionDefinitions = $this->params['functionDefinitions'];
+            $this->aspectRegister = $this->params['aspectRegister'];
+
             // Go through the tokens and check what we found
             $tokensCount = count($tokens);
             for ($i = 0; $i < $tokensCount; $i++) {
@@ -83,13 +96,16 @@ class AdviceFilter extends AbstractFilter
                     $functionName = $tokens[$i + 2][1];
 
                     // Check if we got the function in our list, if not continue
-                    $functionDefinition = $this->params->get($functionName);
+                    $functionDefinition = $functionDefinitions->get($functionName);
 
                     if (!$functionDefinition instanceof FunctionDefinition) {
 
                         continue;
 
                     } else {
+
+                        $stuff = $this->findMatchingAdvices($functionDefinition);
+                        error_log($functionDefinition->getName() . ': ' . var_export($stuff, true));
 
                         // get the pointcuts which are associated with this function already and have a look at what we have to do
                         $sortedFunctionPointcuts = $this->sortPointcutExpressions($functionDefinition->getPointcutExpressions());
@@ -152,6 +168,31 @@ class AdviceFilter extends AbstractFilter
         }
 
         return true;
+    }
+
+    /**
+     * @param FunctionDefinition $functionDefinition
+     * @return array
+     */
+    protected function findMatchingAdvices(FunctionDefinition $functionDefinition)
+    {
+        $matches = array();
+        foreach ($this->aspectRegister as $aspect) {
+
+            foreach ($aspect->advices as $advice) {
+
+                foreach ($advice->pointcuts as $pointcut) {
+
+                    if ($pointcut->matches($functionDefinition)) {
+
+                        $matches[] = $advice;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $matches;
     }
 
     /**

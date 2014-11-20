@@ -1,15 +1,20 @@
 <?php
+
 /**
- * File containing the AutoLoader class
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
  *
  * PHP version 5
  *
- * @category  Doppelgaenger
- * @package   AppserverIo\Doppelgaenger
- * @author    Bernhard Wick <b.wick@techdivision.com>
- * @copyright 2014 TechDivision GmbH - <info@techdivision.com>
+ * @category  Library
+ * @package   Doppelgaenger
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2014 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      http://www.techdivision.com/
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger;
@@ -32,6 +37,13 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'Dictionaries' . DIRECTORY_SEPARATO
  */
 class AutoLoader
 {
+    /**
+     * The register for any known aspects
+     *
+     * @var \AppserverIo\Doppelgaenger\AspectRegister $aspectRegister
+     */
+    protected $aspectRegister;
+
     /**
      * @var \AppserverIo\Doppelgaenger\Config $config The configuration we base our actions on
      */
@@ -84,16 +96,7 @@ class AutoLoader
         );
 
         $this->cache = null;
-    }
-
-    /**
-     * Getter for the structureMap member
-     *
-     * @return \AppserverIo\Doppelgaenger\StructureMap
-     */
-    public function getStructureMap()
-    {
-        return $this->structureMap;
+        $this->aspectRegister = new AspectRegister();
     }
 
     /**
@@ -107,13 +110,35 @@ class AutoLoader
     }
 
     /**
+     * Getter for the structureMap member
+     *
+     * @return \AppserverIo\Doppelgaenger\StructureMap
+     */
+    public function getStructureMap()
+    {
+        return $this->structureMap;
+    }
+
+    /**
+     * Will inject an AspectRegister instance into the generator
+     *
+     * @param \AppserverIo\Doppelgaenger\AspectRegister $aspectRegister The AspectRegister instance to inject
+     *
+     * @return null
+     */
+    public function injectAspectRegister(AspectRegister $aspectRegister)
+    {
+        $this->aspectRegister = $aspectRegister;
+    }
+
+    /**
      * Will load any given structure based on it's availability in our structure map which depends on the configured
      * project directories.
      * If the structure cannot be found we will redirect to the composer autoloader which we registered as a fallback
      *
      * @param string $className The name of the structure we will try to load
      *
-     * @return bool
+     * @return boolean
      */
     public function loadClass($className)
     {
@@ -207,7 +232,7 @@ class AutoLoader
             // We also require the classes of our maps as we do not have proper autoloading in place
             $this->cache = new CacheMap($cacheConfig['dir'], array(), $this->config);
         }
-        $this->generator = new Generator($this->structureMap, $this->cache, $this->config);
+        $this->generator = new Generator($this->structureMap, $this->cache, $this->config, $this->aspectRegister);
 
         // Create the new class definition
         if ($this->generator->create($file, $this->config->getValue('enforcement/contract-inheritance')) === true) {
