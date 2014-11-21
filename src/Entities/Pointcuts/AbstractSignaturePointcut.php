@@ -104,7 +104,7 @@ abstract class AbstractSignaturePointcut extends AbstractPointcut
 
             // we have to isolate the parts of the expression
             $this->structure = strstr($expression, $this->callType, true);
-            $this->function = rtrim(str_replace($this->structure . $this->callType, '', $expression), '()');
+            $this->function = str_replace($this->structure . $this->callType, '', $expression);
 
         } else {
 

@@ -143,7 +143,7 @@ abstract class AbstractStructureDefinition extends AbstractDefinition implements
 
         } else {
 
-            return '\\' . ltrim($this->namespace, '\\') . '\\' . $this->name;
+            return ltrim($this->namespace, '\\') . '\\' . $this->name;
         }
     }
 

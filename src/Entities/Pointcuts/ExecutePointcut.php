@@ -54,6 +54,18 @@ class ExecutePointcut extends AbstractSignaturePointcut
     const TYPE = 'execute';
 
     /**
+     * Default constructor
+     *
+     * @param string  $expression String representing the expression defining this pointcut
+     * @param boolean $isNegated  If any match made against this pointcut's expression has to be negated in its result
+     */
+    public function __construct($expression, $isNegated = false)
+    {
+        // clean any trailing brackets and proceed to parent constructor
+        parent::__construct(rtrim($expression, '()'), $isNegated);
+    }
+
+    /**
      * Returns a string representing a boolean condition which can be used to determine if
      * the pointcut has to be executed
      *

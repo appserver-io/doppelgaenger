@@ -239,6 +239,7 @@ class AutoLoader
 
             // Require the new class, it should have been created now
             $file = $this->generator->getFileName($className);
+
             if (is_readable($file) === true) {
 
                 require $file;

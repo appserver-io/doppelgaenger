@@ -207,6 +207,7 @@ class AdviceFilter extends AbstractFilter
      */
     protected function findAdvicePointcutExpressions(FunctionDefinition $functionDefinition)
     {
+        // we have to search for all advices, all of their pointcuts and all pointcut expressions those reference
         $pointcutExpressions = new PointcutExpressionList();
         foreach ($this->aspectRegister as $aspect) {
 
@@ -220,7 +221,6 @@ class AdviceFilter extends AbstractFilter
                             // we found a pointcut of an advice that matches!
                             // lets create a distinctive joinpoint and add the advice weaving to the pointcut
                             $pointcutExpression = $referencedPointcut->getPointcutExpression();
-
                             $joinpoint = new Joinpoint();
                             $joinpoint->codeHook = $advice->getCodeHook();
                             $joinpoint->structure = $functionDefinition->getStructureName();
@@ -231,7 +231,7 @@ class AdviceFilter extends AbstractFilter
 
                             // add the weaving pointcut into the expression
                             $pointcutExpression->pointcut = new AndPointcut(
-                                AdvisePointcut::TYPE . '(' . $advice->getQualifiedName() . ')',
+                                AdvisePointcut::TYPE . '(\\' . $advice->getQualifiedName() . ')',
                                 $pointcutExpression->getPointcut()->getType() . '(' . $pointcutExpression->getPointcut()->getExpression() . ')'
                             );
                             $pointcutExpression->string = $pointcutExpression->getPointcut()->getExpression();
@@ -239,6 +239,7 @@ class AdviceFilter extends AbstractFilter
                             // add it to our result list
                             $pointcutExpressions->add($pointcutExpression);
 
+                            // break here as we only need one, they are implicitly or combined
                             break;
                         }
                     }
@@ -279,6 +280,13 @@ class AdviceFilter extends AbstractFilter
 
         // iterate the callback chain and build up the code but pop the first element as we will invoke it initially
         unset($callbackChain[0]);
+
+        // empty chain? Add the original function at least
+        if (empty($callbackChain)) {
+
+            $callbackChain[] = array($functionDefinition->getStructureName(), $functionDefinition->getName());
+        }
+
         $code .= 'array(';
         foreach ($callbackChain as $callback) {
 
@@ -286,7 +294,7 @@ class AdviceFilter extends AbstractFilter
             $structure = $callback[0];
             if ($structure === $functionDefinition->getStructureName()) {
 
-                $structure = '$this';
+                $structure = $contextCode;
 
             } elseif ($structure !== '__CLASS__') {
 

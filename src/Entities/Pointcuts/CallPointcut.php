@@ -57,6 +57,18 @@ class CallPointcut extends AbstractSignaturePointcut
     const TYPE = 'call';
 
     /**
+     * Default constructor
+     *
+     * @param string  $expression String representing the expression defining this pointcut
+     * @param boolean $isNegated  If any match made against this pointcut's expression has to be negated in its result
+     */
+    public function __construct($expression, $isNegated = false)
+    {
+        // clean any trailing brackets and proceed to parent constructor
+        parent::__construct(rtrim($expression, '()'), $isNegated);
+    }
+
+    /**
      * Returns a string representing a boolean condition which can be used to determine if
      * the pointcut has to be executed
      *
@@ -97,6 +109,6 @@ class CallPointcut extends AbstractSignaturePointcut
 
         // build up the signature of the candidate function definition and look for a match
         $candidateSignature = $candidate->getStructureName() . $this->callType . $candidate->getName() . '()';
-        return (preg_match("/" . str_replace('\\', '\\\\', $this->getExpression()) . "/", $candidateSignature) === 1);
+        return (preg_match("/" . str_replace('\\', '\\\\', ltrim($this->getExpression(), '\\')) . "/", $candidateSignature) === 1);
     }
 }

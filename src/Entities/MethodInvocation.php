@@ -251,6 +251,20 @@ class MethodInvocation
      */
     public function proceed()
     {
+        // if the callback chain is empty we got a real problem, only thing we can do is trying to invoke the original
+        // implementation.
+        // but lets throw a warning so the user knows
+        if (empty($this->callbackChain)) {
+
+            trigger_error(
+                'The callback chain for ' . $this->getStructureName() . '::' . $this->getName() . ' was empty, invoking original implementation.',
+                E_USER_NOTICE
+            );
+            $this->callbackChain = array(
+                array($this->getContext(), $this->getName())
+            );
+        }
+
         // get the first entry of the callback and remove it as we don't want to call methods twice
         $callback = $this->callbackChain[0];
         unset($this->callbackChain[0]);
