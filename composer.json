@@ -1,6 +1,6 @@
 {
     "name": "appserver-io/doppelgaenger",
-    "description": "Creates proxy classes with identical signatures",
+    "description": "Make PHP structure definition clones which look the same but behave differently",
     "keywords": [
         "remote proxy",
         "twin",
@@ -14,13 +14,12 @@
     "authors": [
         {
             "name": "Bernhard Wick",
-            "email": "b.wick@techdivision.com"
+            "email": "bw@appserver.io"
         }
     ],
     "require": {
         "php": ">=5.4.0",
         "techdivision/php-by-contract" : "~0.3",
-        "techdivision/persistencecontainerprotocol" : "0.2.*",
         "herrera-io/annotations": "~1.0"
     },
     "require-dev": {

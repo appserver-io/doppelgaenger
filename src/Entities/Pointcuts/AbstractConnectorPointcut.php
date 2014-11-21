@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NOTICE OF LICENSE
  *
@@ -11,10 +12,10 @@
  * @category   Library
  * @package    Doppelgaenger
  * @subpackage Entities
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
@@ -29,10 +30,10 @@ use AppserverIo\Doppelgaenger\Dictionaries\PointcutPatterns;
  * @category   Library
  * @package    Doppelgaenger
  * @subpackage Entities
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
 abstract class AbstractConnectorPointcut extends AbstractPointcut
 {
@@ -61,14 +62,14 @@ abstract class AbstractConnectorPointcut extends AbstractPointcut
     /**
      * Pointcut specified to the left of the connector
      *
-     * @var \AppserverIo\Doppelgaenger\Interfaces\Pointcut $leftPointcut
+     * @var \AppserverIo\Doppelgaenger\Interfaces\PointcutInterface $leftPointcut
      */
     protected $leftPointcut;
 
     /**
      * Pointcut specified to the right of the connector
      *
-     * @var \AppserverIo\Doppelgaenger\Interfaces\Pointcut $rightPointcut
+     * @var \AppserverIo\Doppelgaenger\Interfaces\PointcutInterface $rightPointcut
      */
     protected $rightPointcut;
 
@@ -85,6 +86,16 @@ abstract class AbstractConnectorPointcut extends AbstractPointcut
         $pointcutFactory = new PointcutFactory();
         $this->leftPointcut = $pointcutFactory->getInstance($leftExpression);
         $this->rightPointcut = $pointcutFactory->getInstance($rightExpression);
+    }
+
+    /**
+     * Will return a chain of callbacks which can be used to call woven code in an onion like manner
+     *
+     * @return array
+     */
+    public function getCallbackChain()
+    {
+        return array_merge($this->leftPointcut->getCallbackChain(), $this->rightPointcut->getCallbackChain());
     }
 
     /**
@@ -106,7 +117,7 @@ abstract class AbstractConnectorPointcut extends AbstractPointcut
      */
     public function getExecutionString($assignTo = null)
     {
-        return $this->leftPointcut->getExecutionString() . '
-        ' . $this->rightPointcut->getExecutionString();
+        return $this->leftPointcut->getExecutionString($assignTo) . '
+        ' . $this->rightPointcut->getExecutionString($assignTo);
     }
 }

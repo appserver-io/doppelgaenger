@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NOTICE OF LICENSE
  *
@@ -11,16 +12,16 @@
  * @category   Library
  * @package    Doppelgaenger
  * @subpackage Entities
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
 
 use AppserverIo\Doppelgaenger\Entities\AbstractLockableEntity;
-use AppserverIo\Doppelgaenger\Interfaces\Pointcut;
+use AppserverIo\Doppelgaenger\Interfaces\PointcutInterface;
 
 /**
  * AppserverIo\Doppelgaenger\Entities\Pointcut\AbstractPointcut
@@ -30,15 +31,15 @@ use AppserverIo\Doppelgaenger\Interfaces\Pointcut;
  * @category   Library
  * @package    Doppelgaenger
  * @subpackage Entities
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  *
  * @see        https://www.eclipse.org/aspectj/doc/next/progguide/quick.html
  * @see        https://www.eclipse.org/aspectj/doc/next/progguide/semantics-pointcuts.html
  */
-abstract class AbstractPointcut extends AbstractLockableEntity implements Pointcut
+abstract class AbstractPointcut extends AbstractLockableEntity implements PointcutInterface
 {
 
     /**
@@ -61,10 +62,20 @@ abstract class AbstractPointcut extends AbstractLockableEntity implements Pointc
      * @param string  $expression String representing the expression defining this pointcut
      * @param boolean $isNegated  If any match made against this pointcut's expression has to be negated in its result
      */
-    public function __construct($expression, $isNegated)
+    public function __construct($expression, $isNegated = false)
     {
         $this->expression = $expression;
         $this->isNegated = $isNegated;
+    }
+
+    /**
+     * Will return a chain of callbacks which can be used to call woven code in an onion like manner
+     *
+     * @return array
+     */
+    public function getCallbackChain()
+    {
+        return array();
     }
 
     /**

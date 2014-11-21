@@ -1,20 +1,27 @@
 <?php
+
 /**
- * File containing the Generator class
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
  *
  * PHP version 5
  *
  * @category  Library
- * @package   AppserverIo\Doppelgaenger
- * @author    Bernhard Wick <b.wick@techdivision.com>
- * @copyright 2014 TechDivision GmbH - <info@techdivision.com>
+ * @package   Doppelgaenger
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2014 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      http://www.techdivision.com/
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger;
 
 use AppserverIo\Doppelgaenger\CacheMap;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Aspect as AspectAnnotation;
+use AppserverIo\Doppelgaenger\Entities\Definitions\AspectDefinition;
 use AppserverIo\Doppelgaenger\StructureMap;
 use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
 use AppserverIo\Doppelgaenger\Entities\Definitions\ClassDefinition;
@@ -32,16 +39,22 @@ use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
  * This class initiates the creation of enforced structure definitions.
  *
  * @category  Library
- * @package   AppserverIo\Doppelgaenger
- * @author    Bernhard Wick <b.wick@techdivision.com>
- * @copyright 2014 TechDivision GmbH - <info@techdivision.com>
+ * @package   Doppelgaenger
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2014 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      http://www.techdivision.com/
- *
- * TODO we are dealing with structures here, not just classes. Change variables and comments accordingly
+ * @link      http://www.appserver.io/
  */
 class Generator
 {
+
+    /**
+     * The register for any known aspects
+     *
+     * @var \AppserverIo\Doppelgaenger\AspectRegister $aspectRegister
+     */
+    protected $aspectRegister;
+
     /**
      * @var \AppserverIo\Doppelgaenger\CacheMap $cacheMap A cacheMap instance to organize our cache
      */
@@ -58,18 +71,21 @@ class Generator
     protected $config;
 
     /**
-     * @var StructureDefinitionHierarchy
+     * Collection of definitions and their inheritance relation to each other
+     *
+     * @var \AppserverIo\Doppelgaenger\Entities\Definitions\StructureDefinitionHierarchy $structureDefinitionHierarchy
      */
     protected $structureDefinitionHierarchy;
 
     /**
      * Default constructor
      *
-     * @param \AppserverIo\Doppelgaenger\StructureMap $structureMap A structureMap instance to organize the known structures
-     * @param \AppserverIo\Doppelgaenger\CacheMap     $cache        A cacheMap instance to organize our cache
-     * @param \AppserverIo\Doppelgaenger\Config       $config       Configuration
+     * @param \AppserverIo\Doppelgaenger\StructureMap   $structureMap   A structureMap instance to organize the known structures
+     * @param \AppserverIo\Doppelgaenger\CacheMap       $cache          A cacheMap instance to organize our cache
+     * @param \AppserverIo\Doppelgaenger\Config         $config         Configuration
+     * @param \AppserverIo\Doppelgaenger\AspectRegister $aspectRegister The register for known aspects
      */
-    public function __construct(StructureMap $structureMap, CacheMap $cache, Config $config)
+    public function __construct(StructureMap $structureMap, CacheMap $cache, Config $config, AspectRegister $aspectRegister)
     {
         $this->cache = $cache;
 
@@ -77,19 +93,9 @@ class Generator
 
         $this->config = $config;
 
-        $this->structureDefinitionHierarchy = new StructureDefinitionHierarchy();
-    }
+        $this->aspectRegister = $aspectRegister;
 
-    /**
-     * Method used to update certain structures
-     *
-     * @param string $className Name of the structure we want to update
-     *
-     * @return boolean
-     */
-    public function update($className)
-    {
-        return $this->create($className, true);
+        $this->structureDefinitionHierarchy = new StructureDefinitionHierarchy();
     }
 
     /**
@@ -152,16 +158,16 @@ class Generator
     /**
      * Will return the path the cached and altered definition will have
      *
-     * @param string $className Name of the structure we want to update
+     * @param string $structureName Name of the structure we want to update
      *
      * @return string
      *
      * TODO implement this somewhere more accessible, others might need it too (e.g. autoloader)
      */
-    protected function createFilePath($className)
+    protected function createFilePath($structureName)
     {
-        // As a file can contain multiple classes we will substitute the filename with the class name
-        $tmpFileName = ltrim(str_replace('\\', '_', $className), '_');
+        // s a file can contain multiple structures we will substitute the filename with the structure name
+        $tmpFileName = ltrim(str_replace('\\', '_', $structureName), '_');
 
         return $this->config->getValue('cache/dir') . DIRECTORY_SEPARATOR . $tmpFileName . '.php';
     }
@@ -189,23 +195,40 @@ class Generator
         $tmp = explode('\\', $definitionType);
         $creationMethod = 'createFileFrom' . array_pop($tmp);
 
-        // Check if we got something
+        // Check if we got something, if not we will default to class
         if (!method_exists($this, $creationMethod)) {
 
-            throw new \InvalidArgumentException();
+            $creationMethod = 'createFileFromClassDefinition';
         }
 
         return $this->$creationMethod($targetFileName, $structureDefinition);
     }
 
     /**
+     * Will create a file with the altered class definition as its content.
+     * We will register the aspect first
+     *
+     * @param string                                                           $targetFileName   The intended name of the new file
+     * @param \AppserverIo\Doppelgaenger\Entities\Definitions\AspectDefinition $aspectDefinition The definition of the structure we will alter
+     *
+     * @return boolean
+     */
+    protected function createFileFromAspectDefinition($targetFileName, AspectDefinition $aspectDefinition)
+    {
+
+        // register the aspect in our central aspect register
+        $this->aspectRegister->register($aspectDefinition);
+
+        // create the new definition
+        return $this->createFileFromClassDefinition($targetFileName, $aspectDefinition);
+    }
+
+    /**
      * Will create a file for a given interface definition.
      * We will just copy the file here until the autoloader got refactored.
      *
-     * @param string                                                              $targetFileName      The intended name of the
-     *                                                                                        new file
-     * @param \AppserverIo\Doppelgaenger\Entities\Definitions\InterfaceDefinition $structureDefinition The definition of the
-     *                                                                                        structure we will alter
+     * @param string                                                              $targetFileName      The intended name of the new file
+     * @param \AppserverIo\Doppelgaenger\Entities\Definitions\InterfaceDefinition $structureDefinition The definition of the structure we will alter
      *
      * @return boolean
      *
@@ -232,14 +255,12 @@ class Generator
     }
 
     /**
-     * Will create a file with the altered class definition as it's content
+     * Will create a file with the altered class definition as its content
      *
-     * @param string                                                          $targetFileName      The intended name of the
-     *                                                                                    new file
-     * @param \AppserverIo\Doppelgaenger\Entities\Definitions\ClassDefinition $structureDefinition The definition of the
-     *                                                                                    structure we will alter
+     * @param string                                                          $targetFileName      The intended name of the new file
+     * @param \AppserverIo\Doppelgaenger\Entities\Definitions\ClassDefinition $structureDefinition The definition of the structure we will alter
      *
-     * @return bool
+     * @return boolean
      */
     protected function createFileFromClassDefinition(
         $targetFileName,
@@ -256,7 +277,11 @@ class Generator
 
         // TODO remove this after testing
         $appendedFilters['IntroductionFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\IntroductionFilter', $structureDefinition->getIntroductions());
-        $appendedFilters['AdviceFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\AdviceFilter', $structureDefinition->getFunctionDefinitions());
+        $appendedFilters['AdviceFilter'] = $this->appendFilter(
+            $res,
+            'AppserverIo\Doppelgaenger\StreamFilters\AdviceFilter',
+            array('functionDefinitions' => $structureDefinition->getFunctionDefinitions(), 'aspectRegister' => $this->aspectRegister)
+        );
         $appendedFilters['ProcessingFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\ProcessingFilter', $structureDefinition->getFunctionDefinitions());
 
         $tmp = fwrite(
@@ -290,11 +315,8 @@ class Generator
     /**
      * Will append all needed filters based on the enforcement level stated in the configuration file.
      *
-     * @param resource                                                           $res                 The resource we will append
-     *                                                                                       the filters to
-     * @param \AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface $structureDefinition Structure definition
-     *                                                                                       providing needed
-     *                                                                                       information
+     * @param resource                                                           $res                 The resource we will append the filters to
+     * @param \AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface $structureDefinition Structure definition providing needed information
      *
      * @return array
      */
@@ -429,13 +451,13 @@ class Generator
     /**
      * Return the cache path (as organized by our cache map) for a given structure name
      *
-     * @param string $className The structure we want the cache path for
+     * @param string $structureName The structure we want the cache path for
      *
      * @return boolean|string
      */
-    public function getFileName($className)
+    public function getFileName($structureName)
     {
-        $mapEntry = $this->cache->getEntry($className);
+        $mapEntry = $this->cache->getEntry($structureName);
 
         if (!$mapEntry instanceof Structure) {
 
@@ -443,5 +465,17 @@ class Generator
         }
 
         return $mapEntry->getPath();
+    }
+
+    /**
+     * Method used to update certain structures
+     *
+     * @param string $structureName Name of the structure we want to update
+     *
+     * @return boolean
+     */
+    public function update($structureName)
+    {
+        return $this->create($structureName, true);
     }
 }

@@ -1,16 +1,21 @@
 <?php
+
 /**
- * File containing the StructureParserFactory class
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
  *
  * PHP version 5
  *
- * @category   Doppelgaenger
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Parser
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Parser;
@@ -25,13 +30,13 @@ use AppserverIo\Doppelgaenger\Exceptions\ParserException;
  *
  * This class helps us getting the right parser for different structures
  *
- * @category   Php-by-contract
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Parser
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
 class StructureParserFactory
 {
@@ -86,7 +91,7 @@ class StructureParserFactory
     protected function getName($type)
     {
         // What kind of exception do we need?
-        $class = __NAMESPACE__ . '\\' . ucfirst($type) . 'Parser';
+        $class = __NAMESPACE__ . '\\' . ucfirst(trim($type)) . 'Parser';
 
         if (!class_exists($class)) {
 

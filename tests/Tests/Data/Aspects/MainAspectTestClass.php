@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NOTICE OF LICENSE
  *
@@ -11,13 +12,15 @@
  * @category   Library
  * @package    Doppelgaenger
  * @subpackage Tests
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Tests\Data\Aspects;
+
+use AppserverIo\Doppelgaenger\Entities\MethodInvocation;
 
 /**
  * AppserverIo\Doppelgaenger\Tests\Data\Aspects\MainAspectTestClass
@@ -27,14 +30,34 @@ namespace AppserverIo\Doppelgaenger\Tests\Data\Aspects;
  * @category   Library
  * @package    Doppelgaenger
  * @subpackage Tests
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  *
  * @Aspect
  */
 class MainAspectTestClass
 {
 
+    /**
+     * @Pointcut("call(\AppserverIo\Doppelgaenger\Tests\Data\AdvisedTestClass->publicSimpleMethod())")
+     */
+    public function booleanAdvisedMethods($param1)
+    {}
+
+    /**
+     * Advice used to proceed a method but always replace the result with true
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     *
+     * @return boolean
+     *
+     * @Around("pointcut(booleanAdvisedMethods())")
+     */
+    public static function booleanAdvice(MethodInvocation $methodInvocation)
+    {
+        $methodInvocation->proceed();
+        return true;
+    }
 }

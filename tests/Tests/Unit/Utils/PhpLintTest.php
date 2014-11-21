@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NOTICE OF LICENSE
  *
@@ -8,33 +9,33 @@
  *
  * PHP version 5
  *
- * @category   AppserverIo
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Tests
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
 
-namespace AppserverIo\Doppelgaenger\Tests\Utils;
+namespace AppserverIo\Doppelgaenger\Tests\Unit\Utils;
 
 use AppserverIo\Doppelgaenger\Utils\PhpLint;
 
 /**
- * AppserverIo\Doppelgaenger\Tests\Utils\PhpLintTest
+ * AppserverIo\Doppelgaenger\Tests\Unit\Utils\PhpLintTest
  *
  * Unit test of PhpLint class
  *
- * @category   AppserverIo
- * @package    AppserverIo\Doppelgaenger
+ * @category   Library
+ * @package    Doppelgaenger
  * @subpackage Tests
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
-class PhpLintTest
+class PhpLintTest extends \PHPUnit_Framework_TestCase
 {
 
     /**

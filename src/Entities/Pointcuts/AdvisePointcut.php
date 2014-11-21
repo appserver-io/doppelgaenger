@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NOTICE OF LICENSE
  *
@@ -11,10 +12,10 @@
  * @category   Library
  * @package    Doppelgaenger
  * @subpackage Entities
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
@@ -30,10 +31,10 @@ use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
  * @category   Library
  * @package    Doppelgaenger
  * @subpackage Entities
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  *
  * @Target({"METHOD","PROPERTY"})
  */
@@ -61,7 +62,7 @@ class AdvisePointcut extends AbstractSignaturePointcut
      * @param string  $expression String representing the expression defining this pointcut
      * @param boolean $isNegated  If any match made against this pointcut's expression has to be negated in its result
      */
-    public function __construct($expression, $isNegated)
+    public function __construct($expression, $isNegated = false)
     {
         // clean any trailing brackets and proceed to parent constructor
         parent::__construct(rtrim($expression, '()'), $isNegated);

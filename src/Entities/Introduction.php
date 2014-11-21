@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NOTICE OF LICENSE
  *
@@ -11,10 +12,10 @@
  * @category   Library
  * @package    Doppelgaenger
  * @subpackage Entities
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities;
@@ -23,14 +24,15 @@ namespace AppserverIo\Doppelgaenger\Entities;
  * AppserverIo\Doppelgaenger\Entities\Introduction
  *
  * Class which represents the introduction of additional characteristics to a target class
+ * Technique is also known as inter-type declaration
  *
  * @category   Library
  * @package    Doppelgaenger
  * @subpackage Entities
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
 class Introduction extends AbstractLockableEntity
 {
@@ -55,7 +57,7 @@ class Introduction extends AbstractLockableEntity
      * Name of the target class which gets new characteristics introduced
      * Might also be a PCRE which will match several classes
      *
-     * @var  $target <REPLACE WITH FIELD COMMENT>
+     * @var string $target
      */
     protected $target;
 }

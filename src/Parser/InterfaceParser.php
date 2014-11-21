@@ -1,16 +1,21 @@
 <?php
+
 /**
- * File containing the InterfaceParser class
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
  *
  * PHP version 5
  *
  * @category   Library
  * @package    Doppelgaenger
  * @subpackage Parser
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Parser;
@@ -45,7 +50,7 @@ class InterfaceParser extends AbstractStructureParser
     const TOKEN = T_INTERFACE;
 
     /**
-     * Will get all parent interfaces (is any).
+     * Will get all parent interfaces (if any).
      * Might return false on error
      *
      * @param array $tokens The token array
@@ -114,8 +119,11 @@ class InterfaceParser extends AbstractStructureParser
      */
     protected function getDefinitionFromTokens($tokens, $getRecursive = true)
     {
-        // First of all we need a new ClassDefinition to fill
-        $this->currentDefinition = new InterfaceDefinition();
+        // First of all we need a new InterfaceDefinition to fill
+        if (is_null($this->currentDefinition)) {
+
+            $this->currentDefinition = new InterfaceDefinition();
+        }
 
         // Save the path of the original definition for later use
         $this->currentDefinition->path = $this->file;

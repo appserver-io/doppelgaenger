@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NOTICE OF LICENSE
  *
@@ -11,10 +12,10 @@
  * @category   Library
  * @package    Doppelgaenger
  * @subpackage Entities
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
@@ -29,10 +30,10 @@ use AppserverIo\Doppelgaenger\Dictionaries\PointcutPatterns;
  * @category   Library
  * @package    Doppelgaenger
  * @subpackage Entities
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
 abstract class AbstractSignaturePointcut extends AbstractPointcut
 {
@@ -110,6 +111,23 @@ abstract class AbstractSignaturePointcut extends AbstractPointcut
             $this->callType = null;
             $this->structure = null;
             $this->function = null;
+        }
+    }
+
+    /**
+     * Will return a chain of callbacks which can be used to call woven code in an onion like manner
+     *
+     * @return array
+     */
+    public function getCallbackChain()
+    {
+        if ($this->callType === self::CALL_TYPE_STATIC) {
+
+            return array(array('__CLASS__', $this->function));
+
+        } else {
+
+            return array(array($this->structure, $this->function));
         }
     }
 }

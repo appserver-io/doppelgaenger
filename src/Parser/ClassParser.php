@@ -1,16 +1,21 @@
 <?php
+
 /**
- * File containing the ClassParser class
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
  *
  * PHP version 5
  *
  * @category   Library
  * @package    Doppelgaenger
  * @subpackage Parser
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Parser;
@@ -64,7 +69,10 @@ class ClassParser extends AbstractStructureParser
     protected function getDefinitionFromTokens($tokens, $getRecursive = true)
     {
         // First of all we need a new ClassDefinition to fill
-        $this->currentDefinition = new ClassDefinition();
+        if (is_null($this->currentDefinition)) {
+
+            $this->currentDefinition = new ClassDefinition();
+        }
 
         // Save the path of the original definition for later use
         $this->currentDefinition->path = $this->file;
@@ -75,7 +83,7 @@ class ClassParser extends AbstractStructureParser
         $this->currentDefinition->usedNamespaces = $this->getUsedNamespaces();
 
         // For our next step we would like to get the doc comment (if any)
-        $this->currentDefinition->docBlock = $this->getDocBlock($tokens, T_CLASS);
+        $this->currentDefinition->docBlock = $this->getDocBlock($tokens, self::TOKEN);
 
         // Lets get the attributes the class might have
         $this->currentDefinition->attributeDefinitions = $this->getAttributes(
@@ -109,8 +117,8 @@ class ClassParser extends AbstractStructureParser
         $this->currentDefinition->introductions = $introductions;
 
         // Get the class identity
-        $this->currentDefinition->isFinal = $this->hasSignatureToken($this->tokens, T_FINAL, T_CLASS);
-        $this->currentDefinition->isAbstract = $this->hasSignatureToken($this->tokens, T_ABSTRACT, T_CLASS);
+        $this->currentDefinition->isFinal = $this->hasSignatureToken($this->tokens, T_FINAL, self::TOKEN);
+        $this->currentDefinition->isAbstract = $this->hasSignatureToken($this->tokens, T_ABSTRACT, self::TOKEN);
 
         // Lets check if there is any inheritance, or if we implement any interfaces
         $this->currentDefinition->extends = trim(

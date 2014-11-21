@@ -1,4 +1,5 @@
 <?php
+
 /**
  * NOTICE OF LICENSE
  *
@@ -11,10 +12,10 @@
  * @category   Library
  * @package    Doppelgaenger
  * @subpackage Entities
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities;
@@ -22,37 +23,38 @@ namespace AppserverIo\Doppelgaenger\Entities;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Around;
 use AppserverIo\Doppelgaenger\Entities\Pointcuts\PointcutFactory;
+use AppserverIo\Doppelgaenger\Interfaces\CodifyableInterface;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Pointcut
+ * AppserverIo\Doppelgaenger\Entities\PointcutExpression
  *
  * Definition of a pointcut as a combination of a joinpoint and advices
  *
  * @category   Library
  * @package    Doppelgaenger
  * @subpackage Entities
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
+ * @author     Bernhard Wick <bw@appserver.io>
+ * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @link       http://www.appserver.io/
  *
  * @see        https://www.eclipse.org/aspectj/doc/next/progguide/quick.html
  * @see        https://www.eclipse.org/aspectj/doc/next/progguide/semantics-pointcuts.html
  */
-class PointcutExpression extends AbstractLockableEntity
+class PointcutExpression extends AbstractLockableEntity implements CodifyableInterface
 {
 
     /**
      * Joinpoint at which the enclosed advices have to be weaved
      *
-     * @var \AppserverIo\Doppelgaenger\Entities\Joinpoint $joinpoint
+     * @var \AppserverIo\Doppelgaenger\Entities\Joinpoint|null $joinpoint
      */
     protected $joinpoint;
 
     /**
      * Pointcut(tree) representing the logical structure of the given string expression
      *
-     * @var \AppserverIo\Doppelgaenger\Interfaces\Pointcut $pointcut
+     * @var \AppserverIo\Doppelgaenger\Interfaces\PointcutInterface $pointcut
      */
     protected $pointcut;
 
@@ -70,7 +72,7 @@ class PointcutExpression extends AbstractLockableEntity
      */
     public function __construct($rawString)
     {
-        $this->joinpoint = new Joinpoint();
+        $this->joinpoint = null;
         $this->string = $rawString;
 
         $pointcutFactory = new PointcutFactory();
@@ -80,7 +82,7 @@ class PointcutExpression extends AbstractLockableEntity
     /**
      * Getter for the joinpoints property
      *
-     * @return \AppserverIo\Doppelgaenger\Entities\Lists\JoinpointList
+     * @return \AppserverIo\Doppelgaenger\Entities\Joinpoint|null
      */
     public function getJoinpoint()
     {
@@ -90,7 +92,7 @@ class PointcutExpression extends AbstractLockableEntity
     /**
      * Getter for the pointcut property
      *
-     * @return \AppserverIo\Doppelgaenger\Interfaces\Pointcut
+     * @return \AppserverIo\Doppelgaenger\Interfaces\PointcutInterface
      */
     public function getPointcut()
     {
@@ -98,15 +100,15 @@ class PointcutExpression extends AbstractLockableEntity
     }
 
     /**
-     * Return a string representation of the complete pointcut expression
+     * Return a string representation of the logic behind pointcut expression
      *
      * @return string
      */
-    public function getString()
+    public function toCode()
     {
         // around advices need to have their result saved
         $assignTo = null;
-        if ($this->getJoinpoint()->codeHook === Around::ANNOTATION) {
+        if (!is_null($this->getJoinpoint()) && $this->getJoinpoint()->getCodeHook() === Around::ANNOTATION) {
 
             $assignTo = ReservedKeywords::RESULT;
         }
