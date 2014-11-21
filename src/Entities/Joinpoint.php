@@ -90,4 +90,14 @@ class Joinpoint extends AbstractLockableEntity
      * @var string $targetName
      */
     protected $targetName;
+
+    /**
+     * Getter for the $codeHook property
+     *
+     * @return string
+     */
+    public function getCodeHook()
+    {
+        return $this->codeHook;
+    }
 }

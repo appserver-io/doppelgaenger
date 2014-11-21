@@ -18,10 +18,12 @@
  * @link       http://www.appserver.io/
  */
 
-namespace AppserverIo\Doppelgaenger\Entities;
+namespace AppserverIo\Doppelgaenger\Entities\Definitions;
+
+use AppserverIo\Doppelgaenger\Entities\AbstractLockableEntity;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Advice
+ * AppserverIo\Doppelgaenger\Entities\Definitions\Advice
  *
  * Basic entity class which holds an advice representation
  *
@@ -60,11 +62,41 @@ class Advice extends AbstractLockableEntity
     protected $name;
 
     /**
-     * The
+     * List of pointcuts referenced by this advice
      *
-     * @var  $pointcuts
+     * @var \AppserverIo\Doppelgaenger\Entities\Lists\TypedList $pointcuts
      */
     protected $pointcuts;
+
+    /**
+     * Getter for the $aspectName property
+     *
+     * @return string
+     */
+    public function getAspectName()
+    {
+        return $this->aspectName;
+    }
+
+    /**
+     * Getter for the $codeHook property
+     *
+     * @return string
+     */
+    public function getCodeHook()
+    {
+        return $this->codeHook;
+    }
+
+    /**
+     * Getter for the $name property
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 
     /**
      * Will return the qualified name of an advice.

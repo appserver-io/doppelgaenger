@@ -62,7 +62,7 @@ class AdvisePointcut extends AbstractSignaturePointcut
      * @param string  $expression String representing the expression defining this pointcut
      * @param boolean $isNegated  If any match made against this pointcut's expression has to be negated in its result
      */
-    public function __construct($expression, $isNegated)
+    public function __construct($expression, $isNegated = false)
     {
         // clean any trailing brackets and proceed to parent constructor
         parent::__construct(rtrim($expression, '()'), $isNegated);

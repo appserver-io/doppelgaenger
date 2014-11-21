@@ -56,7 +56,9 @@ class PointcutPointcut extends AbstractPointcut
     const TYPE = 'pointcut';
 
     /**
+     * Pointcuts referenced by this pointcut's expression
      *
+     * @var array $referencedPointcuts
      */
     protected $referencedPointcuts;
 
@@ -80,32 +82,17 @@ class PointcutPointcut extends AbstractPointcut
      */
     public function getExecutionString($assignTo = null)
     {
-        $assignmentPrefix = '';
-        if (!is_null($assignTo)) {
-
-            $assignmentPrefix = $assignTo . ' = ';
-        }
-        // we have to test whether or not we need an instance of the used class first.
-        /*/ if the call is not static then we do
-        $string = '';
-        $expression = $this->getExpression();
-        if ($this->callType === self::CALL_TYPE_OBJECT) {
-
-            // don't forget to create an instance first
-            $variable = '$' . lcfirst(str_replace('\\', '', $this->structure));
-            $string .= $variable . ' = new ' . $this->structure . '();
-            ';
-            $string .= $variable . $this->callType . $this->function . ';
-            ';
-
-        } else {
-
-            $string .= $expression . ';
-            ';
-        }
-
-        return $string;*/
         return '';
+    }
+
+    /**
+     * Getter for the $referencedPointcuts property
+     *
+     * @return array
+     */
+    public function getReferencedPointcuts()
+    {
+        return $this->referencedPointcuts;
     }
 
     /**

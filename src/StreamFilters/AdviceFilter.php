@@ -24,6 +24,11 @@ use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Around;
 use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
 use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
+use AppserverIo\Doppelgaenger\Entities\Joinpoint;
+use AppserverIo\Doppelgaenger\Entities\Lists\PointcutExpressionList;
+use AppserverIo\Doppelgaenger\Entities\Pointcuts\AdvisePointcut;
+use AppserverIo\Doppelgaenger\Entities\Pointcuts\AndPointcut;
+use AppserverIo\Doppelgaenger\Entities\Pointcuts\PointcutPointcut;
 
 /**
  * AppserverIo\Doppelgaenger\StreamFilters\PostconditionFilter
@@ -76,26 +81,26 @@ class AdviceFilter extends AbstractFilter
      */
     public function filter($in, $out, &$consumed, $closing)
     {
-        // Get our buckets from the stream
+        // get our buckets from the stream
         while ($bucket = stream_bucket_make_writeable($in)) {
 
-            // Get the tokens
+            // get the tokens
             $tokens = token_get_all($bucket->data);
 
             $functionDefinitions = $this->params['functionDefinitions'];
             $this->aspectRegister = $this->params['aspectRegister'];
 
-            // Go through the tokens and check what we found
+            // go through the tokens and check what we found
             $tokensCount = count($tokens);
             for ($i = 0; $i < $tokensCount; $i++) {
 
-                // Did we find a function? If so check if we know that thing and insert the code of its preconditions.
+                // did we find a function? If so check if we know that thing and insert the code of its preconditions.
                 if (is_array($tokens[$i]) && $tokens[$i][0] === T_FUNCTION && is_array($tokens[$i + 2])) {
 
-                    // Get the name of the function
+                    // get the name of the function
                     $functionName = $tokens[$i + 2][1];
 
-                    // Check if we got the function in our list, if not continue
+                    // check if we got the function in our list, if not continue
                     $functionDefinition = $functionDefinitions->get($functionName);
 
                     if (!$functionDefinition instanceof FunctionDefinition) {
@@ -104,27 +109,32 @@ class AdviceFilter extends AbstractFilter
 
                     } else {
 
-                        $stuff = $this->findMatchingAdvices($functionDefinition);
-                        error_log($functionDefinition->getName() . ': ' . var_export($stuff, true));
+                        // collect all pointcut expressions, advice based as well as directly defined ones
+                        $pointcutExpressions = $functionDefinition->getPointcutExpressions();
+                        $pointcutExpressions->attach($this->findAdvicePointcutExpressions($functionDefinition));
 
-                        // get the pointcuts which are associated with this function already and have a look at what we have to do
-                        $sortedFunctionPointcuts = $this->sortPointcutExpressions($functionDefinition->getPointcutExpressions());
-                        if (!empty($sortedFunctionPointcuts)) {
+                        if ($pointcutExpressions->count() > 0) {
+
+                            // sort all relevant pointcut expressions by their joinpoint code hooks
+                            $sortedFunctionPointcuts = $this->sortPointcutExpressions($pointcutExpressions);
+
+                            // get all the callbacks for around advices to build a proper advice chain
+                            $callbackChain = $this->generateAdviceCallbacks($sortedFunctionPointcuts);
 
                             // before we weave in any advice code we have to make a MethodInvocation object ready
-                            $this->injectInvocationCode($bucket->data, $functionDefinition);
+                            $this->injectInvocationCode($bucket->data, $functionDefinition, $callbackChain);
 
                             // inject the advice code
                             $this->injectAdviceCode($bucket->data, $sortedFunctionPointcuts, $functionName);
                         }
 
-                        // "Destroy" code and function definition
+                        // "destroy" function definition
                         $functionDefinition = null;
                     }
                 }
             }
 
-            // Tell them how much we already processed, and stuff it back into the output
+            // tell them how much we already processed, and stuff it back into the output
             $consumed += $bucket->datalen;
             stream_bucket_append($out, $bucket);
         }
@@ -146,24 +156,40 @@ class AdviceFilter extends AbstractFilter
         // iterate over the sorted pointcuts and insert the code
         foreach ($sortedPointcutExpressions as $joinpoint => $pointcutExpressions) {
 
+            // only do something if we got expressions
+            if (empty($pointcutExpressions)) {
+
+                continue;
+            }
+
             // get placeholder and replacement prefix based on joinpoint
             $placeholderName = strtoupper($joinpoint) . '_JOINPOINT';
             $placeholderHook = constant('\AppserverIo\Doppelgaenger\Dictionaries\Placeholders::' . $placeholderName) .
                 $functionName . Placeholders::PLACEHOLDER_CLOSE;
 
-            $replacementPrefix = $placeholderHook;
-            if ($joinpoint === Around::ANNOTATION) {
-                $replacementPrefix = '';
-            }
+            // around advices have to be woven differently
+            if ($joinpoint === Around::ANNOTATION && !$pointcutExpressions[0]->getPointcut() instanceof PointcutPointcut) {
 
-            foreach ($pointcutExpressions as $pointcutExpression) {
-
-                // Insert the code
+                // insert the code but make sure to inject only the first one in the row, as the advice chain will
+                // be implemented via the advice chain
+                $pointcutExpression = $pointcutExpressions[0];
                 $bucketData = str_replace(
                     $placeholderHook,
-                    $replacementPrefix . $pointcutExpression->getString(),
+                    $pointcutExpression->toCode(),
                     $bucketData
                 );
+
+            } else {
+
+                // iterate all the others and inject the code
+                foreach ($pointcutExpressions as $pointcutExpression) {
+
+                    $bucketData = str_replace(
+                        $placeholderHook,
+                        $placeholderHook . $pointcutExpression->toCode(),
+                        $bucketData
+                    );
+                }
             }
         }
 
@@ -171,28 +197,56 @@ class AdviceFilter extends AbstractFilter
     }
 
     /**
-     * @param FunctionDefinition $functionDefinition
-     * @return array
+     * Will look at all advices known to the aspect register and filter out pointcut expressions matching the
+     * function in question
+     * Will return a list of pointcut expressions including distinctive pointcuts to weave in the associated advices
+     *
+     * @param FunctionDefinition $functionDefinition Definition of the function to match known advices against
+     *
+     * @return \AppserverIo\Doppelgaenger\Entities\Lists\PointcutExpressionList
      */
-    protected function findMatchingAdvices(FunctionDefinition $functionDefinition)
+    protected function findAdvicePointcutExpressions(FunctionDefinition $functionDefinition)
     {
-        $matches = array();
+        $pointcutExpressions = new PointcutExpressionList();
         foreach ($this->aspectRegister as $aspect) {
 
             foreach ($aspect->advices as $advice) {
 
                 foreach ($advice->pointcuts as $pointcut) {
 
-                    if ($pointcut->matches($functionDefinition)) {
+                    foreach ($pointcut->getReferencedPointcuts() as $referencedPointcut) {
+                        if ($referencedPointcut->getPointcutExpression()->getPointcut()->matches($functionDefinition)) {
 
-                        $matches[] = $advice;
-                        break;
+                            // we found a pointcut of an advice that matches!
+                            // lets create a distinctive joinpoint and add the advice weaving to the pointcut
+                            $pointcutExpression = $referencedPointcut->getPointcutExpression();
+
+                            $joinpoint = new Joinpoint();
+                            $joinpoint->codeHook = $advice->getCodeHook();
+                            $joinpoint->structure = $functionDefinition->getStructureName();
+                            $joinpoint->target = Joinpoint::TARGET_METHOD;
+                            $joinpoint->targetName = $functionDefinition->getName();
+                            $joinpoint->lock();
+                            $pointcutExpression->joinpoint = $joinpoint;
+
+                            // add the weaving pointcut into the expression
+                            $pointcutExpression->pointcut = new AndPointcut(
+                                AdvisePointcut::TYPE . '(' . $advice->getQualifiedName() . ')',
+                                $pointcutExpression->getPointcut()->getType() . '(' . $pointcutExpression->getPointcut()->getExpression() . ')'
+                            );
+                            $pointcutExpression->string = $pointcutExpression->getPointcut()->getExpression();
+
+                            // add it to our result list
+                            $pointcutExpressions->add($pointcutExpression);
+
+                            break;
+                        }
                     }
                 }
             }
         }
 
-        return $matches;
+        return $pointcutExpressions;
     }
 
     /**
@@ -202,30 +256,57 @@ class AdviceFilter extends AbstractFilter
      *
      * @param string             $bucketData         Reference on the current bucket's data
      * @param FunctionDefinition $functionDefinition Definition of the function to inject invocation code into
+     * @param array              $callbackChain      Chain of callbacks which is used to recursively chain calls
      *
      * @return boolean
      */
-    protected function injectInvocationCode(& $bucketData, FunctionDefinition $functionDefinition)
+    protected function injectInvocationCode(& $bucketData, FunctionDefinition $functionDefinition, array $callbackChain)
     {
 
         // start building up the code
         $code = ReservedKeywords::METHOD_INVOCATION_OBJECT . ' = new \AppserverIo\Doppelgaenger\Entities\MethodInvocation(
             ';
 
-        // we have to differentiate between static and object calls
+        // add the original method call to the callback chain so it can be integrated, add it and get add the context
         if ($functionDefinition->getIsStatic()) {
 
-            $code .= 'array(__CLASS__, \'' . $functionDefinition->getName() . ReservedKeywords::ORIGINAL_FUNCTION_SUFFIX . '\'),
-                __CLASS__,';
+            $contextCode = '__CLASS__';
 
         } else {
 
-            $code .= 'array($this, \'' . $functionDefinition->getName() . ReservedKeywords::ORIGINAL_FUNCTION_SUFFIX . '\'),
-                $this,';
+            $contextCode = '$this';
         }
 
+        // iterate the callback chain and build up the code but pop the first element as we will invoke it initially
+        unset($callbackChain[0]);
+        $code .= 'array(';
+        foreach ($callbackChain as $callback) {
+
+            // do some brushing up for the structure
+            $structure = $callback[0];
+            if ($structure === $functionDefinition->getStructureName()) {
+
+                $structure = '$this';
+
+            } elseif ($structure !== '__CLASS__') {
+
+                $structure = 'new ' . $structure . '()';
+            }
+
+            // also brush up the function call to direct to the original
+            if ($callback[1] === $functionDefinition->getName()) {
+
+                $callback[1] = $functionDefinition->getName() . ReservedKeywords::ORIGINAL_FUNCTION_SUFFIX;
+            }
+
+            $code .= 'array(' . $structure . ', \'' . $callback[1] . '\'),';
+        }
+        $code .= '),
+        ';
+
         // continue with the access modifiers
-        $code .= ($functionDefinition->getIsAbstract() ? 'true' : 'false') . ',
+        $code .= $contextCode . ',
+            ' . ($functionDefinition->getIsAbstract() ? 'true' : 'false') . ',
             ' . ($functionDefinition->getIsFinal() ? 'true' : 'false') . ',
             ' . ($functionDefinition->getIsStatic() ? 'true' : 'false') . ',
             ';
@@ -255,6 +336,28 @@ class AdviceFilter extends AbstractFilter
         );
 
         return true;
+    }
+
+    /**
+     * Will generate and advice chain of callbacks to the given around pointcut expressions
+     *
+     * @param array $sortedPointcutExpressions Pointcut expressions sorted by their joinpoint's code hooks
+     *
+     * @return array
+     */
+    protected function generateAdviceCallbacks(array $sortedPointcutExpressions)
+    {
+
+        $callbackChain = array();
+        if (isset($sortedPointcutExpressions[Around::ANNOTATION])) {
+
+            foreach ($sortedPointcutExpressions[Around::ANNOTATION] as $aroundExpression) {
+
+                $callbackChain = array_merge($callbackChain, $aroundExpression->getPointcut()->getCallbackChain());
+            }
+        }
+
+        return $callbackChain;
     }
 
     /**

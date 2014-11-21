@@ -104,13 +104,30 @@ abstract class AbstractSignaturePointcut extends AbstractPointcut
 
             // we have to isolate the parts of the expression
             $this->structure = strstr($expression, $this->callType, true);
-            $this->function = str_replace($this->structure . $this->callType, '', $expression);
+            $this->function = rtrim(str_replace($this->structure . $this->callType, '', $expression), '()');
 
         } else {
 
             $this->callType = null;
             $this->structure = null;
             $this->function = null;
+        }
+    }
+
+    /**
+     * Will return a chain of callbacks which can be used to call woven code in an onion like manner
+     *
+     * @return array
+     */
+    public function getCallbackChain()
+    {
+        if ($this->callType === self::CALL_TYPE_STATIC) {
+
+            return array(array('__CLASS__', $this->function));
+
+        } else {
+
+            return array(array($this->structure, $this->function));
         }
     }
 }

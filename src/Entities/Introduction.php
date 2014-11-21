@@ -24,6 +24,7 @@ namespace AppserverIo\Doppelgaenger\Entities;
  * AppserverIo\Doppelgaenger\Entities\Introduction
  *
  * Class which represents the introduction of additional characteristics to a target class
+ * Technique is also known as inter-type declaration
  *
  * @category   Library
  * @package    Doppelgaenger
@@ -56,7 +57,7 @@ class Introduction extends AbstractLockableEntity
      * Name of the target class which gets new characteristics introduced
      * Might also be a PCRE which will match several classes
      *
-     * @var  $target <REPLACE WITH FIELD COMMENT>
+     * @var string $target
      */
     protected $target;
 }

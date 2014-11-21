@@ -11,31 +11,35 @@
  *
  * @category   Library
  * @package    Doppelgaenger
- * @subpackage Exceptions
+ * @subpackage Interfaces
  * @author     Bernhard Wick <bw@appserver.io>
  * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.appserver.io/
  */
 
-namespace AppserverIo\Doppelgaenger\Exceptions;
-
-use AppserverIo\Doppelgaenger\Interfaces\ExceptionInterface;
+namespace AppserverIo\Doppelgaenger\Interfaces;
 
 /**
- * AppserverIo\Doppelgaenger\Exceptions\ParserException
+ * AppserverIo\Doppelgaenger\Interfaces\CodifyableInterface
  *
- * This exception will be thrown upon general errors within the parser component
+ * Interface defining methods used to create PHP code from class objects
  *
  * @category   Library
  * @package    Doppelgaenger
- * @subpackage Exceptions
+ * @subpackage Interfaces
  * @author     Bernhard Wick <bw@appserver.io>
  * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.appserver.io/
  */
-class ParserException extends \Exception implements ExceptionInterface
+interface CodifyableInterface
 {
-
+    /**
+     * Return a string representation of the classes logic as a piece of PHP code.
+     * Used to transfer important logic into generated code
+     *
+     * @return string
+     */
+    public function toCode();
 }

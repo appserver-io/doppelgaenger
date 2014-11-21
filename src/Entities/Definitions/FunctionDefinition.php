@@ -256,9 +256,9 @@ class FunctionDefinition extends AbstractDefinition
     }
 
     /**
-     * Getter method for attribute $pointcuts
+     * Getter method for attribute $pointcutExpressions
      *
-     * @return AssertionList
+     * @return \AppserverIo\Doppelgaenger\Entities\Lists\PointcutExpressionList
      */
     public function getPointcutExpressions()
     {

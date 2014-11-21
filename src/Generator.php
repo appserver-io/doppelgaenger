@@ -196,7 +196,7 @@ class Generator
                     $advice->aspectName = $structureDefinition->getQualifiedName();
                     $advice->name = $functionDefinition->getName();
                     $advice->codeHook = $needle;
-                    $advice->pointcuts = new TypedList('\AppserverIo\Doppelgaenger\Interfaces\Pointcut');
+                    $advice->pointcuts = new TypedList('\AppserverIo\Doppelgaenger\Interfaces\PointcutInterface');
 
                     $tokens = new Tokens($tokenizer->parse($functionDefinition->getDocBlock()));
 

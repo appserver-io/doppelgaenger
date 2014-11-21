@@ -62,14 +62,14 @@ abstract class AbstractConnectorPointcut extends AbstractPointcut
     /**
      * Pointcut specified to the left of the connector
      *
-     * @var \AppserverIo\Doppelgaenger\Interfaces\Pointcut $leftPointcut
+     * @var \AppserverIo\Doppelgaenger\Interfaces\PointcutInterface $leftPointcut
      */
     protected $leftPointcut;
 
     /**
      * Pointcut specified to the right of the connector
      *
-     * @var \AppserverIo\Doppelgaenger\Interfaces\Pointcut $rightPointcut
+     * @var \AppserverIo\Doppelgaenger\Interfaces\PointcutInterface $rightPointcut
      */
     protected $rightPointcut;
 
@@ -86,6 +86,16 @@ abstract class AbstractConnectorPointcut extends AbstractPointcut
         $pointcutFactory = new PointcutFactory();
         $this->leftPointcut = $pointcutFactory->getInstance($leftExpression);
         $this->rightPointcut = $pointcutFactory->getInstance($rightExpression);
+    }
+
+    /**
+     * Will return a chain of callbacks which can be used to call woven code in an onion like manner
+     *
+     * @return array
+     */
+    public function getCallbackChain()
+    {
+        return array_merge($this->leftPointcut->getCallbackChain(), $this->rightPointcut->getCallbackChain());
     }
 
     /**
@@ -107,7 +117,7 @@ abstract class AbstractConnectorPointcut extends AbstractPointcut
      */
     public function getExecutionString($assignTo = null)
     {
-        return $this->leftPointcut->getExecutionString() . '
-        ' . $this->rightPointcut->getExecutionString();
+        return $this->leftPointcut->getExecutionString($assignTo) . '
+        ' . $this->rightPointcut->getExecutionString($assignTo);
     }
 }

@@ -21,7 +21,7 @@
 namespace AppserverIo\Doppelgaenger\Interfaces;
 
 /**
- * AppserverIo\Doppelgaenger\Interfaces\Pointcut
+ * AppserverIo\Doppelgaenger\Interfaces\PointcutInterface
  *
  * Interface which describes common pointcut functionality
  *
@@ -33,7 +33,7 @@ namespace AppserverIo\Doppelgaenger\Interfaces;
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.appserver.io/
  */
-interface Pointcut
+interface PointcutInterface
 {
     /**
      * Returns a string representing a boolean condition which can be used to determine if

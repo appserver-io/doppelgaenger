@@ -38,11 +38,12 @@ class MethodInvocation
 {
 
     /**
-     * Callback which allows to call the initially invoked
+     * Array containing callbacks which allow to call the contained piece of code.
+     * Allows for a chain of callbacks e.g. with advice chaining
      *
-     * @var callable $callback
+     * @var array<callable> $callbackChain
      */
-    protected $callback;
+    protected $callbackChain;
 
     /**
      * The context in which the invocation happens, is the same as accessing $this within the method logic
@@ -117,18 +118,18 @@ class MethodInvocation
     /**
      * Default constructor
      *
-     * @param callable $callback      Callback which allows to call the initially invoked
-     * @param object   $context       The context in which the invocation happens e.g. $this
-     * @param boolean  $isAbstract    Is the function abstract?
-     * @param boolean  $isFinal       Is the function final?
-     * @param boolean  $isStatic      Is the method static?
-     * @param string   $name          The name of the function
-     * @param array    $parameters    Array of parameters of the form <PARAMETER_NAME> => <PARAMETER_VALUE>
-     * @param string   $structureName Name of the structure (class/trait/...) which contains the method
-     * @param string   $visibility    Visibility of the method
+     * @param array<callable> $callbackChain Callback which allows to call the initially invoked
+     * @param object          $context       The context in which the invocation happens e.g. $this
+     * @param boolean         $isAbstract    Is the function abstract?
+     * @param boolean         $isFinal       Is the function final?
+     * @param boolean         $isStatic      Is the method static?
+     * @param string          $name          The name of the function
+     * @param array           $parameters    Array of parameters of the form <PARAMETER_NAME> => <PARAMETER_VALUE>
+     * @param string          $structureName Name of the structure (class/trait/...) which contains the method
+     * @param string          $visibility    Visibility of the method
      */
     public function __construct(
-        $callback,
+        $callbackChain,
         $context,
         $isAbstract,
         $isFinal,
@@ -138,7 +139,7 @@ class MethodInvocation
         $structureName,
         $visibility
     ) {
-        $this->callback = $callback;
+        $this->callbackChain = $callbackChain;
         $this->context = $context;
         $this->isAbstract = $isAbstract;
         $this->isFinal = $isFinal;
@@ -250,9 +251,13 @@ class MethodInvocation
      */
     public function proceed()
     {
+        // get the first entry of the callback and remove it as we don't want to call methods twice
+        $callback = $this->callbackChain[0];
+        unset($this->callbackChain[0]);
+
         try {
 
-            $this->result = call_user_func_array($this->callback, $this->getParameters());
+            $this->result = call_user_func_array($callback, $this->getParameters());
 
         } catch (\Exception $e) {
 

@@ -21,7 +21,7 @@
 namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
 
 use AppserverIo\Doppelgaenger\Entities\AbstractLockableEntity;
-use AppserverIo\Doppelgaenger\Interfaces\Pointcut;
+use AppserverIo\Doppelgaenger\Interfaces\PointcutInterface;
 
 /**
  * AppserverIo\Doppelgaenger\Entities\Pointcut\AbstractPointcut
@@ -39,7 +39,7 @@ use AppserverIo\Doppelgaenger\Interfaces\Pointcut;
  * @see        https://www.eclipse.org/aspectj/doc/next/progguide/quick.html
  * @see        https://www.eclipse.org/aspectj/doc/next/progguide/semantics-pointcuts.html
  */
-abstract class AbstractPointcut extends AbstractLockableEntity implements Pointcut
+abstract class AbstractPointcut extends AbstractLockableEntity implements PointcutInterface
 {
 
     /**
@@ -62,10 +62,20 @@ abstract class AbstractPointcut extends AbstractLockableEntity implements Pointc
      * @param string  $expression String representing the expression defining this pointcut
      * @param boolean $isNegated  If any match made against this pointcut's expression has to be negated in its result
      */
-    public function __construct($expression, $isNegated)
+    public function __construct($expression, $isNegated = false)
     {
         $this->expression = $expression;
         $this->isNegated = $isNegated;
+    }
+
+    /**
+     * Will return a chain of callbacks which can be used to call woven code in an onion like manner
+     *
+     * @return array
+     */
+    public function getCallbackChain()
+    {
+        return array();
     }
 
     /**

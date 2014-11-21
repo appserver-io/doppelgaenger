@@ -23,9 +23,10 @@ namespace AppserverIo\Doppelgaenger\Entities;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Around;
 use AppserverIo\Doppelgaenger\Entities\Pointcuts\PointcutFactory;
+use AppserverIo\Doppelgaenger\Interfaces\CodifyableInterface;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Pointcut
+ * AppserverIo\Doppelgaenger\Entities\PointcutExpression
  *
  * Definition of a pointcut as a combination of a joinpoint and advices
  *
@@ -40,7 +41,7 @@ use AppserverIo\Doppelgaenger\Entities\Pointcuts\PointcutFactory;
  * @see        https://www.eclipse.org/aspectj/doc/next/progguide/quick.html
  * @see        https://www.eclipse.org/aspectj/doc/next/progguide/semantics-pointcuts.html
  */
-class PointcutExpression extends AbstractLockableEntity
+class PointcutExpression extends AbstractLockableEntity implements CodifyableInterface
 {
 
     /**
@@ -53,7 +54,7 @@ class PointcutExpression extends AbstractLockableEntity
     /**
      * Pointcut(tree) representing the logical structure of the given string expression
      *
-     * @var \AppserverIo\Doppelgaenger\Interfaces\Pointcut $pointcut
+     * @var \AppserverIo\Doppelgaenger\Interfaces\PointcutInterface $pointcut
      */
     protected $pointcut;
 
@@ -91,7 +92,7 @@ class PointcutExpression extends AbstractLockableEntity
     /**
      * Getter for the pointcut property
      *
-     * @return \AppserverIo\Doppelgaenger\Interfaces\Pointcut
+     * @return \AppserverIo\Doppelgaenger\Interfaces\PointcutInterface
      */
     public function getPointcut()
     {
@@ -99,15 +100,15 @@ class PointcutExpression extends AbstractLockableEntity
     }
 
     /**
-     * Return a string representation of the complete pointcut expression
+     * Return a string representation of the logic behind pointcut expression
      *
      * @return string
      */
-    public function getString()
+    public function toCode()
     {
         // around advices need to have their result saved
         $assignTo = null;
-        if (is_null($this->getJoinpoint()) && $this->getJoinpoint()->codeHook === Around::ANNOTATION) {
+        if (!is_null($this->getJoinpoint()) && $this->getJoinpoint()->getCodeHook() === Around::ANNOTATION) {
 
             $assignTo = ReservedKeywords::RESULT;
         }

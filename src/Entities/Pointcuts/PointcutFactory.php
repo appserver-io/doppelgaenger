@@ -136,7 +136,7 @@ class PointcutFactory
      *
      * @param string $expression Expression specifying a certain pointcut
      *
-     * @return \AppserverIo\Doppelgaenger\Interfaces\Pointcut
+     * @return \AppserverIo\Doppelgaenger\Interfaces\PointcutInterface
      *
      * @throws \InvalidArgumentException
      */
