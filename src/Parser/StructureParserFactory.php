@@ -92,7 +92,7 @@ class StructureParserFactory
     {
         // What kind of exception do we need?
         $class = __NAMESPACE__ . '\\' . ucfirst(trim($type)) . 'Parser';
-error_log($class);error_log(var_export(class_exists($class)));
+        error_log($class);error_log(var_export(class_exists($class)));
         if (!class_exists($class)) {
 
             throw new ParserException('Unknown parser type ' . $type);
