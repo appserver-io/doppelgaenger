@@ -23,7 +23,7 @@ namespace AppserverIo\Doppelgaenger\Exceptions;
 use AppserverIo\Doppelgaenger\Interfaces\ExceptionInterface;
 
 /**
- * TechDivision\PBC\Exceptions\BrokenPreconditionException
+ * AppserverIo\Doppelgaenger\Exceptions\BrokenPreconditionException
  *
  * This exception might be thrown if a certain precondition gets broken during runtime.
  *

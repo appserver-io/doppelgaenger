@@ -23,7 +23,7 @@ namespace AppserverIo\Doppelgaenger\Exceptions;
 use AppserverIo\Doppelgaenger\Interfaces\ExceptionInterface;
 
 /**
- * TechDivision\PBC\Exceptions\BrokenInvariantException
+ * AppserverIo\Doppelgaenger\Exceptions\BrokenInvariantException
  *
  * This exception might be thrown if a certain invariant gets broken during runtime.
  *

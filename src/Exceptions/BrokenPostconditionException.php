@@ -23,7 +23,7 @@ namespace AppserverIo\Doppelgaenger\Exceptions;
 use AppserverIo\Doppelgaenger\Interfaces\ExceptionInterface;
 
 /**
- * TechDivision\PBC\Exceptions\BrokenPostconditionException
+ * AppserverIo\Doppelgaenger\Exceptions\BrokenPostconditionException
  *
  * This exception might be thrown if a certain postcondition gets broken during runtime.
  *
