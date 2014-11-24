@@ -71,6 +71,31 @@ abstract class AbstractStructureDefinition extends AbstractDefinition implements
     protected $functionDefinitions;
 
     /**
+     * Will return a list of all dependencies eg. parent class, interfaces and traits.
+     *
+     * @return array
+     */
+    public function getDependencies()
+    {
+        // Get our interfaces
+        $result = $this->implements;
+
+        // We got an error that this is nor array, weird but build up a final frontier here
+        if (!is_array($result)) {
+
+            $result = array($result);
+        }
+
+        // Add our parent class (if any)
+        if (!empty($this->extends)) {
+
+            $result[] = $this->extends;
+        }
+
+        return $result;
+    }
+
+    /**
      * Getter method for attribute $docBlock
      *
      * @return string
@@ -88,6 +113,41 @@ abstract class AbstractStructureDefinition extends AbstractDefinition implements
     public function getFunctionDefinitions()
     {
         return $this->functionDefinitions;
+    }
+
+    /**
+     * Will return all invariants. direct and introduced (by ancestral structures) alike.
+     *
+     * @param boolean $nonPrivateOnly Make this true if you only want conditions which do not have a private context
+     *
+     * @return \AppserverIo\Doppelgaenger\Entities\Lists\TypedListList
+     */
+    public function getInvariants($nonPrivateOnly = false)
+    {
+        // We have to clone it here, otherwise we might have weird side effects, of having the "add()" operation
+        // persistent on $this->ancestralInvariants
+        $invariants = clone $this->ancestralInvariants;
+        $invariants->add($this->invariantConditions);
+
+        // If we need to we will filter all the non private conditions from the lists
+        if ($nonPrivateOnly === true) {
+
+            $invariantListIterator = $invariants->getIterator();
+            foreach ($invariantListIterator as $invariantList) {
+
+                $invariantIterator = $invariantList->getIterator();
+                foreach ($invariantIterator as $key => $invariant) {
+
+                    if ($invariant->isPrivateContext()) {
+
+                        $invariantList->delete($key);
+                    }
+                }
+            }
+        }
+
+        // Return what is left
+        return $invariants;
     }
 
     /**
