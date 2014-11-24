@@ -15,7 +15,6 @@ before_script:
 
 script:
   - ant composer-init
-  - composer dump-autoload
   - ant build
   - php ocular.phar code-coverage:upload --format=php-clover $TRAVIS_BUILD_DIR/target/reports/unit/coverage/clover.xml
 

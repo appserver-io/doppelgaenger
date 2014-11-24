@@ -77,17 +77,17 @@ class ExceptionFactory
 
             case 'precondition':
 
-                $name = 'TechDivision\PBC\BrokenPreconditionException';
+                $name = 'AppserverIo\Doppelgaenger\Exceptions\BrokenPreconditionException';
                 break;
 
             case 'postcondition':
 
-                $name = 'TechDivision\PBC\BrokenPostconditionException';
+                $name = 'AppserverIo\Doppelgaenger\Exceptions\BrokenPostconditionException';
                 break;
 
             case 'invariant':
 
-                $name = 'TechDivision\PBC\BrokenInvariantException';
+                $name = 'AppserverIo\Doppelgaenger\Exceptions\BrokenInvariantException';
                 break;
 
             default:
