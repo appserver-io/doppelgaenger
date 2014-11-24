@@ -40,7 +40,7 @@ class ObjectStack extends AbstractStack
      *
      * @return mixed
      *
-     * @ensures $pbcResult instanceof \Object
+     * @ensures $dgResult instanceof \Object
      */
     public function peek()
     {
@@ -52,7 +52,7 @@ class ObjectStack extends AbstractStack
      *
      * @return mixed
      *
-     * @ensures $pbcResult instanceof \Object
+     * @ensures $dgResult instanceof \Object
      */
     public function pop()
     {

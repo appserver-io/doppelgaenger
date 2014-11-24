@@ -96,7 +96,7 @@ class FunctionDefinition extends AbstractDefinition
     protected $ancestralPreconditions;
 
     /**
-     * @var boolean $usesOld Does this function use the pbcOld keyword?
+     * @var boolean $usesOld Does this function use the dgOld keyword?
      */
     protected $usesOld;
 

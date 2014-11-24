@@ -35,33 +35,27 @@ namespace AppserverIo\Doppelgaenger\Dictionaries;
  */
 class ReservedKeywords
 {
-    /**
-     * The result the around advice has, which helps determining if the original code gets executed or not
-     *
-     * @var string AROUND_ADVICE_RESULT
-     */
-    const AROUND_ADVICE_RESULT = '$doppelgaengerAroundAdviceResult';
 
     /**
      * Reserved property name which is used as a storage for contracted attributes/properties
      *
      * @var string ATTRIBUTE_STORAGE
      */
-    const ATTRIBUTE_STORAGE = 'pbcAttributes';
+    const ATTRIBUTE_STORAGE = 'doppelgaengerAttributes';
 
     /**
      * Reserved name of the function wrapping invariant checks
      *
      * @var string CLASS_INVARIANT
      */
-    const CLASS_INVARIANT = 'pbcClassInvariant';
+    const CLASS_INVARIANT = 'doppelgaengerClassInvariant';
 
     /**
      * Reserved local variable containing a flag which indications if we currently are within a contract
      *
      * @var string CONTRACT_CONTEXT
      */
-    const CONTRACT_CONTEXT = '$pbcOngoingContract';
+    const CONTRACT_CONTEXT = '$doppelgaengerOngoingContract';
 
     /**
      * Reserved constant name which is used for a substitute of the __DIR__ constant
@@ -75,7 +69,7 @@ class ReservedKeywords
      *
      * @var string FAILURE_VARIABLE
      */
-    const FAILURE_VARIABLE = '$pbcFailureMessage';
+    const FAILURE_VARIABLE = '$doppelgaengerFailureMessage';
 
     /**
      * Reserved constant name which is used for a substitute of the __FILE__ constant
@@ -96,7 +90,7 @@ class ReservedKeywords
      *
      * @var string MARK_CONTRACT_ENTRY
      */
-    const MARK_CONTRACT_ENTRY = '$pbcContractEntry';
+    const MARK_CONTRACT_ENTRY = '$doppelgaengerContractEntry';
 
     /**
      * Name of the local variable representing the method invocation within woven advices
@@ -110,7 +104,7 @@ class ReservedKeywords
      *
      * @var string OLD
      */
-    const OLD = '$pbcOld';
+    const OLD = '$dgOld';
 
     /**
      * Suffix which identifies the original implementation of a function
@@ -124,12 +118,5 @@ class ReservedKeywords
      *
      * @var string RESULT
      */
-    const RESULT = '$pbcResult';
-
-    /**
-     * Reserved local variable containing a backup of the result to reset it after unwanted changes
-     *
-     * @var string RESULT_BACKUP
-     */
-    const RESULT_BACKUP = '$pbcResultBackup';
+    const RESULT = '$dgResult';
 }

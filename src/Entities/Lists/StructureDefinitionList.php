@@ -40,6 +40,8 @@ class StructureDefinitionList extends AbstractTypedList
      */
     public function __construct()
     {
+        parent::__construct();
+
         $this->itemType = 'AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface';
         $this->defaultOffset = 'name';
     }

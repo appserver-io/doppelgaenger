@@ -40,6 +40,8 @@ class ParameterDefinitionList extends AbstractTypedList
      */
     public function __construct()
     {
+        parent::__construct();
+
         $this->itemType = 'AppserverIo\Doppelgaenger\Entities\Definitions\ParameterDefinition';
     }
 }

@@ -142,7 +142,7 @@ class PostconditionFilter extends AbstractFilter
 
             return false;
         }
-        // If the function is static it should not use the pbcOld keyword as there is no state to the class!
+        // If the function is static it should not use the dgOld keyword as there is no state to the class!
         if ($functionDefinition->getIsStatic() === true) {
 
             throw new GeneratorException('Cannot clone class state in static method ' . $functionDefinition->getName());

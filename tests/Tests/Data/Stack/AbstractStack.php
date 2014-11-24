@@ -49,7 +49,7 @@ class AbstractStack
      *
      * @return integer
      *
-     * @ensures is_int($pbcResult)
+     * @ensures is_int($dgResult)
      */
     public function size()
     {
@@ -62,7 +62,7 @@ class AbstractStack
      * @return mixed
      *
      * @requires $this->size() >= 1
-     * @ensures $this->size() === $pbcOld->size()
+     * @ensures $this->size() === $dgOld->size()
      */
     public function peek()
     {
@@ -78,8 +78,8 @@ class AbstractStack
      * @return mixed
      *
      * @requires $this->size() >= 1
-     * @ensures $this->size() == $pbcOld->size() - 1
-     * @ensures $pbcResult == $pbcOld->peek()
+     * @ensures $this->size() == $dgOld->size() - 1
+     * @ensures $dgResult == $dgOld->peek()
      */
     public function pop()
     {
@@ -93,7 +93,7 @@ class AbstractStack
      *
      * @return null
      *
-     * @ensures $this->size() == $pbcOld->size() + 1
+     * @ensures $this->size() == $dgOld->size() + 1
      * @ensures $this->peek() == $obj
      */
     public function push($obj)
