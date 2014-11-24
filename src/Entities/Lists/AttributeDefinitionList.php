@@ -41,6 +41,8 @@ class AttributeDefinitionList extends AbstractTypedList
      */
     public function __construct()
     {
+        parent::__construct();
+
         $this->itemType = 'AppserverIo\Doppelgaenger\Entities\Definitions\AttributeDefinition';
         $this->defaultOffset = 'name';
     }

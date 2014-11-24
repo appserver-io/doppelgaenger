@@ -44,6 +44,8 @@ class TypedList extends AbstractTypedList
      */
     public function __construct($itemType, $defaultOffset = '')
     {
+        parent::__construct();
+
         $this->itemType = $itemType;
         $this->defaultOffset = $defaultOffset;
     }

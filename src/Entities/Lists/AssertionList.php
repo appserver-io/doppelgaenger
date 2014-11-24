@@ -42,6 +42,8 @@ class AssertionList extends AbstractTypedList
      */
     public function __construct()
     {
+        parent::__construct();
+
         $this->itemType = 'AppserverIo\Doppelgaenger\Interfaces\AssertionInterface';
     }
 }

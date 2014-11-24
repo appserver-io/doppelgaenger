@@ -54,8 +54,8 @@ class ParentTestClass
 
     /**
      * @requires $this->size() >= 1
-     * @ensures $this->size() == $pbcOld->size() - 1
-     * @ensures $pbcResult == $pbcOld->peek()
+     * @ensures $this->size() == $dgOld->size() - 1
+     * @ensures $dgResult == $dgOld->peek()
      */
     public function pop()
     {
@@ -63,7 +63,7 @@ class ParentTestClass
     }
 
     /**
-     * @ensures $this->size() == $pbcOld->size() + 1
+     * @ensures $this->size() == $dgOld->size() + 1
      * @ensures $this->peek() == $obj
      */
     public function push(\Object $obj)

@@ -80,7 +80,7 @@ class BasicTestClass
      *
      * @param string $ourString
      *
-     * @ensures $pbcResult === 'Welcome stranger'
+     * @ensures $dgResult === 'Welcome stranger'
      *
      * @return string
      */
