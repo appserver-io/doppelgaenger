@@ -106,7 +106,7 @@ abstract class AbstractParser implements ParserInterface
             // Check if we can use the file
             if (!is_readable($file)) {
 
-                throw new ParserException('Could not read input file ' . $file);
+                throw new ParserException(sprintf('Could not read input file %s', $file));
             }
 
             // Get all the tokens and count them

@@ -139,7 +139,7 @@ class Generator
 
         if ($tmp === false) {
 
-            throw new GeneratorException('Could not create altered definition for ' . $qualifiedName);
+            throw new GeneratorException(sprintf('Could not create altered definition for %s', $qualifiedName));
         }
         // Now get our new file into the cacheMap
         $this->cache->add(
@@ -434,7 +434,7 @@ class Generator
         // check if the given filter exists and throw an exception if not
         if (!class_exists($filterClass)) {
 
-            throw new GeneratorException('Could not find filter class ' . $filterClass);
+            throw new GeneratorException(sprintf('Could not find filter class %s', $filterClass));
         }
 
         // append the filter to the given resource

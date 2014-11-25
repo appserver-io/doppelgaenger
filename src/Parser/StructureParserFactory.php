@@ -95,7 +95,7 @@ class StructureParserFactory
 
         if (!class_exists($class)) {
 
-            throw new ParserException('Unknown parser type ' . $type);
+            throw new ParserException(sprintf('Unknown parser type %s', $type));
         }
 
         return $class;

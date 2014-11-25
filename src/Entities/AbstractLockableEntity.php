@@ -63,13 +63,13 @@ abstract class AbstractLockableEntity
         // If we are locked tell them
         if ($this->isLocked) {
 
-            throw new IllegalAccessException('The entity ' . get_called_class() . ' is in a locked state');
+            throw new IllegalAccessException(sprintf('The entity %s is in a locked state', get_called_class()));
         }
 
         // If we do not have this method we should tell them
         if (!method_exists($this, $name)) {
 
-            throw new \InvalidArgumentException('There is no method called ' . $name);
+            throw new \InvalidArgumentException(sprintf('There is no method called %s', $name));
         }
 
         // Still here? call the method then
@@ -89,7 +89,7 @@ abstract class AbstractLockableEntity
         // If we do not have this property we should tell them
         if (!property_exists($this, $attribute)) {
 
-            throw new \InvalidArgumentException('There is no attribute called ' . $attribute);
+            throw new \InvalidArgumentException(sprintf('There is no attribute called %s', $attribute));
         }
 
         // Still here? Get it then
@@ -120,13 +120,13 @@ abstract class AbstractLockableEntity
         // If we are locked tell them
         if ($this->isLocked) {
 
-            throw new IllegalAccessException('The entity ' . get_called_class() . ' is in a locked state');
+            throw new IllegalAccessException(sprintf('The entity %s is in a locked state', get_called_class()));
         }
 
         // If we do not have this property we should tell them
         if (!property_exists($this, $attribute)) {
 
-            throw new \InvalidArgumentException('There is no attribute called ' . $attribute);
+            throw new \InvalidArgumentException(sprintf('There is no attribute called %s', $attribute));
         }
 
         // Still here? Set it then

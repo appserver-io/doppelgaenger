@@ -158,7 +158,7 @@ class SkeletonFilter extends AbstractFilter
                     // Were we able to inject into the definition? If not we have to fail here
                     if (!$tmp) {
 
-                        throw new GeneratorException('Not able to inject condition code for ' . $functionName);
+                        throw new GeneratorException(sprintf('Not able to inject condition code for %s', $functionName));
                     }
 
                     // "Destroy" the function definition to avoid reusing it in the next loop iteration

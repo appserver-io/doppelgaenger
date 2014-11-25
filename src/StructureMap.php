@@ -743,7 +743,7 @@ class StructureMap implements MapInterface
         // if we could not open the file tell them
         if ($rsc === false) {
 
-            throw new ParserException('Could not open file ' . $file . ' for type inspection.');
+            throw new ParserException(sprintf('Could not open file %s for type inspection.', $file));
         }
 
         // some variables we will need

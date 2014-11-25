@@ -194,7 +194,7 @@ class PointcutFactory
         // check if we got a valid class
         if (!class_exists($class)) {
 
-            throw new \InvalidArgumentException('Could not resolve the expression ' . $expression . ' to any known pointcut type');
+            throw new \InvalidArgumentException(sprintf('Could not resolve the expression %s to any known pointcut type', $expression));
         }
 
         $pointcut = new $class(substr(trim(str_replace($type, '', $expression), '( '), 0, -1), $isNegated);

@@ -116,7 +116,7 @@ abstract class AbstractFilter extends \php_user_filter implements StreamFilter
      */
     public function dependenciesMet()
     {
-        throw new \Exception();
+        throw new \Exception(sprintf('%s not implemented yet', __METHOD__));
     }
 
     /**

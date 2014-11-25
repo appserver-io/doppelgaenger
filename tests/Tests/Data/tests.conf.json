@@ -4,8 +4,6 @@
 		"dirs": 
 		[
 			"./../tests/Tests/Data"
-		],
-
-		"contract-inheritance": true
+		]
 	}
 }

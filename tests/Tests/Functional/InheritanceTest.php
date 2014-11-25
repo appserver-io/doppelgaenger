@@ -20,7 +20,6 @@
 
 namespace AppserverIo\Doppelgaenger\Tests\Functional;
 
-use AppserverIo\Doppelgaenger\Tests\Data\ChildTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\BasicChildTestClass;
 
 /**
@@ -38,30 +37,6 @@ use AppserverIo\Doppelgaenger\Tests\Data\BasicChildTestClass;
  */
 class InheritanceTest extends \PHPUnit_Framework_TestCase
 {
-
-    /**
-     * Will test if inheritance of precondition works over one level (class to class)
-     *
-     * @return null
-     */
-    public function testInheritance()
-    {
-        $testClass = new ChildTestClass();
-
-
-        // These should fail
-        $e = null;
-        try {
-
-            $testClass->pop();
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPreconditionException", $e);
-
-    }
 
     /**
      * Will test if inheritance works with overwritten methods having a different signature as the parent methods

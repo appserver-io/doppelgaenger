@@ -10,6 +10,7 @@
             <exclude>
                 <directory prefix="Mock">src</directory>
                 <directory suffix="Test.php">src</directory>
+                <directory suffix=".php">src/cache</directory>
             </exclude>
         </whitelist>
     </filter>
