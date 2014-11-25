@@ -127,7 +127,7 @@ abstract class AbstractAssertion implements AssertionInterface
 
             throw new \InvalidArgumentException(
                 sprintf('The minimal scope %s is not allowed. It may only be "structure", "function" or "body"', $minScope)
-                );
+            );
         }
 
         // Set the new minimal scope
