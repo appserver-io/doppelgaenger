@@ -44,17 +44,30 @@ abstract class AbstractParser implements ParserInterface
 {
 
     /**
-     * @var string $file The path of the file we want to parse
+     * The aspect of the configuration we need
+     *
+     * @var \AppserverIo\Doppelgaenger\Config $config
+     */
+    protected $config;
+
+    /**
+     * The path of the file we want to parse
+     *
+     * @var string $file
      */
     protected $file;
 
     /**
-     * @var array $tokens The token array representing the whole file
+     * The token array representing the whole file
+     *
+     * @var array $tokens
      */
     protected $tokens = array();
 
     /**
-     * @var integer $tokenCount The count of our main token array, so we do not have to calculate it over and over again
+     * The count of our main token array, so we do not have to calculate it over and over again
+     *
+     * @var integer $tokenCount
      */
     protected $tokenCount;
 
@@ -75,7 +88,9 @@ abstract class AbstractParser implements ParserInterface
     protected $structureDefinitionHierarchy;
 
     /**
-     * @var \AppserverIo\Doppelgaenger\StructureMap $structureMap Our structure map instance
+     * Our structure map instance
+     *
+     * @var \AppserverIo\Doppelgaenger\StructureMap $structureMap
      */
     protected $structureMap;
 

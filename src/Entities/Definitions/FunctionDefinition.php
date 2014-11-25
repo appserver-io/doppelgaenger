@@ -21,6 +21,7 @@
 namespace AppserverIo\Doppelgaenger\Entities\Definitions;
 
 use AppserverIo\Doppelgaenger\Entities\Lists\AssertionList;
+use AppserverIo\Doppelgaenger\Entities\Lists\ParameterDefinitionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\PointcutExpressionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
 use AppserverIo\Doppelgaenger\Entities\Lists\PointcutList;
@@ -134,7 +135,7 @@ class FunctionDefinition extends AbstractDefinition
         $this->visibility = '';
         $this->isStatic = false;
         $this->name = '';
-        $this->parameterDefinitions = array();
+        $this->parameterDefinitions = new ParameterDefinitionList();
         $this->preconditions = new AssertionList();
         $this->ancestralPreconditions = new TypedListList();
         $this->usesOld = false;

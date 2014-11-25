@@ -20,6 +20,8 @@
 
 namespace AppserverIo\Doppelgaenger\Entities\Assertions;
 
+use AppserverIo\Doppelgaenger\Exceptions\ParserException;
+
 /**
  * AppserverIo\Doppelgaenger\Entities\Assertions\TypeAssertion
  *
@@ -68,7 +70,9 @@ class TypeAssertion extends AbstractAssertion
     /**
      * Will return a string representation of this assertion. Will return false if the type is unknown.
      *
-     * @return boolean|string
+     * @return string
+     *
+     * @throws \AppserverIo\Doppelgaenger\Exceptions\ParserException
      */
     public function getString()
     {
@@ -85,7 +89,7 @@ class TypeAssertion extends AbstractAssertion
 
         } else {
 
-            return false;
+            throw new ParserException(sprintf('%s does not seem to be scalar type.', $this->getString()));
         }
     }
 

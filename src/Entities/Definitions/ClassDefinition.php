@@ -39,6 +39,16 @@ use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
  * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.appserver.io/
+ *
+ * @property \AppserverIo\Doppelgaenger\Entities\Lists\IntroductionList        $introductions        List of introductions
+ * @property boolean                                                           $isFinal              Is this a final class
+ * @property boolean                                                           $isAbstract           Is this class abstract
+ * @property string                                                            $extends              Name of the parent class (if any)
+ * @property array                                                             $implements           Array of interface names this class implements
+ * @property array                                                             $constants            Class constants
+ * @property \AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList $attributeDefinitions List of defined attributes
+ * @property \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList           $invariantConditions  List of directly defined invariant conditions
+ * @property \AppserverIo\Doppelgaenger\Entities\Lists\TypedListList           $ancestralInvariants  List of lists of any ancestral invariants
  */
 class ClassDefinition extends AbstractStructureDefinition
 {
@@ -51,47 +61,63 @@ class ClassDefinition extends AbstractStructureDefinition
     /**
      * List of introductions which are used to extend the class's characteristics
      *
-     * @var \AppserverIo\Doppelgaenger\Entities\Lists\IntroductionList
+     * @var \AppserverIo\Doppelgaenger\Entities\Lists\IntroductionList $introductions
      */
     protected $introductions;
 
     /**
-     * @var boolean $isFinal Is this a final class
+     * Is this a final class
+     *
+     * @var boolean $isFinal
      */
     protected $isFinal;
 
     /**
-     * @var boolean $isAbstract Is this class abstract
+     * Is this class abstract
+     *
+     * @var boolean $isAbstract
      */
     protected $isAbstract;
 
     /**
-     * @var string $extends Name of the parent class (if any)
+     * Name of the parent class (if any)
+     *
+     * @var string $extends
      */
     protected $extends;
 
     /**
-     * @var array $implements Array of interface names this class implements
+     * Array of interface names this class implements
+     *
+     * @var array $implements
      */
     protected $implements;
 
     /**
-     * @var array $constants Class constants
+     * Class constants
+     *
+     * @var array $constants
      */
     protected $constants;
 
     /**
-     * @var AttributeDefinitionList $attributeDefinitions List of defined attributes
+     * List of defined attributes
+     *
+     * @var \AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList $attributeDefinitions
      */
     protected $attributeDefinitions;
 
     /**
-     * @var AssertionList $invariantConditions List of directly defined invariant conditions
+     * List of directly defined invariant conditions
+     *
+     * @var \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList $invariantConditions
      */
     protected $invariantConditions;
 
     /**
-     * @var TypedListList $ancestralInvariants List of lists of any ancestral invariants
+     * List of lists of any ancestral invariants
+     *
+     * @var \AppserverIo\Doppelgaenger\Entities\Lists\TypedListList $ancestralInvariants
      */
     protected $ancestralInvariants;
 

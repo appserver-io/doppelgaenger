@@ -60,7 +60,7 @@ class ExceptionFactory
     {
         $name = $this->getName($type);
 
-        return call_user_func_array($name->__construct(), $params);
+        return call_user_func_array(array($name, '__construct'), $params);
     }
 
     /**

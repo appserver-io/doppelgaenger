@@ -56,7 +56,7 @@ class InstanceContainerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test setOffset method
+     * Test offsetGet method
      *
      * @return void
      *
@@ -70,13 +70,25 @@ class InstanceContainerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test getOffset method
+     * Test offsetGet method
      *
      * @return void
      */
     public function testGetOffset()
     {
         $this->assertEquals($this->container[__CLASS__], 'value');
+    }
+
+    /**
+     * Test offsetExists method
+     *
+     * @return void
+     */
+    public function testOffsetExists()
+    {
+        $this->assertTrue($this->container->offsetExists(__CLASS__));
+        $this->assertFalse($this->container->offsetExists('iDoNotExist'));
+
     }
 
     /**
@@ -94,5 +106,18 @@ class InstanceContainerTest extends \PHPUnit_Framework_TestCase
 
         $tmpContainer = new InstanceContainer();
         $this->assertEquals($tmpContainer[__METHOD__], 'value');
+    }
+
+    /**
+     * Test offsetUnset method
+     *
+     * @return void
+     *
+     * @depends testOffsetExists
+     */
+    public function testUnsetOffset()
+    {
+        $this->container->offsetUnset(__CLASS__);
+        $this->assertFalse($this->container->offsetExists(__CLASS__));
     }
 }

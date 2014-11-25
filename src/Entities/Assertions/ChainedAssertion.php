@@ -69,7 +69,6 @@ class ChainedAssertion extends AbstractAssertion
     {
         // Set our attributes
         $this->assertionList = $assertionList;
-        $this->combinators = $combinators;
 
         // Set the mapping for our inversion
         $this->inversionMapping = array(
@@ -89,6 +88,10 @@ class ChainedAssertion extends AbstractAssertion
 
                 $this->combinators[] = $combinators;
             }
+
+        } else {
+
+            $this->combinators = $combinators;
         }
 
         // No check if the counts are ok

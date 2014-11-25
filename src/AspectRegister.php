@@ -65,25 +65,25 @@ class AspectRegister extends AbstractTypedList
     /**
      * Look up a certain advice based on a glob-like expression optionally containing aspect name and advice name
      *
-     * @param string $expression Expression defining the search term
+     * @param string $adviceExpression Expression defining the search term
      *
      * @return array<\AppserverIo\Doppelgaenger\Entities\Definitions\Advice>
      */
-    public function lookupAdvice($expression)
+    public function lookupAdvice($adviceExpression)
     {
         // if there is an aspect name within the expression we have to filter our search range and cut the expression
         $container = $this->container;
-        if (strpos($expression, '->')) {
+        if (strpos($adviceExpression, '->')) {
 
-            $aspectExpression = strstr($expression, '->', true);
+            $aspectExpression = strstr($adviceExpression, '->', true);
             $container = $this->lookupAspects($aspectExpression);
-            $expression = str_replace('->', '', strstr($expression, '->'));
+            $adviceExpression = str_replace('->', '', strstr($adviceExpression, '->'));
         }
 
         $matches = array();
         foreach ($container as $aspect) {
 
-            $matches = array_merge($matches, $this->lookupEntries($aspect->getAdvices(), $expression));
+            $matches = array_merge($matches, $this->lookupEntries($aspect->getAdvices(), $adviceExpression));
         }
 
         return $matches;
@@ -105,8 +105,8 @@ class AspectRegister extends AbstractTypedList
     /**
      * Look up certain entities in a container based on their qualified name and a glob-like expression
      *
-     * @param \Traversable $container  Traversable container we will look in
-     * @param string       $expression Expression defining the search term
+     * @param array|\Traversable $container  Traversable container we will look in
+     * @param string             $expression Expression defining the search term
      *
      * @return array
      */
@@ -134,25 +134,25 @@ class AspectRegister extends AbstractTypedList
     /**
      * Look up a certain advice based on a glob-like expression optionally containing aspect name and pointcut name
      *
-     * @param string $expression Expression defining the search term
+     * @param string $pointcutExpression Expression defining the search term
      *
      * @return array<\AppserverIo\Doppelgaenger\Entities\Definitions\Pointcut>
      */
-    public function lookupPointcuts($expression)
+    public function lookupPointcuts($pointcutExpression)
     {
         // if there is an aspect name within the expression we have to filter our search range and cut the expression
         $container = $this->container;
-        if (strpos($expression, '->')) {
+        if (strpos($pointcutExpression, '->')) {
 
-            $aspectExpression = strstr($expression, '->', true);
+            $aspectExpression = strstr($pointcutExpression, '->', true);
             $container = $this->lookupAspects($aspectExpression);
-            $expression = str_replace('->', '', strstr($expression, '->'));
+            $pointcutExpression = str_replace('->', '', strstr($pointcutExpression, '->'));
         }
 
         $matches = array();
         foreach ($container as $aspect) {
 
-            $matches = array_merge($matches, $this->lookupEntries($aspect->getPointcuts(), $expression));
+            $matches = array_merge($matches, $this->lookupEntries($aspect->getPointcuts(), $pointcutExpression));
         }
 
         return $matches;
@@ -204,7 +204,7 @@ class AspectRegister extends AbstractTypedList
                 if (strpos($functionDefinition->getDocBlock(), $needle) !== false) {
 
                     $foundNeedle = true;
-                    $scheduledAdviceDefinitions[] = $functionDefinition;
+                    $scheduledAdviceDefinitions[$needle][] = $functionDefinition;
 
                     break;
                 }
@@ -230,34 +230,36 @@ class AspectRegister extends AbstractTypedList
         $this->add($aspect);
 
         // do the pointcut lookups
-        foreach ($scheduledAdviceDefinitions as $scheduledAdviceDefinition) {
+        foreach ($scheduledAdviceDefinitions as $codeHook => $hookedAdviceDefinitions) {
+            foreach ($hookedAdviceDefinitions as $scheduledAdviceDefinition) {
 
-            $advice = new Advice();
-            $advice->aspectName = $aspectDefinition->getQualifiedName();
-            $advice->name = $functionDefinition->getName();
-            $advice->codeHook = $needle;
-            $advice->pointcuts = new TypedList('\AppserverIo\Doppelgaenger\Interfaces\PointcutInterface');
+                $advice = new Advice();
+                $advice->aspectName = $aspectDefinition->getQualifiedName();
+                $advice->name = $scheduledAdviceDefinition->getName();
+                $advice->codeHook = $codeHook;
+                $advice->pointcuts = new TypedList('\AppserverIo\Doppelgaenger\Interfaces\PointcutInterface');
 
-            $tokens = new Tokens($tokenizer->parse($functionDefinition->getDocBlock()));
+                $tokens = new Tokens($tokenizer->parse($scheduledAdviceDefinition->getDocBlock()));
 
-            // convert to array and run it through our advice factory
-            $toArray = new ToArray();
-            $annotations = $toArray->convert($tokens);
+                // convert to array and run it through our advice factory
+                $toArray = new ToArray();
+                $annotations = $toArray->convert($tokens);
 
-            // create the entities for the joinpoints and advices the pointcut describes
-            foreach ($annotations as $annotation) {
+                // create the entities for the joinpoints and advices the pointcut describes
+                foreach ($annotations as $annotation) {
 
-                $pointcut = $pointcutFactory->getInstance(array_pop($annotation->values));
-                if ($pointcut instanceof PointcutPointcut) {
+                    $pointcut = $pointcutFactory->getInstance(array_pop($annotation->values));
+                    if ($pointcut instanceof PointcutPointcut) {
 
-                    $pointcut->referencedPointcuts = $this->lookupPointcuts($pointcut->getExpression());
+                        $pointcut->referencedPointcuts = $this->lookupPointcuts($pointcut->getExpression());
+                    }
+
+                    $advice->pointcuts->add($pointcut);
                 }
 
-                $advice->pointcuts->add($pointcut);
+                $advice->lock();
+                $aspect->advices->add($advice);
             }
-
-            $advice->lock();
-            $aspect->advices->add($advice);
         }
 
         $this->set($aspect->name, $aspect);

@@ -78,7 +78,7 @@ class BeautifyFilter extends AbstractFilter
 
             $data = '<?php ' . $prettyPrinter->prettyPrint($stmts);
 
-        } catch (PHPParser_Error $e) {
+        } catch (\PHPParser_Error $e) {
 
             throw new GeneratorException($e->getMessage());
         }

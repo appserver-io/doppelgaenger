@@ -215,6 +215,12 @@ class AdviceFilter extends AbstractFilter
 
                 foreach ($advice->pointcuts as $pointcut) {
 
+                    // there should be no other pointcuts than those referencing pointcut definitions
+                    if (!$pointcut instanceof PointcutPointcut) {
+
+                        continue;
+                    }
+
                     foreach ($pointcut->getReferencedPointcuts() as $referencedPointcut) {
                         if ($referencedPointcut->getPointcutExpression()->getPointcut()->matches($functionDefinition)) {
 

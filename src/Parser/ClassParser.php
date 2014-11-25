@@ -26,6 +26,7 @@ use AppserverIo\Doppelgaenger\Entities\Definitions\Structure;
 use AppserverIo\Doppelgaenger\Entities\Introduction;
 use AppserverIo\Doppelgaenger\Entities\Lists\IntroductionList;
 use AppserverIo\Doppelgaenger\Dictionaries\Annotations;
+use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
 
 /**
  * AppserverIo\Doppelgaenger\Parser\ClassParser
@@ -65,6 +66,8 @@ class ClassParser extends AbstractStructureParser
      * @param boolean $getRecursive Do we have to get the ancestral conditions as well?
      *
      * @return \AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface
+     *
+     * @throws \AppserverIo\Doppelgaenger\Exceptions\GeneratorException
      */
     protected function getDefinitionFromTokens($tokens, $getRecursive = true)
     {
@@ -72,6 +75,13 @@ class ClassParser extends AbstractStructureParser
         if (is_null($this->currentDefinition)) {
 
             $this->currentDefinition = new ClassDefinition();
+
+        } elseif (!$this->currentDefinition instanceof ClassDefinition) {
+
+            throw new GeneratorException(sprintf(
+                'The structure definition %s does not seem to be a class definition.',
+                $this->currentDefinition->getQualifiedName()
+            ));
         }
 
         // Save the path of the original definition for later use
@@ -144,10 +154,14 @@ class ClassParser extends AbstractStructureParser
             $this->tokens
         );
 
-        $this->currentDefinition->functionDefinitions = $functionParser->getDefinitionListFromTokens(
+        $functionDefinitions = $functionParser->getDefinitionListFromTokens(
             $tokens,
             $getRecursive
         );
+        if ($functionDefinitions !== false) {
+
+            $this->currentDefinition->functionDefinitions = $functionDefinitions;
+        }
 
         // If we have to parse the definition in a recursive manner, we have to get the parent invariants
         if ($getRecursive === true) {

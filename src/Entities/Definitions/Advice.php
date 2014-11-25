@@ -34,6 +34,11 @@ use AppserverIo\Doppelgaenger\Entities\AbstractLockableEntity;
  * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.appserver.io/
+ *
+ * @property string                                              $aspectName Name of the aspect the advice is defined in
+ * @property string                                              $codeHook   The code hook this advice is designed for
+ * @property string                                              $name       Name of the advice itself
+ * @property \AppserverIo\Doppelgaenger\Entities\Lists\TypedList $pointcuts  List of pointcuts referenced by this advice
  */
 class Advice extends AbstractLockableEntity
 {

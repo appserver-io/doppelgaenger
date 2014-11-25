@@ -36,6 +36,9 @@ use AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList;
  * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.appserver.io/
+ *
+ * @property \AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList $attributeDefinitions List of defined attributes
+ * @property \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList           $invariantConditions  List of directly defined invariant conditions
  */
 class TraitDefinition extends AbstractStructureDefinition
 {
@@ -46,12 +49,16 @@ class TraitDefinition extends AbstractStructureDefinition
     const TYPE = 'trait';
 
     /**
-     * @var AttributeDefinitionList $attributeDefinitions List of defined attributes
+     * List of defined attributes
+     *
+     * @var \AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList $attributeDefinitions
      */
     protected $attributeDefinitions;
 
     /**
-     * @var AssertionList $invariantConditions List of directly defined invariant conditions
+     * List of directly defined invariant conditions
+     *
+     * @var \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList $invariantConditions
      */
     protected $invariantConditions;
 

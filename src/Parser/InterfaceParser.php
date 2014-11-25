@@ -24,6 +24,7 @@ use AppserverIo\Doppelgaenger\Entities\Definitions\InterfaceDefinition;
 use AppserverIo\Doppelgaenger\Entities\Definitions\FileDefinition;
 use AppserverIo\Doppelgaenger\Entities\Lists\StructureDefinitionList;
 use AppserverIo\Doppelgaenger\Dictionaries\Annotations;
+use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
 
 /**
  * AppserverIo\Doppelgaenger\Parser\InterfaceParser
@@ -116,6 +117,8 @@ class InterfaceParser extends AbstractStructureParser
      * @param boolean $getRecursive Do we have to load the inherited contracts as well?
      *
      * @return \AppserverIo\Doppelgaenger\Entities\Definitions\InterfaceDefinition
+     *
+     * @throws \AppserverIo\Doppelgaenger\Exceptions\GeneratorException
      */
     protected function getDefinitionFromTokens($tokens, $getRecursive = true)
     {
@@ -123,6 +126,13 @@ class InterfaceParser extends AbstractStructureParser
         if (is_null($this->currentDefinition)) {
 
             $this->currentDefinition = new InterfaceDefinition();
+
+        } elseif (!$this->currentDefinition instanceof InterfaceDefinition) {
+
+            throw new GeneratorException(sprintf(
+                'The structure definition %s does not seem to be a trait definition.',
+                $this->currentDefinition->getQualifiedName()
+            ));
         }
 
         // Save the path of the original definition for later use

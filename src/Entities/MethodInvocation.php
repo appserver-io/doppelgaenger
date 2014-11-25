@@ -76,7 +76,7 @@ class MethodInvocation
     /**
      * The name of the function
      *
-     * @var array $name
+     * @var string $name
      */
     protected $name;
 

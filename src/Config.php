@@ -435,7 +435,7 @@ class Config implements ConfigInterface
         $configCandidate = $this->normalizeConfigDirs('autoloader', $configCandidate);
 
         // Lets check if there is a valid processing in place
-        if (!$this->validateProcessing($configCandidate)) {
+        if ($configCandidate === false || !$this->validateProcessing($configCandidate)) {
 
             return false;
         }

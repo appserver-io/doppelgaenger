@@ -56,17 +56,23 @@ class Generator
     protected $aspectRegister;
 
     /**
-     * @var \AppserverIo\Doppelgaenger\CacheMap $cacheMap A cacheMap instance to organize our cache
+     * A cacheMap instance to organize our cache
+     *
+     * @var \AppserverIo\Doppelgaenger\CacheMap $cacheMap
      */
     protected $cacheMap;
 
     /**
-     * @var \AppserverIo\Doppelgaenger\StructureMap $structureMap A structureMap instance to organize the known structures
+     * A structureMap instance to organize the known structures
+     *
+     * @var \AppserverIo\Doppelgaenger\StructureMap $structureMap
      */
     protected $structureMap;
 
     /**
-     * @var array $config The aspect of the configuration we need
+     * The aspect of the configuration we need
+     *
+     * @var \AppserverIo\Doppelgaenger\Config $config
      */
     protected $config;
 
@@ -81,13 +87,13 @@ class Generator
      * Default constructor
      *
      * @param \AppserverIo\Doppelgaenger\StructureMap   $structureMap   A structureMap instance to organize the known structures
-     * @param \AppserverIo\Doppelgaenger\CacheMap       $cache          A cacheMap instance to organize our cache
+     * @param \AppserverIo\Doppelgaenger\CacheMap       $cacheMap       A cacheMap instance to organize our cache
      * @param \AppserverIo\Doppelgaenger\Config         $config         Configuration
      * @param \AppserverIo\Doppelgaenger\AspectRegister $aspectRegister The register for known aspects
      */
-    public function __construct(StructureMap $structureMap, CacheMap $cache, Config $config, AspectRegister $aspectRegister)
+    public function __construct(StructureMap $structureMap, CacheMap $cacheMap, Config $config, AspectRegister $aspectRegister)
     {
-        $this->cache = $cache;
+        $this->cacheMap = $cacheMap;
 
         $this->structureMap = $structureMap;
 
@@ -142,7 +148,7 @@ class Generator
             throw new GeneratorException(sprintf('Could not create altered definition for %s', $qualifiedName));
         }
         // Now get our new file into the cacheMap
-        $this->cache->add(
+        $this->cacheMap->add(
             new Structure(
                 filectime($mapEntry->getPath()),
                 $qualifiedName,
@@ -457,7 +463,7 @@ class Generator
      */
     public function getFileName($structureName)
     {
-        $mapEntry = $this->cache->getEntry($structureName);
+        $mapEntry = $this->cacheMap->getEntry($structureName);
 
         if (!$mapEntry instanceof Structure) {
 

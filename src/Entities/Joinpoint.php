@@ -33,7 +33,12 @@ namespace AppserverIo\Doppelgaenger\Entities;
  * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.appserver.io/
- */
+ *
+ * @property string $codeHook   The actual point within the targeted piece of code e.g. "Before"
+ * @property string $structure  Structure at which the joinpoint resides
+ * @property string $target     At which part of the housing structure does the joinpoint sit?
+ * @property string $targetName Name of the target which describes the targeted piece of code
+*/
 class Joinpoint extends AbstractLockableEntity
 {
 

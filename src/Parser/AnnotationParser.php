@@ -59,7 +59,7 @@ class AnnotationParser extends AbstractParser
     /**
      * The configuration aspect we need here
      *
-     * @var array $config
+     * @var \AppserverIo\Doppelgaenger\Config $config
      */
     protected $config;
 
@@ -107,10 +107,10 @@ class AnnotationParser extends AbstractParser
     /**
      * Default constructor
      *
-     * @param string                            $file              The path of the file we want to parse
-     * @param \AppserverIo\Doppelgaenger\Config $config            Configuration
-     * @param array                             $tokens            The array of tokens taken from the file
-     * @param StructureDefinitionHierarchy|null $currentDefinition The current definition we are working on
+     * @param string                                                                  $file              The path of the file we want to parse
+     * @param \AppserverIo\Doppelgaenger\Config                                       $config            Configuration
+     * @param array                                                                   $tokens            The array of tokens taken from the file
+     * @param \AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface|null $currentDefinition The current definition we are working on
      */
     public function __construct(
         $file,
@@ -358,7 +358,7 @@ class AnnotationParser extends AbstractParser
      * @param string      $docString      The DocBlock piece to search in
      * @param null|string $usedAnnotation The annotation we want to specifically search for
      *
-     * @return bool
+     * @return boolean|\AppserverIo\Doppelgaenger\Interfaces\AssertionInterface
      *
      * TODO we need an assertion factory badly! This is way to long
      */
@@ -406,6 +406,7 @@ class AnnotationParser extends AbstractParser
             return false;
         }
 
+        $assertion = false;
         switch ($usedAnnotation) {
             // We got something which can only contain type information
             case '@param':
