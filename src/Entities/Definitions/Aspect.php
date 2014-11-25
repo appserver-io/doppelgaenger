@@ -36,6 +36,11 @@ use AppserverIo\Doppelgaenger\Entities\Lists\TypedList;
  * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.appserver.io/
+ *
+ * @property \AppserverIo\Doppelgaenger\Entities\Lists\TypedList $advices   List of advices
+ * @property string                                              $name      Name of the aspect
+ * @property string                                              $namespace Namespace of this aspect definition
+ * @property \AppserverIo\Doppelgaenger\Entities\Lists\TypedList $pointcuts List of pointcut definitions
  */
 class Aspect extends AbstractLockableEntity
 {

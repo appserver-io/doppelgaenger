@@ -35,38 +35,56 @@ use AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface;
  * @author     Bernhard Wick <bw@appserver.io>
  * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io//
+ * @link       http://www.appserver.io/
+ *
+ * @property string                 $path                File path to the class definition
+ * @property string                 $namespace           The namespace the class belongs to
+ * @property array                  $usedNamespaces      All classes which are referenced by the "use" keyword
+ * @property string                 $docBlock            The initial class docblock header
+ * @property string                 $name                Name of the class
+ * @property FunctionDefinitionList $functionDefinitions List of methods
  */
 abstract class AbstractStructureDefinition extends AbstractDefinition implements StructureDefinitionInterface
 {
     /**
-     * @var string $path File path to the class definition
+     * File path to the class definition
+     *
+     * @var string $path
      */
     protected $path;
 
     /**
-     * @var string $namespace The namespace the class belongs to
+     * The namespace the class belongs to
+     *
+     * @var string $namespace
      */
     protected $namespace;
 
     /**
-     * @var array $usedNamespaces All classes which are referenced by the "use" keyword
+     * All classes which are referenced by the "use" keyword
+     *
+     * @var array $usedNamespaces
      */
     protected $usedNamespaces;
 
     /**
-     * @var string $docBlock The initial class docblock header
+     * The initial class docblock header
+     *
+     * @var string $docBlock
      */
     protected $docBlock;
 
     /**
-     * @var string $name Name of the class
+     * Name of the class
+     *
+     * @var string $name
      */
     protected $name;
 
     /**
-     * @var \AppserverIo\Doppelgaenger\Entities\Lists\FunctionDefinitionList $functionDefinitions List of methods this class
-     *          defines
+     * List of methods this class defines
+     *
+     * @var \AppserverIo\Doppelgaenger\Entities\Lists\FunctionDefinitionList $functionDefinitions
      */
     protected $functionDefinitions;
 

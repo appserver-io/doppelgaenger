@@ -38,6 +38,9 @@ use AppserverIo\Doppelgaenger\Interfaces\PointcutInterface;
  *
  * @see        https://www.eclipse.org/aspectj/doc/next/progguide/quick.html
  * @see        https://www.eclipse.org/aspectj/doc/next/progguide/semantics-pointcuts.html
+ *
+ * @property string  $expression Raw expression as defined within code
+ * @property boolean $isNegated  Has the result of any match to be negated?
  */
 abstract class AbstractPointcut extends AbstractLockableEntity implements PointcutInterface
 {

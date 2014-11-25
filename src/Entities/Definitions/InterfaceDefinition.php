@@ -38,6 +38,11 @@ use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
  * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.appserver.io/
+ *
+ * @property array                                                             $extends              Parental interfaces (if any)
+ * @property array                                                             $constants            Possible constants the interface defines
+ * @property \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList           $invariantConditions  List of directly defined invariant conditions
+ * @property \AppserverIo\Doppelgaenger\Entities\Lists\TypedListList           $ancestralInvariants  List of lists of any ancestral invariants
  */
 class InterfaceDefinition extends AbstractStructureDefinition
 {
@@ -48,24 +53,30 @@ class InterfaceDefinition extends AbstractStructureDefinition
     const TYPE = 'interface';
 
     /**
-     * @var array $extends The parent interfaces (if any)
+     * The parent interfaces (if any)
+     *
+     * @var array $extends
      */
     protected $extends;
 
     /**
-     * @var array $constants Possible constants the interface defines
+     * Possible constants the interface defines
+     *
+     * @var array $constants
      */
     protected $constants;
 
     /**
-     * @var AssertionList $invariantConditions Invariant conditions
-     * TODO get rid of this as it breaks information hiding
+     * List of directly defined invariant conditions
+     *
+     * @var \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList $invariantConditions
      */
     protected $invariantConditions;
 
     /**
-     * @var TypedListList $ancestralInvariants Ancestral invariants
-     * TODO get rid of this as it breaks information hiding
+     * List of lists of any ancestral invariants
+     *
+     * @var \AppserverIo\Doppelgaenger\Entities\Lists\TypedListList $ancestralInvariants
      */
     protected $ancestralInvariants;
 

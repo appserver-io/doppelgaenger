@@ -93,9 +93,9 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
      * Will return the definition of a specified structure
      *
      * @param null|string $name         The name of the class we are searching for
-     * @param bool        $getRecursive Do we have to get the ancestral conditions as well?
+     * @param boolean     $getRecursive Do we have to get the ancestral conditions as well?
      *
-     * @return bool|\AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface
+     * @return boolean|\AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface
      */
     public function getDefinition($name = null, $getRecursive = true)
     {
@@ -147,9 +147,9 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
      *
      * @param string         $file           Path of the file we are searching in
      * @param FileDefinition $fileDefinition Definition of the file the class is in
-     * @param bool           $getRecursive   Do we have to get the ancestral conditions as well?
+     * @param boolean        $getRecursive   Do we have to get the ancestral conditions as well?
      *
-     * @return bool|StructureDefinitionList
+     * @return boolean|StructureDefinitionList
      */
     public function getDefinitionListFromFile($file, FileDefinition $fileDefinition, $getRecursive = true)
     {
@@ -416,14 +416,14 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
      * @param string                       $structureName       The name of the structure we have to check against the
      *                                                          use statements of the definition
      *
-     * @return bool|string
+     * @return string
      */
     protected function resolveUsedNamespace(StructureDefinitionInterface & $structureDefinition, $structureName)
     {
         // If there was no useful name passed we can fail right here
         if (empty($structureName)) {
 
-            return false;
+            return '';
         }
 
         // Walk over all namespaces and if we find something we will act accordingly.

@@ -16,12 +16,7 @@
 use \AppserverIo\Doppelgaenger\Config;
 
 // Get the vendor dir
-$vendorDir = '';
-if (realpath(__DIR__ . "/vendor")) {
-    $vendorDir = realpath(__DIR__ . "/vendor");
-} else {
-    throw new Exception('Could not locate vendor dir');
-}
+$vendorDir = __DIR__ . "/vendor";
 
 // Include the composer autoloader as a fallback
 $loader = require $vendorDir . DIRECTORY_SEPARATOR . 'autoload.php';

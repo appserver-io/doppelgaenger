@@ -22,6 +22,7 @@ namespace AppserverIo\Doppelgaenger\Parser;
 
 use AppserverIo\Doppelgaenger\Entities\Definitions\TraitDefinition;
 use AppserverIo\Doppelgaenger\Dictionaries\Annotations;
+use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
 
 /**
  * AppserverIo\Doppelgaenger\Parser\TraitParser
@@ -73,6 +74,8 @@ class TraitParser extends AbstractStructureParser
      * @param boolean $getRecursive Do we have to get the ancestral conditions as well? Makes no sense currently
      *
      * @return \AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface
+     *
+     * @throws \AppserverIo\Doppelgaenger\Exceptions\GeneratorException
      */
     protected function getDefinitionFromTokens($tokens, $getRecursive = false)
     {
@@ -80,6 +83,13 @@ class TraitParser extends AbstractStructureParser
         if (is_null($this->currentDefinition)) {
 
             $this->currentDefinition = new TraitDefinition();
+
+        } elseif (!$this->currentDefinition instanceof TraitDefinition) {
+
+            throw new GeneratorException(sprintf(
+                'The structure definition %s does not seem to be a trait definition.',
+                $this->currentDefinition->getQualifiedName()
+            ));
         }
 
         // Save the path of the original definition for later use

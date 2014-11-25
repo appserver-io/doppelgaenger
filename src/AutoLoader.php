@@ -100,6 +100,16 @@ class AutoLoader
     }
 
     /**
+     * Getter for the $aspectRegister property
+     *
+     * @return \AppserverIo\Doppelgaenger\AspectRegister
+     */
+    public function getAspectRegister()
+    {
+        return $this->aspectRegister;
+    }
+
+    /**
      * Getter for the config member
      *
      * @return \AppserverIo\Doppelgaenger\Config
@@ -240,7 +250,7 @@ class AutoLoader
             // Require the new class, it should have been created now
             $file = $this->generator->getFileName($className);
 
-            if (is_readable($file) === true) {
+            if ($file !== false && is_readable($file) === true) {
 
                 require $file;
 
