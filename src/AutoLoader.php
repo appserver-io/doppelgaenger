@@ -100,6 +100,16 @@ class AutoLoader
     }
 
     /**
+     * Getter for the $aspectRegister property
+     *
+     * @return \AppserverIo\Doppelgaenger\AspectRegister
+     */
+    public function getAspectRegister()
+    {
+        return $this->aspectRegister;
+    }
+
+    /**
      * Getter for the config member
      *
      * @return \AppserverIo\Doppelgaenger\Config
