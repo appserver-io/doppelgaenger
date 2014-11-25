@@ -243,7 +243,7 @@ class Config implements ConfigInterface
             return $this->config[$value];
         }
         // throw exception
-        throw new ConfigException("Config value '$value' does not exist.");
+        throw new ConfigException(sprintf("Config value %s does not exist.", $value));
     }
 
     /**
@@ -278,7 +278,7 @@ class Config implements ConfigInterface
         $configCandidate = $this->validate($file);
         if ($configCandidate === false) {
 
-            throw new ConfigException('Attempt to load invalid configuration file ' . $file);
+            throw new ConfigException(sprintf('Attempt to load invalid configuration file %s', $file));
         }
 
         $this->config = array_replace_recursive($this->config, $configCandidate);
@@ -398,7 +398,7 @@ class Config implements ConfigInterface
         // Did we even get an array?
         if (!is_array($configCandidate)) {
 
-            throw new ConfigException('Could not parse configuration file "' . $file . '".');
+            throw new ConfigException(sprintf('Could not parse configuration file %s.', $file));
 
         } else {
 
@@ -418,7 +418,7 @@ class Config implements ConfigInterface
 
             } else {
 
-                throw new ConfigException('The configured cache directory "' . $tmp . '" is not writable.');
+                throw new ConfigException(sprintf('The configured cache directory %s is not writable.', $tmp));
             }
         }
 

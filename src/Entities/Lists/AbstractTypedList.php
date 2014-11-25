@@ -97,7 +97,7 @@ abstract class AbstractTypedList implements TypedListInterface, \Iterator
     {
         if (!is_a($value, $this->itemType)) {
 
-            throw new \UnexpectedValueException('The added value does not have the expected type ' . $this->itemType);
+            throw new \UnexpectedValueException(sprintf('The added value does not have the expected type %s', $this->itemType));
 
         } else {
 

@@ -80,7 +80,7 @@ abstract class AbstractAssertion implements AssertionInterface
 
         if (!$this->isValid()) {
 
-            throw new ParserException('Could not parse assertion string ' . $this->getString());
+            throw new ParserException(sprintf('Could not parse assertion string %s', $this->getString()));
         }
     }
 
@@ -126,8 +126,8 @@ abstract class AbstractAssertion implements AssertionInterface
         if (!isset($tmp[$minScope])) {
 
             throw new \InvalidArgumentException(
-                'The minimal scope ' . $minScope . ' is not allowed. It may only be "structure", "function" or "body"'
-            );
+                sprintf('The minimal scope %s is not allowed. It may only be "structure", "function" or "body"', $minScope)
+                );
         }
 
         // Set the new minimal scope

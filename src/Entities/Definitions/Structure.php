@@ -96,7 +96,7 @@ class Structure
         $allowedTypes = array_flip($this->allowedTypes);
         if (!isset($allowedTypes[$type])) {
 
-            throw new \InvalidArgumentException('The type ' . $type . ' seems to be an unknown structure type');
+            throw new \InvalidArgumentException(sprintf('The type %s seems to be an unknown structure type', $type));
         }
 
         $this->type = $type;
