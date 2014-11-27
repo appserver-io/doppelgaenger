@@ -1,3 +1,14 @@
+# Version 0.3.1
+
+## Bugfixes
+
+* Shell regex pattern not working in pointcut expressions
+* StructureMap->map did get cast wrong
+
+## Features
+
+* None
+
 # Version 0.3.0
 
 ## Bugfixes
