@@ -878,7 +878,7 @@ class StructureMap implements MapInterface
         $this->map['version'] = $this->version;
 
         // try to serialize into the known path
-        if (file_put_contents($this->mapPath, serialize($this->map)) >= 0) {
+        if (file_put_contents($this->mapPath, serialize((array) $this->map)) >= 0) {
 
             // Remove the version entry and return the result
             unset($this->map['version']);
