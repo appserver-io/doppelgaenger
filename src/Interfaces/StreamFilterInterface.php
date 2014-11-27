@@ -21,7 +21,7 @@
 namespace AppserverIo\Doppelgaenger\Interfaces;
 
 /**
- * AppserverIo\Doppelgaenger\Interfaces\StreamFilter
+ * AppserverIo\Doppelgaenger\Interfaces\StreamFilterInterface
  *
  * An interface defining the functionality of any possible stream filter class
  *
@@ -33,7 +33,7 @@ namespace AppserverIo\Doppelgaenger\Interfaces;
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.techdivision.com/
  */
-interface StreamFilter
+interface StreamFilterInterface
 {
     /**
      * Will return the order number the concrete filter has been constantly assigned

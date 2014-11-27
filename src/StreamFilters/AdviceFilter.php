@@ -31,10 +31,9 @@ use AppserverIo\Doppelgaenger\Entities\Pointcuts\AndPointcut;
 use AppserverIo\Doppelgaenger\Entities\Pointcuts\PointcutPointcut;
 
 /**
- * AppserverIo\Doppelgaenger\StreamFilters\PostconditionFilter
+ * AppserverIo\Doppelgaenger\StreamFilters\AdviceFilter
  *
- * This filter will buffer the input stream and add all postcondition related information at prepared locations
- * (see $dependencies)
+ * This filter will buffer the input stream and add all advice calls into their respective joinpoint locations
  *
  * @category   Library
  * @package    Doppelgaenger
