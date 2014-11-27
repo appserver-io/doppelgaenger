@@ -45,6 +45,13 @@ class AndPointcut extends AbstractConnectorPointcut
     const CONNECTOR = self::CONNECTOR_AND;
 
     /**
+     * The type of this pointcut
+     *
+     * @var string TYPE
+     */
+    const TYPE = 'and';
+
+    /**
      * Returns a string representing a boolean condition which can be used to determine if
      * the pointcut has to be executed
      *

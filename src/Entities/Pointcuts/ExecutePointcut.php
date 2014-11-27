@@ -82,11 +82,11 @@ class ExecutePointcut extends AbstractSignaturePointcut
 
         // build up code searching within the methods backtrace
         $code = 'count(array_filter(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), function(&$value) {;
-            $expression = \'' . $this->getExpression() . '\';
+            $expression = \'' . ltrim($this->getExpression(), '\\') . '\';
             foreach ($value as $entry) {
                 $caller = @$entry["class"] . @$entry["type"] . @$entry["function"];
 
-                if (preg_match("/" . $expression . "/", $caller) === 1) {
+                if (fnmatch($expression, $caller) === 1) {
 
                     return true;
                 }

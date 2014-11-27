@@ -108,7 +108,7 @@ class CallPointcut extends AbstractSignaturePointcut
         }
 
         // build up the signature of the candidate function definition and look for a match
-        $candidateSignature = $candidate->getStructureName() . $this->callType . $candidate->getName() . '()';
-        return (preg_match("/" . str_replace('\\', '\\\\', ltrim($this->getExpression(), '\\')) . "/", $candidateSignature) === 1);
+        $candidateSignature = $candidate->getStructureName() . $this->callType . $candidate->getName();
+        return fnmatch(str_replace('\\', '\\\\', ltrim($this->getExpression(), '\\')), $candidateSignature);
     }
 }

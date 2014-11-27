@@ -115,14 +115,14 @@ class AspectRegister extends AbstractTypedList
         // if we got the complete name of the aspect we can return it alone
         if (!strpos($expression, '*') && $this->entryExists($expression)) {
 
-            return $this->get($expression);
+            return array($this->get($expression));
         }
 
         // as it seems we got something else we have to get all regex about
         $matches = array();
         foreach ($container as $entry) {
 
-            if (preg_match('`' . $expression . '`', $entry->getQualifiedName()) === 1) {
+            if (fnmatch(ltrim($expression, '\\'), $entry->getQualifiedName() . '()')) {
 
                 $matches[] = $entry;
             }
