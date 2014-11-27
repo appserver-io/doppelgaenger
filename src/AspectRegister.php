@@ -122,7 +122,7 @@ class AspectRegister extends AbstractTypedList
         $matches = array();
         foreach ($container as $entry) {
 
-            if (preg_match('`' . $expression . '`', $entry->getQualifiedName()) === 1) {
+            if (fnmatch(ltrim($expression, '\\'), $entry->getQualifiedName() . '()')) {
 
                 $matches[] = $entry;
             }

@@ -224,8 +224,9 @@ class AdviceFilter extends AbstractFilter
                         if ($referencedPointcut->getPointcutExpression()->getPointcut()->matches($functionDefinition)) {
 
                             // we found a pointcut of an advice that matches!
-                            // lets create a distinctive joinpoint and add the advice weaving to the pointcut
-                            $pointcutExpression = $referencedPointcut->getPointcutExpression();
+                            // lets create a distinctive joinpoint and add the advice weaving to the pointcut.
+                            // Make a clone so that there are no weird reference shenanigans
+                            $pointcutExpression = clone $referencedPointcut->getPointcutExpression();
                             $joinpoint = new Joinpoint();
                             $joinpoint->codeHook = $advice->getCodeHook();
                             $joinpoint->structure = $functionDefinition->getStructureName();
