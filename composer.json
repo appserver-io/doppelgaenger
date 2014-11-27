@@ -13,13 +13,14 @@
     "license": "OSL 3.0",
     "authors": [
         {
-            "name": "Bernhard Wick",
-            "email": "bw@appserver.io"
+            "name" : "Bernhard Wick",
+            "email" : "bw@appserver.io",
+            "homepage" : "https://github.com/wick-ed",
+            "role" : "Developer"
         }
     ],
     "require": {
         "php": ">=5.4.0",
-        "techdivision/php-by-contract" : "~0.3",
         "herrera-io/annotations": "~1.0"
     },
     "require-dev": {

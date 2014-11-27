@@ -17,5 +17,4 @@ Doppelgaenger currently supports the known techniques of:
 
 # Roadmap
 
-- [] Allow for centrally annotated advice weaving
-- [] Allow for annotation shorthands and annotation mapping
+- Allow for annotation shorthands and annotation mapping
