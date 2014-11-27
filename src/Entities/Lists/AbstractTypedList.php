@@ -26,6 +26,7 @@ use AppserverIo\Doppelgaenger\Interfaces\TypedListInterface;
  * AppserverIo\Doppelgaenger\Entities\Lists\AbstractTypedList
  *
  * Abstract parent class for type safe list structures
+ * This class has dynamically defined properties as there are problems with earlier versions of extensions like pthreads!
  *
  * @category   Library
  * @package    Doppelgaenger
@@ -34,53 +35,25 @@ use AppserverIo\Doppelgaenger\Interfaces\TypedListInterface;
  * @copyright  2014 TechDivision GmbH - <info@appserver.io>
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.appserver.io/
+ *
+ * @property array   $container     The actual container holding the entries
+ * @property integer $position      Keeps track of the currently iterated position
+ * @property string  $defaultOffset Default member of an entity which will be used as offset e.g. "name"
+ * @property string  $itemType      Type of the contained elements
+ * @property array   $keyTracker    Internally used array which provides a mapping for associative offset keys to integer ones, which allows for a more easy iteration process
  */
 abstract class AbstractTypedList implements TypedListInterface, \Iterator
 {
-
-    /**
-     * The actual container holding the entries
-     *
-     * @var array $container
-     */
-    protected $container = array();
-
-    /**
-     * Keeps track of the currently iterated position to make this class iterateable
-     *
-     * @var int $position
-     */
-    protected $currentPosition = 0;
-
-    /**
-     * Default member of an entity which will be used as offset e.g. "name"
-     *
-     * @var string $defaultOffset
-     */
-    protected $defaultOffset = '';
-
-    /**
-     * Type of the contained elements
-     *
-     * @var string $itemType
-     */
-    protected $itemType;
-
-    /**
-     * Internally used array which provides a mapping for associative offset keys to integer ones, which allows
-     * for a more easy iteration process
-     *
-     * @var array $keyTracker
-     */
-    protected $keyTracker = array();
 
     /**
      * Default constructor
      */
     public function __construct()
     {
-        $this->currentPosition = 0;
         $this->container = array();
+        $this->currentPosition = 0;
+        $this->defaultOffset = '';
+        $this->itemType = '';
         $this->keyTracker = array();
     }
 

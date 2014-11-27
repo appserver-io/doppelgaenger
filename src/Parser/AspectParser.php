@@ -25,7 +25,7 @@ use AppserverIo\Doppelgaenger\Entities\Definitions\AspectDefinition;
 /**
  * AppserverIo\Doppelgaenger\Parser\AspectParser
  *
- * <TODO CLASS DESCRIPTION>
+ * Parser for classes which are used as aspects
  *
  * @category   Library
  * @package    Doppelgaenger
@@ -38,10 +38,11 @@ use AppserverIo\Doppelgaenger\Entities\Definitions\AspectDefinition;
 class AspectParser extends ClassParser
 {
     /**
-     * Returns a ClassDefinition from a token array.
+     * Returns a AspectDefinition from a token array.
      *
      * This method will use a set of other methods to parse a token array and retrieve any
-     * possible information from it. This information will be entered into a ClassDefinition object.
+     * possible information from it.
+     * This information will be entered into a AspectDefinition object.
      *
      * @param array   $tokens       The token array containing structure tokens
      * @param boolean $getRecursive Do we have to get the ancestral conditions as well?

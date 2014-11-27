@@ -140,9 +140,8 @@ abstract class AbstractParser implements ParserInterface
 
         $this->currentDefinition = $currentDefinition;
 
-        $this->structureMap = $structureMap;
-
-        $this->structureDefinitionHierarchy = $structureDefinitionHierarchy;
+        $this->structureMap = is_null($structureMap) ? new StructureMap($config->getValue('autoloader/dirs'), $config->getValue('enforcement/dirs'), $config) : $structureMap;
+        $this->structureDefinitionHierarchy = is_null($structureDefinitionHierarchy) ? new StructureDefinitionHierarchy() : $structureDefinitionHierarchy;
     }
 
     /**
