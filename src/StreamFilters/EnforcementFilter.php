@@ -77,7 +77,7 @@ class EnforcementFilter extends AbstractFilter
         // Lets check if we got the config we wanted
         $config = $this->params;
 
-        if ($config->hasValue('enforcement/processing')) {
+        if (!$config->hasValue('enforcement/processing')) {
 
             throw new GeneratorException('Configuration does not contain the needed processing section.');
         }
