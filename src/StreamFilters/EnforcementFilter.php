@@ -75,11 +75,11 @@ class EnforcementFilter extends AbstractFilter
     public function filter($in, $out, &$consumed, $closing)
     {
         // Lets check if we got the config we wanted
-        $config = $this->params->getConfig('enforcement');
+        $config = $this->params;
 
-        if (!is_array($config) || !isset($config['processing'])) {
+        if (!$config->hasValue('enforcement/processing')) {
 
-            throw new GeneratorException();
+            throw new GeneratorException('Configuration does not contain the needed processing section.');
         }
 
         // Get the code for the processing
@@ -136,7 +136,7 @@ class EnforcementFilter extends AbstractFilter
         }
 
         // What kind of reaction should we create?
-        switch ($config['processing']) {
+        switch ($config->getValue('enforcement/processing')) {
 
             case 'exception':
 

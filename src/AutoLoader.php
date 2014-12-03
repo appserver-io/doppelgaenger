@@ -152,13 +152,12 @@ class AutoLoader
      */
     public function loadClass($className)
     {
-        // There was no file in our cache dir, so lets hope we know the original path of the file.
-        $autoLoaderConfig = $this->config->getConfig('autoloader');
 
         // Might the class be a omitted one? If so we can require the original.
-        if (isset($autoLoaderConfig['omit'])) {
+        if ($this->getConfig()->hasValue('autoloader/omit')) {
 
-            foreach ($autoLoaderConfig['omit'] as $omitted) {
+            $omittedNamespaces = $this->getConfig()->getValue('autoloader/omit');
+            foreach ($omittedNamespaces as $omitted) {
 
                 // If our class name begins with the omitted part e.g. it's namespace
                 if (strpos($className, str_replace('\\\\', '\\', $omitted)) === 0) {
@@ -169,10 +168,9 @@ class AutoLoader
         }
 
         // Do we have the file in our cache dir? If we are in development mode we have to ignore this.
-        $cacheConfig = $this->config->getConfig('cache');
-        if ($this->config->getConfig('environment') !== 'development') {
+        if ($this->getConfig()->getValue('environment') !== 'development') {
 
-            $cachePath = $cacheConfig['dir'] . DIRECTORY_SEPARATOR . str_replace('\\', '_', $className) . '.php';
+            $cachePath = $this->getConfig()->getValue('cache/dir') . DIRECTORY_SEPARATOR . str_replace('\\', '_', $className) . '.php';
 
             if (is_readable($cachePath)) {
 
@@ -196,8 +194,6 @@ class AutoLoader
                     if (filemtime($path) == $mTime) {
 
                         require $cachePath;
-
-
                         return true;
                     }
                 }
@@ -240,7 +236,7 @@ class AutoLoader
         if ($this->cache === null) {
 
             // We also require the classes of our maps as we do not have proper autoloading in place
-            $this->cache = new CacheMap($cacheConfig['dir'], array(), $this->config);
+            $this->cache = new CacheMap($this->getConfig()->getValue('cache/dir'), array(), $this->config);
         }
         $this->generator = new Generator($this->structureMap, $this->cache, $this->config, $this->aspectRegister);
 

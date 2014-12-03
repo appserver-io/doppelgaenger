@@ -131,8 +131,7 @@ class StructureMap implements MapInterface
         $this->rootPaths = array_merge($autoloaderPaths, $enforcementPaths);
 
         // Build up the path of the serialized map.
-        $cacheConfig = $this->config->getConfig('cache');
-        $this->mapPath = $cacheConfig['dir'] . DIRECTORY_SEPARATOR . md5(
+        $this->mapPath = $this->config->getValue('cache/dir') . DIRECTORY_SEPARATOR . md5(
             implode('', $autoloaderPaths) . implode('', $enforcementPaths)
         );
     }
