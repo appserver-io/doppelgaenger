@@ -20,6 +20,9 @@
 
 namespace AppserverIo\Doppelgaenger\Interfaces;
 
+use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
+use AppserverIo\Doppelgaenger\Entities\Definitions\AttributeDefinition;
+
 /**
  * AppserverIo\Doppelgaenger\Interfaces\PointcutInterface
  *
@@ -98,4 +101,15 @@ interface PointcutInterface
      * @return boolean
      */
     public function matches($candidate);
+
+    /**
+     * Used to "straighten out" an expression as some expressions allow for shell regex which makes them hard to
+     * generate code from.
+     * So with this method a matching pointcut can be altered into having a directly readable expression
+     *
+     * @param FunctionDefinition|AttributeDefinition $definition Definition to straighten the expression against
+     *
+     * @return null
+     */
+    public function straightenExpression($definition);
 }

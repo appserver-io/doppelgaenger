@@ -57,7 +57,7 @@ class PointcutFactory
 
                 $connectionIndex = strpos($expression, $connector, $connectionIndex + 1);
                 $leftCandidate = substr($expression, 0, $connectionIndex);
-                $rightCandidate = trim(str_replace($leftCandidate . $connector, '', $expression));
+                $rightCandidate = str_replace($leftCandidate . $connector, '', $expression);
 
                 $leftBrackets = $this->getBracketCount($leftCandidate);
                 if ($leftBrackets === 0 && !empty($leftCandidate)) {
@@ -146,11 +146,25 @@ class PointcutFactory
         // first of all we have to get the type of the pointcut
         // check for connector pointcuts first
         $expression = trim($expression);
+
+        // if we are already in a wrapping connector pointcut then we will cut it off as those are not distinguished
+        // by type but rather by their connector
+        if (strpos($expression, AndPointcut::TYPE) === 0) {
+
+            $expression = str_replace(AndPointcut::TYPE, '', $expression);
+
+        } elseif (strpos($expression, OrPointcut::TYPE) === 0) {
+
+            $expression = str_replace(OrPointcut::TYPE, '', $expression);
+        }
+
+        // now lets have a look if we are wrapped in some outer brackets
         if (strlen($expression) === $this->getBracketSpan($expression)) {
 
             $expression = substr($expression, 1, strlen($expression) - 2);
         }
 
+        // now check if we do have any "and" connectors here
         if (strpos($expression, AndPointcut::CONNECTOR) !== false) {
 
             $class = '\AppserverIo\Doppelgaenger\Entities\Pointcuts\AndPointcut';

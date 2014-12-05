@@ -169,10 +169,12 @@ class AspectRegister extends AbstractTypedList
     public function register(AspectDefinition $aspectDefinition)
     {
 
+        // create the new aspect and fill it with things we already know
         $aspect = new Aspect();
         $aspect->name = $aspectDefinition->getName();
         $aspect->namespace = $aspectDefinition->getNamespace();
 
+        // prepare the tokenizer we will need for further processing
         $needles = array(
             After::ANNOTATION,
             AfterReturning::ANNOTATION,
@@ -180,10 +182,6 @@ class AspectRegister extends AbstractTypedList
             Around::ANNOTATION,
             Before::ANNOTATION
         );
-
-        $pointcutFactory = new PointcutFactory();
-
-        // get our tokenizer and parse the doc Block
         $tokenizer = new Tokenizer();
         $tokenizer->ignore(
             array(
@@ -229,14 +227,16 @@ class AspectRegister extends AbstractTypedList
         }
         $this->add($aspect);
 
-        // do the pointcut lookups
+        // do the pointcut lookups where we will need the pointcut factory for later use
+        $pointcutFactory = new PointcutFactory();
         foreach ($scheduledAdviceDefinitions as $codeHook => $hookedAdviceDefinitions) {
             foreach ($hookedAdviceDefinitions as $scheduledAdviceDefinition) {
 
+                // create our advice
                 $advice = new Advice();
                 $advice->aspectName = $aspectDefinition->getQualifiedName();
                 $advice->name = $scheduledAdviceDefinition->getName();
-                $advice->codeHook = $codeHook;
+                $advice->codeHook = (string) $codeHook;
                 $advice->pointcuts = new TypedList('\AppserverIo\Doppelgaenger\Interfaces\PointcutInterface');
 
                 $tokens = new Tokens($tokenizer->parse($scheduledAdviceDefinition->getDocBlock()));
@@ -251,6 +251,7 @@ class AspectRegister extends AbstractTypedList
                     $pointcut = $pointcutFactory->getInstance(array_pop($annotation->values));
                     if ($pointcut instanceof PointcutPointcut) {
 
+                        // get the referenced pointcuts for the split parts of the expression
                         $pointcut->referencedPointcuts = $this->lookupPointcuts($pointcut->getExpression());
                     }
 

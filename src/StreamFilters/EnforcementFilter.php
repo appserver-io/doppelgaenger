@@ -117,8 +117,8 @@ class EnforcementFilter extends AbstractFilter
      * /**
      * Will generate the code needed to enforce any broken assertion checks
      *
-     * @param array  $config The configuration aspect which holds needed information for us
-     * @param string $for    For which kind of assertion do wee need the processing
+     * @param \AppserverIo\Doppelgaenger\Config $config The configuration aspect which holds needed information for us
+     * @param string                            $for    For which kind of assertion do wee need the processing
      *
      * @return string
      */

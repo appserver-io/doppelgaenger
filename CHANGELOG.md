@@ -1,3 +1,25 @@
+# Version 0.3.3
+
+## Bugfixes
+
+* Pointcut expressions using shell regex in the class name did result in errors
+* Problem with around advice chaining
+
+## Features
+
+* Improved performance of AppserverIo\Doppelgaenger\AutoLoader::loadClass() method
+* Improved parser type safety
+
+# Version 0.3.2
+
+## Bugfixes
+
+* Wrong test for configuration values within EnforcementFilter class
+
+## Features
+
+* None
+
 # Version 0.3.1
 
 ## Bugfixes

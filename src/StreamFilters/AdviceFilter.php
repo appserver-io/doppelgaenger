@@ -118,7 +118,7 @@ class AdviceFilter extends AbstractFilter
                             $sortedFunctionPointcuts = $this->sortPointcutExpressions($pointcutExpressions);
 
                             // get all the callbacks for around advices to build a proper advice chain
-                            $callbackChain = $this->generateAdviceCallbacks($sortedFunctionPointcuts);
+                            $callbackChain = $this->generateAdviceCallbacks($sortedFunctionPointcuts, $functionDefinition);
 
                             // before we weave in any advice code we have to make a MethodInvocation object ready
                             $this->injectInvocationCode($bucket->data, $functionDefinition, $callbackChain);
@@ -235,6 +235,9 @@ class AdviceFilter extends AbstractFilter
                             $joinpoint->lock();
                             $pointcutExpression->joinpoint = $joinpoint;
 
+                            // "straighten out" structure and function referenced by the pointcut to avoid regex within generated code
+                            $pointcutExpression->getPointcut()->straightenExpression($functionDefinition);
+
                             // add the weaving pointcut into the expression
                             $pointcutExpression->pointcut = new AndPointcut(
                                 AdvisePointcut::TYPE . '(\\' . $advice->getQualifiedName() . ')',
@@ -245,7 +248,7 @@ class AdviceFilter extends AbstractFilter
                             // add it to our result list
                             $pointcutExpressions->add($pointcutExpression);
 
-                            // break here as we only need one, they are implicitly or combined
+                            // break here as we only need one, they are implicitly "or" combined
                             break;
                         }
                     }
@@ -301,10 +304,6 @@ class AdviceFilter extends AbstractFilter
             if ($structure === $functionDefinition->getStructureName()) {
 
                 $structure = $contextCode;
-
-            } elseif ($structure !== '__CLASS__') {
-
-                $structure = 'new ' . $structure . '()';
             }
 
             // also brush up the function call to direct to the original
@@ -355,19 +354,30 @@ class AdviceFilter extends AbstractFilter
     /**
      * Will generate and advice chain of callbacks to the given around pointcut expressions
      *
-     * @param array $sortedPointcutExpressions Pointcut expressions sorted by their joinpoint's code hooks
+     * @param array              $sortedPointcutExpressions Pointcut expressions sorted by their joinpoint's code hooks
+     * @param FunctionDefinition $functionDefinition        Definition of the function to inject invocation code into
      *
      * @return array
      */
-    protected function generateAdviceCallbacks(array $sortedPointcutExpressions)
+    protected function generateAdviceCallbacks(array $sortedPointcutExpressions, FunctionDefinition $functionDefinition)
     {
 
+        // collect the callback chains of the involved pointcut expressions
         $callbackChain = array();
         if (isset($sortedPointcutExpressions[Around::ANNOTATION])) {
 
             foreach ($sortedPointcutExpressions[Around::ANNOTATION] as $aroundExpression) {
 
                 $callbackChain = array_merge($callbackChain, $aroundExpression->getPointcut()->getCallbackChain());
+            }
+        }
+
+        // filter the combined callback chain to avoid doubled calls to the original implementation
+        for ($i = 0; $i < (count($callbackChain) - 1); $i ++) {
+
+            if ($callbackChain[$i][1] === $functionDefinition->getName()) {
+
+                unset($callbackChain[$i]);
             }
         }
 

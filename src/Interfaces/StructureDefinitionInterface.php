@@ -37,6 +37,28 @@ use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
  */
 interface StructureDefinitionInterface
 {
+
+    /**
+     * Will return a list of all dependencies of a structure like parent class, implemented interfaces, etc.
+     *
+     * @return array
+     */
+    public function getDependencies();
+
+    /**
+     * Getter method for all function definitions a structure might have
+     *
+     * @return null|\AppserverIo\Doppelgaenger\Entities\Lists\FunctionDefinitionList
+     */
+    public function getFunctionDefinitions();
+
+    /**
+     * Will return all invariants of a structure.
+     *
+     * @return TypedListList
+     */
+    public function getInvariants();
+
     /**
      * Will return the qualified name of a structure
      *
@@ -52,24 +74,10 @@ interface StructureDefinitionInterface
     public function getType();
 
     /**
-     * Will return a list of all dependencies of a structure like parent class, implemented interfaces, etc.
-     *
-     * @return array
-     */
-    public function getDependencies();
-
-    /**
      * Will return true if the structure has (a) parent structure(s).
      * Will return false if not.
      *
      * @return bool
      */
     public function hasParents();
-
-    /**
-     * Will return all invariants of a structure.
-     *
-     * @return TypedListList
-     */
-    public function getInvariants();
 }
