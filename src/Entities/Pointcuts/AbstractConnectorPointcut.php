@@ -21,6 +21,8 @@
 namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
 
 use AppserverIo\Doppelgaenger\Dictionaries\PointcutPatterns;
+use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
+use AppserverIo\Doppelgaenger\Entities\Definitions\AttributeDefinition;
 
 /**
  * AppserverIo\Doppelgaenger\Entities\Pointcuts\AbstractCombinatorPointcut
@@ -95,7 +97,9 @@ abstract class AbstractConnectorPointcut extends AbstractPointcut
      */
     public function getCallbackChain()
     {
-        return array_merge($this->leftPointcut->getCallbackChain(), $this->rightPointcut->getCallbackChain());
+        $tmp = array_merge($this->leftPointcut->getCallbackChain(), $this->rightPointcut->getCallbackChain());
+
+        return $tmp;
     }
 
     /**
@@ -119,5 +123,26 @@ abstract class AbstractConnectorPointcut extends AbstractPointcut
     {
         return $this->leftPointcut->getExecutionString($assignTo) . '
         ' . $this->rightPointcut->getExecutionString($assignTo);
+    }
+
+    /**
+     * Used to "straighten out" an expression as some expressions allow for shell regex which makes them hard to
+     * generate code from.
+     * So with this method a matching pointcut can be altered into having a directly readable expression
+     *
+     * @param FunctionDefinition|AttributeDefinition $definition Definition to straighten the expression against
+     *
+     * @return null
+     */
+    public function straightenExpression($definition)
+    {
+        // just make sure that both child pointcuts are straightened as well
+        $this->leftPointcut->straightenExpression($definition);
+        $this->rightPointcut->straightenExpression($definition);
+
+        // update the expression too
+        $this->expression = $this->leftPointcut->getType() . '(' . $this->leftPointcut->getExpression() . ')' .
+            $this->getConnector() .
+            $this->rightPointcut->getType() . '(' . $this->rightPointcut->getExpression() . ')';
     }
 }

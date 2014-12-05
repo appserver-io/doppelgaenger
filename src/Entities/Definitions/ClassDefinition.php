@@ -25,6 +25,7 @@ use AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\FunctionDefinitionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\IntroductionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
+use AppserverIo\Doppelgaenger\Interfaces\PropertiedStructureInterface;
 
 /**
  * AppserverIo\Doppelgaenger\Entities\Definitions\ClassDefinition
@@ -50,7 +51,7 @@ use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
  * @property \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList           $invariantConditions  List of directly defined invariant conditions
  * @property \AppserverIo\Doppelgaenger\Entities\Lists\TypedListList           $ancestralInvariants  List of lists of any ancestral invariants
  */
-class ClassDefinition extends AbstractStructureDefinition
+class ClassDefinition extends AbstractStructureDefinition implements PropertiedStructureInterface
 {
 
     /**

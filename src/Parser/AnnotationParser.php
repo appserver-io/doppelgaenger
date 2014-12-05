@@ -34,6 +34,7 @@ use AppserverIo\Doppelgaenger\Entities\Lists\PointcutExpressionList;
 use AppserverIo\Doppelgaenger\Entities\PointcutExpression;
 use AppserverIo\Doppelgaenger\Exceptions\ParserException;
 use AppserverIo\Doppelgaenger\Interfaces\AssertionInterface;
+use AppserverIo\Doppelgaenger\Interfaces\PropertiedStructureInterface;
 use AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface;
 use AppserverIo\Doppelgaenger\Dictionaries\Annotations;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
@@ -763,6 +764,12 @@ class AnnotationParser extends AbstractParser
      */
     protected function determinePrivateContext(AssertionInterface $assertion)
     {
+        // we only have to act if the current definition has functions and properties
+        if (!$this->currentDefinition instanceof PropertiedStructureInterface || !$this->currentDefinition instanceof StructureDefinitionInterface) {
+
+            return;
+        }
+
         // Get the string to check for dynamic properties
         $assertionString = $assertion->getString();
 

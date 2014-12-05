@@ -22,6 +22,7 @@ namespace AppserverIo\Doppelgaenger\Entities\Definitions;
 
 use AppserverIo\Doppelgaenger\Entities\Lists\AssertionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList;
+use AppserverIo\Doppelgaenger\Interfaces\PropertiedStructureInterface;
 
 /**
  * AppserverIo\Doppelgaenger\Entities\Definitions\Traitdefinition
@@ -40,7 +41,7 @@ use AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList;
  * @property \AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList $attributeDefinitions List of defined attributes
  * @property \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList           $invariantConditions  List of directly defined invariant conditions
  */
-class TraitDefinition extends AbstractStructureDefinition
+class TraitDefinition extends AbstractStructureDefinition implements PropertiedStructureInterface
 {
 
     /**

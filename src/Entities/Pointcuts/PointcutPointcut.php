@@ -41,6 +41,13 @@ class PointcutPointcut extends AbstractPointcut
 {
 
     /**
+     * Connector for referencing of several pointcuts at once
+     *
+     * @var string ADD_CONNECTOR
+     */
+    const ADD_CONNECTOR = '&&';
+
+    /**
      * Whether or not the pointcut is considered static, meaning is has to be weaved and evaluated during runtime
      * anyway
      *

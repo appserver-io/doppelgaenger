@@ -154,9 +154,9 @@ class AutoLoader
     {
 
         // Might the class be a omitted one? If so we can require the original.
-        if ($this->getConfig()->hasValue('autoloader/omit')) {
+        if ($this->config->hasValue('autoloader/omit')) {
 
-            $omittedNamespaces = $this->getConfig()->getValue('autoloader/omit');
+            $omittedNamespaces = $this->config->getValue('autoloader/omit');
             foreach ($omittedNamespaces as $omitted) {
 
                 // If our class name begins with the omitted part e.g. it's namespace
@@ -168,9 +168,9 @@ class AutoLoader
         }
 
         // Do we have the file in our cache dir? If we are in development mode we have to ignore this.
-        if ($this->getConfig()->getValue('environment') !== 'development') {
+        if ($this->config->getValue('environment') !== 'development') {
 
-            $cachePath = $this->getConfig()->getValue('cache/dir') . DIRECTORY_SEPARATOR . str_replace('\\', '_', $className) . '.php';
+            $cachePath = $this->config->getValue('cache/dir') . DIRECTORY_SEPARATOR . str_replace('\\', '_', $className) . '.php';
 
             if (is_readable($cachePath)) {
 

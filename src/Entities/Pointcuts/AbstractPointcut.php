@@ -133,4 +133,18 @@ abstract class AbstractPointcut extends AbstractLockableEntity implements Pointc
     {
         return $this->isNegated;
     }
+
+    /**
+     * Used to "straighten out" an expression as some expressions allow for shell regex which makes them hard to
+     * generate code from.
+     * So with this method a matching pointcut can be altered into having a directly readable expression
+     *
+     * @param FunctionDefinition|AttributeDefinition $definition Definition to straighten the expression against
+     *
+     * @return null
+     */
+    public function straightenExpression($definition)
+    {
+        // nothing to do in general
+    }
 }

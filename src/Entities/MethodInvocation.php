@@ -266,12 +266,20 @@ class MethodInvocation
         }
 
         // get the first entry of the callback and remove it as we don't want to call methods twice
-        $callback = $this->callbackChain[0];
-        unset($this->callbackChain[0]);
+        $callback = reset($this->callbackChain);
+        unset($this->callbackChain[key($this->callbackChain)]);
 
         try {
 
-            $this->result = call_user_func_array($callback, $this->getParameters());
+            // pass over the method invocation object (instead of original params) as long as we got something in the chain
+            if (!empty($this->callbackChain)) {
+
+                $this->result = call_user_func_array($callback, array($this));
+
+            } else {
+
+                $this->result = call_user_func_array($callback, $this->getParameters());
+            }
 
         } catch (\Exception $e) {
 

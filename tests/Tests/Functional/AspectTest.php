@@ -20,7 +20,9 @@
 
 namespace AppserverIo\Doppelgaenger\Tests\Functional;
 
-use AppserverIo\Doppelgaenger\Tests\Data\AdvisedTestClass;
+use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
+use AppserverIo\Doppelgaenger\Tests\Data\Advised\AdvisedRegexClass;
+use AppserverIo\Doppelgaenger\Tests\Data\Advised\AdvisedTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\Aspects\MainAspectTestClass;
 
 /**
@@ -40,19 +42,82 @@ class AspectTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
+     * Default constructor
+     */
+    public function __construct()
+    {
+        // pipe the aspect through the generator to make it known
+        $aspect = new MainAspectTestClass();
+    }
+
+    /**
      * Test if a single and directly annotated pointcut works (around advice used)
      *
      * @return null
      */
     public function testSingleDirectPointcut()
     {
-        // TODO make this a manual process
-        // pipe the aspect through the generator to make it known
-        $aspect = new MainAspectTestClass();
-
         $testClass = new AdvisedTestClass();
 
         // if the return value could be intercepted
         $this->assertTrue($testClass->publicSimpleMethod());
+    }
+
+    /**
+     * Test if a pointcut containing a regular expression in the class name will find its target
+     *
+     * @return null
+     */
+    public function testRegexAdvisedClass()
+    {
+        $testClass = new AdvisedRegexClass();
+
+        // just run through, we should not get an exception
+        $this->assertTrue($testClass->regexClassMethod());
+    }
+
+    /**
+     * Test if a pointcut containing a regular expression in the method name will find its target
+     *
+     * @return null
+     */
+    public function testRegexAdvisedMethod()
+    {
+        $testClass = new AdvisedRegexClass();
+
+        // just run through, we should not get an exception
+        $this->assertFalse($testClass->regexMethodMethod());
+    }
+
+    /**
+     * Tests if around advice chaining works at all
+     *
+     * @return null
+     */
+    public function testAroundAdviceChainingWorks()
+    {
+        $testClass = new AdvisedTestClass();
+
+        // just run through, we should not get an exception
+        $tmp = $testClass->aroundChainMethod();
+        $this->assertTrue(is_array($tmp));
+        $this->assertEquals(2, count($tmp));
+    }
+
+    /**
+     * Tests if around advice chaining works in the correct order of advices
+     *
+     * @return null
+     *
+     * @depends testAroundAdviceChainingWorks
+     */
+    public function testAroundAdviceChainingOrder()
+    {
+        $testClass = new AdvisedTestClass();
+
+        // just run through, we should not get an exception
+        $tmp = $testClass->aroundChainMethod();
+        $this->assertEquals('chainingAdvice1' . ReservedKeywords::ORIGINAL_FUNCTION_SUFFIX, array_pop($tmp));
+        $this->assertEquals('chainingAdvice2' . ReservedKeywords::ORIGINAL_FUNCTION_SUFFIX, array_pop($tmp));
     }
 }
