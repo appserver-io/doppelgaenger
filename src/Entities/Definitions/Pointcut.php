@@ -35,7 +35,7 @@ use AppserverIo\Doppelgaenger\Entities\AbstractLockableEntity;
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.appserver.io/
  *
- * @property string                                                 $aspect             Name Name of the aspect the advice is defined in
+ * @property string                                                 $aspectName         Name Name of the aspect the advice is defined in
  * @property string                                                 $name               Name of function representing the pointcut within code
  * @property \AppserverIo\Doppelgaenger\Entities\PointcutExpression $pointcutExpression Expression defining the target of advices referencing this pointcut
  */
