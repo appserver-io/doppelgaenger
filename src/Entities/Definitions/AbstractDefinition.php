@@ -20,8 +20,6 @@
 
 namespace AppserverIo\Doppelgaenger\Entities\Definitions;
 
-use AppserverIo\Doppelgaenger\Entities\AbstractLockableEntity;
-
 /**
  * AppserverIo\Doppelgaenger\Entities\Definitions\AbstractDefinition
  *
@@ -36,7 +34,7 @@ use AppserverIo\Doppelgaenger\Entities\AbstractLockableEntity;
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.appserver.io/
  */
-abstract class AbstractDefinition extends AbstractLockableEntity
+abstract class AbstractDefinition
 {
 
 }

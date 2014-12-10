@@ -377,7 +377,7 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
      *
      * TODO namespaces does not make any sense here, as we are referencing structures!
      */
-    public function getUsedNamespaces()
+    public function getUsedStructures()
     {
         // Check the tokens
         $namespaces = array();
@@ -428,10 +428,10 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
 
         // Walk over all namespaces and if we find something we will act accordingly.
         $result = $structureDefinition->getQualifiedName();
-        foreach ($structureDefinition->getUsedNamespaces() as $key => $usedNamespace) {
+        foreach ($structureDefinition->getUsedStructures() as $key => $usedStructures) {
 
             // Check if the last part of the use statement is our structure
-            $tmp = explode('\\', $usedNamespace);
+            $tmp = explode('\\', $usedStructures);
             if (array_pop($tmp) === $structureName) {
 
                 // Tell them we succeeded

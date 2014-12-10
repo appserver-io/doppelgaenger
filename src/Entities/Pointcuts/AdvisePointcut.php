@@ -103,7 +103,7 @@ class AdvisePointcut extends AbstractSignaturePointcut
 
             // don't forget to create an instance first
             $variable = '$' . lcfirst(str_replace('\\', '', $this->structure));
-            $string .= $variable . ' = new ' . $this->structure . '();
+            $string .= $variable . ' = new ' . str_replace('\\\\', '\\', $this->structure) . '();
             ';
             $string .= $assignmentPrefix . $variable . $this->callType . $this->function . $invocationCode . ';
             ';

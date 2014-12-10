@@ -156,18 +156,18 @@ class FunctionParser extends AbstractParser
         $functionDefinition = new FunctionDefinition();
 
         // For our next step we would like to get the doc comment (if any)
-        $functionDefinition->docBlock = $this->getDocBlock($tokens, T_FUNCTION);
+        $functionDefinition->setDocBlock($this->getDocBlock($tokens, T_FUNCTION));
 
         // Get the function signature
-        $functionDefinition->isFinal = $this->hasSignatureToken($tokens, T_FINAL, T_FUNCTION);
-        $functionDefinition->isAbstract = $this->hasSignatureToken($tokens, T_ABSTRACT, T_FUNCTION);
-        $functionDefinition->visibility = $this->getFunctionVisibility($tokens);
-        $functionDefinition->isStatic = $this->hasSignatureToken($tokens, T_STATIC, T_FUNCTION);
-        $functionDefinition->name = $this->getFunctionName($tokens);
-        $functionDefinition->structureName = $this->currentDefinition->getQualifiedName();
+        $functionDefinition->setIsFinal($this->hasSignatureToken($tokens, T_FINAL, T_FUNCTION));
+        $functionDefinition->setIsAbstract($this->hasSignatureToken($tokens, T_ABSTRACT, T_FUNCTION));
+        $functionDefinition->setVisibility($this->getFunctionVisibility($tokens));
+        $functionDefinition->setIsStatic($this->hasSignatureToken($tokens, T_STATIC, T_FUNCTION));
+        $functionDefinition->setName($this->getFunctionName($tokens));
+        $functionDefinition->setStructureName($this->currentDefinition->getQualifiedName());
 
         // Lets also get out parameters
-        $functionDefinition->parameterDefinitions = $this->getParameterDefinitionList($tokens);
+        $functionDefinition->setParameterDefinitions($this->getParameterDefinitionList($tokens));
 
         // Do we have a private context here? If so we have to tell the annotation parser
         $privateContext = false;
@@ -178,11 +178,11 @@ class FunctionParser extends AbstractParser
 
         // So we got our docBlock, now we can parse the precondition annotations from it
         $annotationParser = new AnnotationParser($this->file, $this->config, $this->tokens, $this->currentDefinition);
-        $functionDefinition->preconditions = $annotationParser->getConditions(
+        $functionDefinition->setPreconditions($annotationParser->getConditions(
             $functionDefinition->getDocBlock(),
             Annotations::PRECONDITION,
             $privateContext
-        );
+        ));
 
         // get the advices
         $functionDefinition->getPointcutExpressions()->attach($annotationParser->getPointcutExpressions(
@@ -192,17 +192,17 @@ class FunctionParser extends AbstractParser
         ));
 
         // Does this method require the use of our "old" mechanism?
-        $functionDefinition->usesOld = $this->usesKeyword($functionDefinition->getDocBlock(), ReservedKeywords::OLD);
+        $functionDefinition->setUsesOld($this->usesKeyword($functionDefinition->getDocBlock(), ReservedKeywords::OLD));
 
         // We have to get the body of the function, so we can recreate it
-        $functionDefinition->body = $this->getFunctionBody($tokens);
+        $functionDefinition->setBody($this->getFunctionBody($tokens));
 
         // So we got our docBlock, now we can parse the postcondition annotations from it
-        $functionDefinition->postconditions = $annotationParser->getConditions(
+        $functionDefinition->setPostconditions($annotationParser->getConditions(
             $functionDefinition->getDocBlock(),
             Annotations::POSTCONDITION,
             $privateContext
-        );
+        ));
 
         // If we have to parse the definition in a recursive manner, we have to get the parent invariants
         if ($getRecursive === true) {
@@ -210,9 +210,6 @@ class FunctionParser extends AbstractParser
             // Add all the assertions we might get from ancestral dependencies
             $this->addAncestralAssertions($functionDefinition);
         }
-
-        // All done? Then lock the definition to make it a DTO
-        $functionDefinition->lock();
 
         return $functionDefinition;
     }
@@ -267,15 +264,14 @@ class FunctionParser extends AbstractParser
                 $dependencyFunctionDefinition = $dependencyFunctionDefinitions->get($functionDefinition->getName());
 
                 // If the ancestral function uses the old keyword we have to do too
-                if ($dependencyFunctionDefinition->getUsesOld() !== false) {
+                if ($dependencyFunctionDefinition->usesOld() !== false) {
 
-                    $functionDefinition->usesOld = true;
+                    $functionDefinition->setUsesOld(true);
                 }
 
                 // Get the conditions
-                $functionDefinition->ancestralPreconditions = $dependencyFunctionDefinition->getAllPreconditions(true);
-                $functionDefinition->ancestralPostconditions =
-                    $dependencyFunctionDefinition->getAllPostconditions(true);
+                $functionDefinition->setAncestralPreconditions($dependencyFunctionDefinition->getAllPreconditions(true));
+                $functionDefinition->setAncestralPostconditions($dependencyFunctionDefinition->getAllPostconditions(true));
             }
         }
     }

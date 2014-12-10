@@ -84,11 +84,11 @@ class InvariantFilter extends AbstractFilter
             $attribute = $iterator->current();
 
             // Only enter the attribute if it is used in an invariant and it is not private
-            if ($attribute->inInvariant && $attribute->visibility !== 'private') {
+            if ($attribute->inInvariant() && $attribute->getVisibility() !== 'private') {
 
                 // Build up our regex expression to filter them out
-                $obsoleteProperties[] = '/' . $attribute->visibility . '.*?\\' . $attribute->name . '/';
-                $propertyReplacements[] = 'private ' . $attribute->name;
+                $obsoleteProperties[] = '/' . $attribute->getVisibility() . '.*?\\' . $attribute->getName() . '/';
+                $propertyReplacements[] = 'private ' . $attribute->getName();
             }
 
             // Move the iterator
@@ -203,13 +203,13 @@ class InvariantFilter extends AbstractFilter
             $attribute = $iterator->current();
 
             // Only enter the attribute if it is used in an invariant and it is not private
-            if ($attribute->inInvariant && $attribute->visibility !== 'private') {
+            if ($attribute->inInvariant() && $attribute->getVisibility() !== 'private') {
 
-                $code .= '"' . substr($attribute->name, 1) . '"';
-                $code .= ' => array("visibility" => "' . $attribute->visibility . '", ';
+                $code .= '"' . substr($attribute->getName(), 1) . '"';
+                $code .= ' => array("visibility" => "' . $attribute->getVisibility() . '", ';
 
                 // Now check if we need any keywords for the variable identity
-                if ($attribute->isStatic) {
+                if ($attribute->isStatic()) {
 
                     $code .= '"static" => true';
                 } else {

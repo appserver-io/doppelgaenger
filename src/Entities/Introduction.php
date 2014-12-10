@@ -34,7 +34,7 @@ namespace AppserverIo\Doppelgaenger\Entities;
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.appserver.io/
  */
-class Introduction extends AbstractLockableEntity
+class Introduction
 {
 
     /**
@@ -60,4 +60,70 @@ class Introduction extends AbstractLockableEntity
      * @var string $target
      */
     protected $target;
+
+    /**
+     * Getter for the $implementation property
+     *
+     * @return string
+     */
+    public function getImplementation()
+    {
+        return $this->implementation;
+    }
+
+    /**
+     * Getter for the $interface property
+     *
+     * @return string
+     */
+    public function getInterface()
+    {
+        return $this->interface;
+    }
+
+    /**
+     * Getter for the $target property
+     *
+     * @return string
+     */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
+     * Setter for the $implementation property
+     *
+     * @param string $implementation Name of the trait used to implement functionality
+     *
+     * @return null
+     */
+    public function setImplementation($implementation)
+    {
+        $this->implementation = $implementation;
+    }
+
+    /**
+     * Setter for the $interface property
+     *
+     * @param string $interface The interface describing the functionality
+     *
+     * @return null
+     */
+    public function setInterface($interface)
+    {
+        $this->interface = $interface;
+    }
+
+    /**
+     * Setter for the $target property
+     *
+     * @param string $target Class which the implementation gets introduced to
+     *
+     * @return null
+     */
+    public function setTarget($target)
+    {
+        $this->target = $target;
+    }
 }

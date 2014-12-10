@@ -138,12 +138,12 @@ class PostconditionFilter extends AbstractFilter
     private function injectOldCode(& $bucketData, FunctionDefinition & $functionDefinition)
     {
         // Do we even need to do anything?
-        if ($functionDefinition->getUsesOld() !== true) {
+        if ($functionDefinition->usesOld() !== true) {
 
             return false;
         }
         // If the function is static it should not use the dgOld keyword as there is no state to the class!
-        if ($functionDefinition->getIsStatic() === true) {
+        if ($functionDefinition->isStatic() === true) {
 
             throw new GeneratorException('Cannot clone class state in static method ' . $functionDefinition->getName());
         }

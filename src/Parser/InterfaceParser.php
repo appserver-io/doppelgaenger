@@ -136,59 +136,59 @@ class InterfaceParser extends AbstractStructureParser
         }
 
         // Save the path of the original definition for later use
-        $this->currentDefinition->path = $this->file;
+        $this->currentDefinition->setPath($this->file);
 
         // Get the interfaces own namespace and the namespace which are included via use
-        $this->currentDefinition->namespace = $this->getNamespace();
-        $this->currentDefinition->usedNamespaces = $this->getUsedNamespaces();
+        $this->currentDefinition->setNamespace($this->getNamespace());
+        $this->currentDefinition->setUsedStructures($this->getUsedStructures());
 
         // For our next step we would like to get the doc comment (if any)
-        $this->currentDefinition->docBlock = $this->getDocBlock($tokens, T_INTERFACE);
+        $this->currentDefinition->setDocBlock($this->getDocBlock($tokens, T_INTERFACE));
 
         // Get the interface identity
-        $this->currentDefinition->name = $this->getName($tokens);
+        $this->currentDefinition->setName($this->getName($tokens));
 
         // So we got our docBlock, now we can parse the invariant annotations from it
         $annotationParser = new AnnotationParser($this->file, $this->config, $this->tokens);
-        $this->currentDefinition->invariantConditions = $annotationParser->getConditions(
-            $this->currentDefinition->docBlock,
+        $this->currentDefinition->setInvariantConditions($annotationParser->getConditions(
+            $this->currentDefinition->getDocBlock(),
             Annotations::INVARIANT
-        );
+        ));
 
         // Lets check if there is any inheritance, or if we implement any interfaces
         $parentNames = $this->getParents($tokens);
-        if (count($this->currentDefinition->usedNamespaces) === 0) {
+        if (count($this->currentDefinition->getUsedStructures()) === 0) {
 
             foreach ($parentNames as $parentName) {
 
                 if (strpos($parentName, '\\') !== false) {
 
-                    $this->currentDefinition->extends[] = $parentName;
+                    $this->currentDefinition->getExtends()[] = $parentName;
 
                 } else {
 
-                    $this->currentDefinition->extends[] = '\\' . $this->currentDefinition->namespace . '\\' . $parentName;
+                    $this->currentDefinition->getExtends()[] = '\\' . $this->currentDefinition->getNamespace() . '\\' . $parentName;
                 }
             }
 
         } else {
 
-            foreach ($this->currentDefinition->usedNamespaces as $alias) {
+            foreach ($this->currentDefinition->getUsedStructures() as $alias) {
 
                 foreach ($parentNames as $parentName) {
 
                     if (strpos($alias, $parentName) !== false) {
 
-                        $this->currentDefinition->extends = '\\' . $alias;
+                        $this->currentDefinition->setExtends('\\' . $alias);
                     }
                 }
             }
         }
 
         // Clean possible double-\
-        $this->currentDefinition->extends = str_replace('\\\\', '\\', $this->currentDefinition->extends);
+        $this->currentDefinition->setExtends(str_replace('\\\\', '\\', $this->currentDefinition->getExtends()));
 
-        $this->currentDefinition->constants = $this->getConstants($tokens);
+        $this->currentDefinition->setConstants($this->getConstants($tokens));
 
         // Only thing still missing are the methods, so ramp up our FunctionParser
         $functionParser = new FunctionParser(
@@ -200,7 +200,7 @@ class InterfaceParser extends AbstractStructureParser
             $this->tokens
         );
 
-        $this->currentDefinition->functionDefinitions = $functionParser->getDefinitionListFromTokens($tokens);
+        $this->currentDefinition->setFunctionDefinitions($functionParser->getDefinitionListFromTokens($tokens));
 
         return $this->currentDefinition;
     }

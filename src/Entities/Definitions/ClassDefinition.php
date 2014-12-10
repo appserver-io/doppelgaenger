@@ -180,6 +180,37 @@ class ClassDefinition extends AbstractStructureDefinition implements PropertiedS
     }
 
     /**
+     * Will flatten all conditions available at the time of the call.
+     * That means this method will check which conditions make sense in an inheritance context and will drop the
+     * others.
+     *
+     * @return bool
+     */
+    public function flattenConditions()
+    {
+        // As our lists only supports unique entries anyway, the only thing left is to check if the condition's
+        // assertions can be fulfilled (would be possible as direct assertions), and flatten the contained
+        // function definitions as well
+        $ancestralConditionIterator = $this->ancestralInvariants->getIterator();
+        foreach ($ancestralConditionIterator as $conditionList) {
+
+            $conditionListIterator = $conditionList->getIterator();
+            foreach ($conditionListIterator as $assertion) {
+
+            }
+        }
+
+        // No flatten all the function definitions we got
+        $functionDefinitionIterator = $this->functionDefinitions->getIterator();
+        foreach ($functionDefinitionIterator as $functionDefinition) {
+
+            $functionDefinition->flattenConditions();
+        }
+
+        return false;
+    }
+
+    /**
      * Getter method for attribute $ancestralInvariants
      *
      * @return null|TypedListList
@@ -254,7 +285,7 @@ class ClassDefinition extends AbstractStructureDefinition implements PropertiedS
      *
      * @return bool
      */
-    public function getIsAbstract()
+    public function isAbstract()
     {
         return $this->isAbstract;
     }
@@ -264,42 +295,116 @@ class ClassDefinition extends AbstractStructureDefinition implements PropertiedS
      *
      * @return bool
      */
-    public function getIsFinal()
+    public function isFinal()
     {
         return $this->isFinal;
     }
 
     /**
-     * Will flatten all conditions available at the time of the call.
-     * That means this method will check which conditions make sense in an inheritance context and will drop the
-     * others.
-     * This method MUST be protected/private so it will run through \AppserverIo\Doppelgaenger\Entities\AbstractLockableEntity's
-     * __call() method which will check the lock status before doing anything.
+     * Setter method for attribute $ancestralInvariants
      *
-     * @return bool
+     * @param \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList $ancestralInvariants Inherited invariant assertions
+     *
+     * @return null
      */
-    protected function flattenConditions()
+    public function setAncestralInvariants(AssertionList $ancestralInvariants)
     {
-        // As our lists only supports unique entries anyway, the only thing left is to check if the condition's
-        // assertions can be fulfilled (would be possible as direct assertions), and flatten the contained
-        // function definitions as well
-        $ancestralConditionIterator = $this->ancestralInvariants->getIterator();
-        foreach ($ancestralConditionIterator as $conditionList) {
+        $this->ancestralInvariants = $ancestralInvariants;
+    }
 
-            $conditionListIterator = $conditionList->getIterator();
-            foreach ($conditionListIterator as $assertion) {
+    /**
+     * Setter method for attribute $attributeDefinitions
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList $attributeDefinitions List of attribute definitions
+     *
+     * @return null
+     */
+    public function setAttributeDefinitions(AttributeDefinitionList $attributeDefinitions)
+    {
+        $this->attributeDefinitions = $attributeDefinitions;
+    }
 
+    /**
+     * Setter method for the $constants property
+     *
+     * @param array $constants Constants the class defines
+     *
+     * @return null
+     */
+    public function setConstants($constants)
+    {
+        $this->constants = $constants;
+    }
 
-            }
-        }
+    /**
+     * Setter method for the $extends property
+     *
+     * @param string $extends Potential parent class
+     *
+     * @return null
+     */
+    public function setExtends($extends)
+    {
+        $this->extends = $extends;
+    }
 
-        // No flatten all the function definitions we got
-        $functionDefinitionIterator = $this->functionDefinitions->getIterator();
-        foreach ($functionDefinitionIterator as $functionDefinition) {
+    /**
+     * Getter method for the $implements property
+     *
+     * @param array $implements Array of interfaces the class implements
+     *
+     * @return null
+     */
+    public function setImplements($implements)
+    {
+        $this->implements = $implements;
+    }
 
-            $functionDefinition->flattenConditions();
-        }
+    /**
+     * Setter method for attribute $introductions
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\Lists\IntroductionList $introductions List of introductions
+     *
+     * @return null
+     */
+    public function setIntroductions(IntroductionList $introductions)
+    {
+        $this->introductions = $introductions;
+    }
 
-        return false;
+    /**
+     * Setter method for attribute $invariantConditions
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList $invariantConditions List of invariant assertions
+     *
+     * @return null
+     */
+    public function setInvariantConditions(AssertionList $invariantConditions)
+    {
+        $this->invariantConditions = $invariantConditions;
+    }
+
+    /**
+     * Setter method for the $isAbstract property
+     *
+     * @param boolean $isAbstract If the class is abstract
+     *
+     * @return null
+     */
+    public function setIsAbstract($isAbstract)
+    {
+        $this->isAbstract = $isAbstract;
+    }
+
+    /**
+     * Setter method for the $isFinal property
+     *
+     * @param boolean $isFinal If the class is defined final
+     *
+     * @return null
+     */
+    public function setIsFinal($isFinal)
+    {
+        $this->isFinal = $isFinal;
     }
 }

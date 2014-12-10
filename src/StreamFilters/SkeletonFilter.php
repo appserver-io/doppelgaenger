@@ -146,7 +146,7 @@ class SkeletonFilter extends AbstractFilter
                     // Check if we got the function in our list, if not continue
                     $functionDefinition = $structureDefinition->getFunctionDefinitions()->get($functionName);
                     if (!$functionDefinition instanceof FunctionDefinition ||
-                        $functionDefinition->getIsAbstract() === true
+                        $functionDefinition->isAbstract() === true
                     ) {
 
                         continue;
@@ -265,7 +265,7 @@ class SkeletonFilter extends AbstractFilter
         // Invariant is not needed in private or static functions.
         // Also make sure that there is none in front of the constructor check
         if ($functionDefinition->getVisibility() !== 'private' &&
-            !$functionDefinition->getIsStatic() && $functionDefinition->getName() !== '__construct'
+            !$functionDefinition->isStatic() && $functionDefinition->getName() !== '__construct'
         ) {
 
             $code .= Placeholders::INVARIANT . Placeholders::PLACEHOLDER_CLOSE . '
@@ -307,7 +307,7 @@ class SkeletonFilter extends AbstractFilter
         $code .= Placeholders::POSTCONDITION . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
 
         // Invariant is not needed in private or static functions
-        if ($functionDefinition->getVisibility() !== 'private' && !$functionDefinition->getIsStatic()) {
+        if ($functionDefinition->getVisibility() !== 'private' && !$functionDefinition->isStatic()) {
 
             $code .= Placeholders::INVARIANT . Placeholders::PLACEHOLDER_CLOSE;
         }

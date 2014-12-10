@@ -20,7 +20,7 @@
 
 namespace AppserverIo\Doppelgaenger\Entities\Definitions;
 
-use AppserverIo\Doppelgaenger\Entities\AbstractLockableEntity;
+use AppserverIo\Doppelgaenger\Entities\PointcutExpression;
 
 /**
  * AppserverIo\Doppelgaenger\Entities\Definitions\Pointcut
@@ -39,10 +39,10 @@ use AppserverIo\Doppelgaenger\Entities\AbstractLockableEntity;
  * @property string                                                 $name               Name of function representing the pointcut within code
  * @property \AppserverIo\Doppelgaenger\Entities\PointcutExpression $pointcutExpression Expression defining the target of advices referencing this pointcut
  */
-class Pointcut extends AbstractLockableEntity
+class Pointcut
 {
     /**
-     * Name of the aspect the advice is defined in
+     * Name of the aspect the pointcut is defined in
      *
      * @var string $aspectName
      */
@@ -61,6 +61,26 @@ class Pointcut extends AbstractLockableEntity
      * @var \AppserverIo\Doppelgaenger\Entities\PointcutExpression $pointcutExpression
      */
     protected $pointcutExpression;
+
+    /**
+     * Getter for the $aspectName property
+     *
+     * @return string
+     */
+    public function getAspectName()
+    {
+        return $this->aspectName;
+    }
+
+    /**
+     * Getter for the $name property
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 
     /**
      * Getter for the $pointcutExpression property
@@ -88,5 +108,41 @@ class Pointcut extends AbstractLockableEntity
 
             return $this->aspectName . '->' . $this->name;
         }
+    }
+
+    /**
+     * Setter for the $aspectName property
+     *
+     * @param string $aspectName Name of the aspect the pointcut is defined in
+     *
+     * @return null
+     */
+    public function setAspectName($aspectName)
+    {
+        $this->aspectName = $aspectName;
+    }
+
+    /**
+     * Setter for the $name property
+     *
+     * @param string $name Name of the pointcut
+     *
+     * @return null
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * Setter for the $pointcutExpression property
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\PointcutExpression $pointcutExpression Expression defining the target
+     *
+     * @return null
+     */
+    public function setPointcutExpression(PointcutExpression $pointcutExpression)
+    {
+        $this->pointcutExpression = $pointcutExpression;
     }
 }

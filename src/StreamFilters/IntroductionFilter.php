@@ -118,10 +118,10 @@ class IntroductionFilter extends AbstractFilter
                         $interfaces = array();
                         foreach ($introductions as $introduction) {
 
-                            $interfaces[] = $introduction->interface;
+                            $interfaces[] = $introduction->getInterface();
 
                             // build up code for the trait usage
-                            $useCode .= 'use ' . $introduction->implementation . ';
+                            $useCode .= 'use ' . $introduction->getImplementation() . ';
                             ';
                         }
                         $implementsCode .= implode(', ', $interfaces);
