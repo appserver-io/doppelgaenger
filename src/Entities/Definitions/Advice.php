@@ -20,7 +20,7 @@
 
 namespace AppserverIo\Doppelgaenger\Entities\Definitions;
 
-use AppserverIo\Doppelgaenger\Entities\AbstractLockableEntity;
+use AppserverIo\Doppelgaenger\Entities\Lists\TypedList;
 
 /**
  * AppserverIo\Doppelgaenger\Entities\Definitions\Advice
@@ -40,7 +40,7 @@ use AppserverIo\Doppelgaenger\Entities\AbstractLockableEntity;
  * @property string                                              $name       Name of the advice itself
  * @property \AppserverIo\Doppelgaenger\Entities\Lists\TypedList $pointcuts  List of pointcuts referenced by this advice
  */
-class Advice extends AbstractLockableEntity
+class Advice
 {
 
     /**
@@ -74,6 +74,14 @@ class Advice extends AbstractLockableEntity
     protected $pointcuts;
 
     /**
+     * Default constructor
+     */
+    public function __construct()
+    {
+        $this->pointcuts = new TypedList('\AppserverIo\Doppelgaenger\Interfaces\PointcutInterface');
+    }
+
+    /**
      * Getter for the $aspectName property
      *
      * @return string
@@ -104,6 +112,16 @@ class Advice extends AbstractLockableEntity
     }
 
     /**
+     * Getter for the $pointcuts property
+     *
+     * @return \AppserverIo\Doppelgaenger\Entities\Lists\TypedList
+     */
+    public function getPointcuts()
+    {
+        return $this->pointcuts;
+    }
+
+    /**
      * Will return the qualified name of an advice.
      * Will have the form or <CONTAINING ASPECT>-><ADVICE NAME>
      *
@@ -119,5 +137,41 @@ class Advice extends AbstractLockableEntity
 
             return $this->aspectName . '->' . $this->name;
         }
+    }
+
+    /**
+     * Setter for the $aspectName property
+     *
+     * @param string $aspectName Name of the aspect the advice is defined in
+     *
+     * @return null
+     */
+    public function setAspectName($aspectName)
+    {
+        $this->aspectName = $aspectName;
+    }
+
+    /**
+     * Setter for the $codeHook property
+     *
+     * @param string $codeHook The code hook this advice is designed for
+     *
+     * @return null
+     */
+    public function setCodeHook($codeHook)
+    {
+        $this->codeHook = $codeHook;
+    }
+
+    /**
+     * Setter for the $name property
+     *
+     * @param string $name Name of the advice itself
+     *
+     * @return null
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 }

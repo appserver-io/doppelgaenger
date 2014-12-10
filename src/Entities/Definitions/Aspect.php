@@ -20,7 +20,6 @@
 
 namespace AppserverIo\Doppelgaenger\Entities\Definitions;
 
-use AppserverIo\Doppelgaenger\Entities\AbstractLockableEntity;
 use AppserverIo\Doppelgaenger\Entities\Lists\TypedList;
 
 /**
@@ -42,17 +41,8 @@ use AppserverIo\Doppelgaenger\Entities\Lists\TypedList;
  * @property string                                              $namespace Namespace of this aspect definition
  * @property \AppserverIo\Doppelgaenger\Entities\Lists\TypedList $pointcuts List of pointcut definitions
  */
-class Aspect extends AbstractLockableEntity
+class Aspect
 {
-
-    /**
-     * Default constructor
-     */
-    public function __construct()
-    {
-        $this->pointcuts = new TypedList('\AppserverIo\Doppelgaenger\Entities\Definitions\Pointcut', 'name');
-        $this->advices = new TypedList('\AppserverIo\Doppelgaenger\Entities\Definitions\Advice', 'name');
-    }
 
     /**
      * List of advices (\AppserverIo\Doppelgaenger\Entities\Definitions\Advice) which are defined within
@@ -83,6 +73,15 @@ class Aspect extends AbstractLockableEntity
      * @var \AppserverIo\Doppelgaenger\Entities\Lists\TypedList $pointcuts
      */
     protected $pointcuts;
+
+    /**
+     * Default constructor
+     */
+    public function __construct()
+    {
+        $this->pointcuts = new TypedList('\AppserverIo\Doppelgaenger\Entities\Definitions\Pointcut', 'name');
+        $this->advices = new TypedList('\AppserverIo\Doppelgaenger\Entities\Definitions\Advice', 'name');
+    }
 
     /**
      * Getter for the $advices property
@@ -139,5 +138,29 @@ class Aspect extends AbstractLockableEntity
 
             return $this->namespace . '\\' . $this->name;
         }
+    }
+
+    /**
+     * Setter for the $name property
+     *
+     * @param string $name Name of the aspect
+     *
+     * @return null
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * Setter for the $namespace property
+     *
+     * @param string $namespace Namespace of this aspect definition
+     *
+     * @return null
+     */
+    public function setNamespace($namespace)
+    {
+        $this->namespace = $namespace;
     }
 }

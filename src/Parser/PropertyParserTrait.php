@@ -130,7 +130,7 @@ trait PropertyParserTrait
                         $attributePosition = strpos(
                             $invariantIterator->current()->getString(),
                             '$this->' . ltrim(
-                                $attributeIterator->current()->name,
+                                $attributeIterator->current()->getName(),
                                 '$'
                             )
                         );
@@ -139,7 +139,7 @@ trait PropertyParserTrait
                         ) {
 
                             // Tell them we were mentioned and persist it
-                            $attributeIterator->current()->inInvariant = true;
+                            $attributeIterator->current()->setInInvariant(true);
                         }
 
                         $invariantIterator->next();
@@ -166,8 +166,8 @@ trait PropertyParserTrait
         // We got the tokens and the position of the attribute, so look in front of it for visibility and a
         // possible static keyword
         $attribute = new AttributeDefinition();
-        $attribute->name = $tokens[$attributePosition][1];
-        $attribute->structureName = $this->currentDefinition->getQualifiedName();
+        $attribute->setName($tokens[$attributePosition][1]);
+        $attribute->setStructureName($this->currentDefinition->getQualifiedName());
 
         for ($i = $attributePosition; $i > $attributePosition - 6; $i--) {
 
@@ -175,14 +175,14 @@ trait PropertyParserTrait
             if (is_array($tokens[$i]) && ($tokens[$i][0] === T_PRIVATE || $tokens[$i][0] === T_PROTECTED)) {
 
                 // Got it!
-                $attribute->visibility = $tokens[$i][1];
+                $attribute->setVisibility($tokens[$i][1]);
             }
 
             // Do we get a static keyword?
             if (is_array($tokens[$i]) && $tokens[$i][0] === T_STATIC) {
 
                 // default is false, so set it to true
-                $attribute->isStatic = true;
+                $attribute->setIsStatic(true);
             }
         }
 
@@ -216,13 +216,13 @@ trait PropertyParserTrait
         }
 
         // Set the default Value
-        $attribute->defaultValue = $defaultValue;
+        $attribute->setDefaultValue($defaultValue);
 
         // Last but not least we have to check if got the visibility, if not, set it public.
         // This is necessary, as missing visibility in the definition will also default to public
-        if ($attribute->visibility === '') {
+        if ($attribute->getVisibility() === '') {
 
-            $attribute->visibility = 'public';
+            $attribute->setVisibility('public');
         }
 
         return $attribute;

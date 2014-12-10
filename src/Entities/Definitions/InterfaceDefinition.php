@@ -117,17 +117,13 @@ class InterfaceDefinition extends AbstractStructureDefinition
     }
 
     /**
-     * Will return all invariants for this interface, direct or indirect
+     * Getter method for attribute $constants
      *
-     * @return TypedListList
-     * TODO get rid of this
+     * @return array
      */
-    public function getInvariants()
+    public function getConstants()
     {
-        $invariants = clone $this->ancestralInvariants;
-        $invariants->add($this->invariantConditions);
-
-        return $invariants;
+        return $this->constants;
     }
 
     /**
@@ -147,5 +143,77 @@ class InterfaceDefinition extends AbstractStructureDefinition
         }
 
         return $result;
+    }
+
+    /**
+     * Getter method for attribute $extends
+     *
+     * @return string
+     */
+    public function getExtends()
+    {
+        return $this->extends;
+    }
+
+    /**
+     * Will return all invariants for this interface, direct or indirect
+     *
+     * @return TypedListList
+     * TODO get rid of this
+     */
+    public function getInvariants()
+    {
+        $invariants = clone $this->ancestralInvariants;
+        $invariants->add($this->invariantConditions);
+
+        return $invariants;
+    }
+
+    /**
+     * Setter method for attribute $ancestralInvariants
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList $ancestralInvariants Inherited invariant assertions
+     *
+     * @return null
+     */
+    public function setAncestralInvariants(AssertionList $ancestralInvariants)
+    {
+        $this->ancestralInvariants = $ancestralInvariants;
+    }
+
+    /**
+     * Setter method for the $constants property
+     *
+     * @param array $constants Constants the class defines
+     *
+     * @return null
+     */
+    public function setConstants($constants)
+    {
+        $this->constants = $constants;
+    }
+
+    /**
+     * Setter method for the $extends property
+     *
+     * @param string $extends Potential parent class
+     *
+     * @return null
+     */
+    public function setExtends($extends)
+    {
+        $this->extends = $extends;
+    }
+
+    /**
+     * Setter method for attribute $invariantConditions
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList $invariantConditions List of invariant assertions
+     *
+     * @return null
+     */
+    public function setInvariantConditions(AssertionList $invariantConditions)
+    {
+        $this->invariantConditions = $invariantConditions;
     }
 }

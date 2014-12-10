@@ -129,4 +129,16 @@ class PointcutPointcut extends AbstractPointcut
 
         return false;
     }
+
+    /**
+     * Setter for the $referencedPointcuts property
+     *
+     * @param array $referencedPointcuts Pointcuts referenced by this pointcut's expression
+     *
+     * @return null
+     */
+    public function setReferencedPointcuts(array $referencedPointcuts)
+    {
+        $this->referencedPointcuts = $referencedPointcuts;
+    }
 }

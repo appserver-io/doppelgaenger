@@ -20,8 +20,9 @@
 
 namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
 
-use AppserverIo\Doppelgaenger\Entities\AbstractLockableEntity;
 use AppserverIo\Doppelgaenger\Interfaces\PointcutInterface;
+use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
+use AppserverIo\Doppelgaenger\Entities\Definitions\AttributeDefinition;
 
 /**
  * AppserverIo\Doppelgaenger\Entities\Pointcut\AbstractPointcut
@@ -42,7 +43,7 @@ use AppserverIo\Doppelgaenger\Interfaces\PointcutInterface;
  * @property string  $expression Raw expression as defined within code
  * @property boolean $isNegated  Has the result of any match to be negated?
  */
-abstract class AbstractPointcut extends AbstractLockableEntity implements PointcutInterface
+abstract class AbstractPointcut implements PointcutInterface
 {
 
     /**

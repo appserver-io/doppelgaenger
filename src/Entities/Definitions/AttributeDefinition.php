@@ -20,7 +20,6 @@
 
 namespace AppserverIo\Doppelgaenger\Entities\Definitions;
 
-use AppserverIo\Doppelgaenger\Entities\AbstractLockableEntity;
 use AppserverIo\Doppelgaenger\Interfaces\DefinitionInterface;
 
 /**
@@ -36,32 +35,36 @@ use AppserverIo\Doppelgaenger\Interfaces\DefinitionInterface;
  * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link       http://www.appserver.io/
  */
-class AttributeDefinition extends AbstractLockableEntity implements DefinitionInterface
+class AttributeDefinition implements DefinitionInterface
 {
-    /**
-     * @var string $visibility Visibility of the attribute
-     */
-    protected $visibility;
 
     /**
-     * @var boolean $isStatic Is this attribute static?
-     */
-    protected $isStatic;
-
-    /**
-     * @var string $name Name of the class attribute
-     */
-    protected $name;
-
-    /**
-     * @var mixed $defaultValue Default value (if any)
+     * Default value (if any)
+     *
+     * @var mixed $defaultValue
      */
     protected $defaultValue;
 
     /**
-     * @var bool $inInvariant Is this attribute part of the invariant?
+     * Is this attribute part of the invariant?
+     *
+     * @var boolean $inInvariant
      */
     protected $inInvariant;
+
+    /**
+     * Is this attribute static?
+     *
+     * @var boolean $isStatic
+     */
+    protected $isStatic;
+
+    /**
+     * Name of the class attribute
+     *
+     * @var string $name
+     */
+    protected $name;
 
     /**
      * Name of the structure containing this attribute
@@ -69,6 +72,13 @@ class AttributeDefinition extends AbstractLockableEntity implements DefinitionIn
      * @var string $structureName
      */
     protected $structureName;
+
+    /**
+     * Visibility of the attribute
+     *
+     * @var string $visibility
+     */
+    protected $visibility;
 
     /**
      * Default constructor
@@ -81,6 +91,26 @@ class AttributeDefinition extends AbstractLockableEntity implements DefinitionIn
         $this->defaultValue = null;
         $this->inInvariant = false;
         $this->structureName = '';
+    }
+
+    /**
+     * Getter method for the $defaultValue property
+     *
+     * @return string
+     */
+    public function getDefaultValue()
+    {
+        return $this->defaultValue;
+    }
+
+    /**
+     * Getter method for the $name property
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -115,12 +145,114 @@ class AttributeDefinition extends AbstractLockableEntity implements DefinitionIn
     }
 
     /**
-     * Getter method for attribute $structureName
+     * Getter method for the $structureName property
      *
      * @return string
      */
     public function getStructureName()
     {
         return $this->structureName;
+    }
+
+    /**
+     * Getter method for the $visibility property
+     *
+     * @return string
+     */
+    public function getVisibility()
+    {
+        return $this->visibility;
+    }
+
+    /**
+     * If the attribute is mentioned in an invariant
+     *
+     * @return boolean
+     */
+    public function inInvariant()
+    {
+        return $this->inInvariant;
+    }
+
+    /**
+     * If the attribute is declared static
+     *
+     * @return boolean
+     */
+    public function isStatic()
+    {
+        return $this->isStatic;
+    }
+
+    /**
+     * Setter method for the $defaultValue property
+     *
+     * @param mixed $defaultValue Default value of the attribute
+     *
+     * @return null
+     */
+    public function setDefaultValue($defaultValue)
+    {
+        $this->defaultValue = $defaultValue;
+    }
+
+    /**
+     * Setter method for the $inInvariant property
+     *
+     * @param boolean $inInvariant If the attribute is mentioned in an invariant clause
+     *
+     * @return null
+     */
+    public function setInInvariant($inInvariant)
+    {
+        $this->inInvariant = $inInvariant;
+    }
+
+    /**
+     * Setter method for the $isStatic property
+     *
+     * @param boolean $isStatic If the attribute is declared static
+     *
+     * @return null
+     */
+    public function setIsStatic($isStatic)
+    {
+        $this->isStatic = $isStatic;
+    }
+
+    /**
+     * Setter method for the $name property
+     *
+     * @param string $name Name of the attribute
+     *
+     * @return null
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * Setter method for the $structureName property
+     *
+     * @param string $structureName Name of the containing structure
+     *
+     * @return null
+     */
+    public function setStructureName($structureName)
+    {
+        $this->structureName = $structureName;
+    }
+
+    /**
+     * Setter method for the $visibility property
+     *
+     * @param string $visibility Visibility of the attribute
+     *
+     * @return null
+     */
+    public function setVisibility($visibility)
+    {
+        $this->visibility = $visibility;
     }
 }

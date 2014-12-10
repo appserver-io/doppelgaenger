@@ -39,6 +39,7 @@ use AppserverIo\Doppelgaenger\Interfaces\PropertiedStructureInterface;
  * @link       http://www.appserver.io/
  *
  * @property \AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList $attributeDefinitions List of defined attributes
+ * @property array                                                             $constants            Trait constants
  * @property \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList           $invariantConditions  List of directly defined invariant conditions
  */
 class TraitDefinition extends AbstractStructureDefinition implements PropertiedStructureInterface
@@ -55,6 +56,13 @@ class TraitDefinition extends AbstractStructureDefinition implements PropertiedS
      * @var \AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList $attributeDefinitions
      */
     protected $attributeDefinitions;
+
+    /**
+     * Trait constants
+     *
+     * @var array $constants
+     */
+    protected $constants;
 
     /**
      * List of directly defined invariant conditions
@@ -133,5 +141,41 @@ class TraitDefinition extends AbstractStructureDefinition implements PropertiedS
     public function hasParents()
     {
         return false;
+    }
+
+    /**
+     * Setter method for attribute $attributeDefinitions
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList $attributeDefinitions List of attribute definitions
+     *
+     * @return null
+     */
+    public function setAttributeDefinitions(AttributeDefinitionList $attributeDefinitions)
+    {
+        $this->attributeDefinitions = $attributeDefinitions;
+    }
+
+    /**
+     * Setter method for the $constants property
+     *
+     * @param array $constants Constants the class defines
+     *
+     * @return null
+     */
+    public function setConstants($constants)
+    {
+        $this->constants = $constants;
+    }
+
+    /**
+     * Setter method for attribute $invariantConditions
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList $invariantConditions List of invariant assertions
+     *
+     * @return null
+     */
+    public function setInvariantConditions(AssertionList $invariantConditions)
+    {
+        $this->invariantConditions = $invariantConditions;
     }
 }

@@ -41,7 +41,7 @@ use AppserverIo\Doppelgaenger\Interfaces\CodifyableInterface;
  * @see        https://www.eclipse.org/aspectj/doc/next/progguide/quick.html
  * @see        https://www.eclipse.org/aspectj/doc/next/progguide/semantics-pointcuts.html
  */
-class PointcutExpression extends AbstractLockableEntity implements CodifyableInterface
+class PointcutExpression implements CodifyableInterface
 {
 
     /**
@@ -80,7 +80,7 @@ class PointcutExpression extends AbstractLockableEntity implements CodifyableInt
     }
 
     /**
-     * Getter for the joinpoints property
+     * Getter for the $joinpoints property
      *
      * @return \AppserverIo\Doppelgaenger\Entities\Joinpoint|null
      */
@@ -90,13 +90,59 @@ class PointcutExpression extends AbstractLockableEntity implements CodifyableInt
     }
 
     /**
-     * Getter for the pointcut property
+     * Getter for the $pointcut property
      *
      * @return \AppserverIo\Doppelgaenger\Interfaces\PointcutInterface
      */
     public function getPointcut()
     {
         return $this->pointcut;
+    }
+
+    /**
+     * Getter for the $string property
+     *
+     * @return string
+     */
+    public function getString()
+    {
+        return $this->string;
+    }
+
+    /**
+     * Setter for the $joinpoints property
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\Joinpoint $joinpoint Joinpoint instance to set
+     *
+     * @return null
+     */
+    public function setJoinpoint(Joinpoint $joinpoint)
+    {
+        $this->joinpoint = $joinpoint;
+    }
+
+    /**
+     * Setter for the $pointcut property
+     *
+     * @param \AppserverIo\Doppelgaenger\Interfaces\PointcutInterface $pointcut Pointcut of this expression
+     *
+     * @return null
+     */
+    public function setPointcut($pointcut)
+    {
+        $this->pointcut = $pointcut;
+    }
+
+    /**
+     * Setter for the $string property
+     *
+     * @param string $string Expression string
+     *
+     * @return null
+     */
+    public function setString($string)
+    {
+        $this->string = $string;
     }
 
     /**

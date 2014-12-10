@@ -85,20 +85,20 @@ class ClassParser extends AbstractStructureParser
         }
 
         // Save the path of the original definition for later use
-        $this->currentDefinition->path = $this->file;
+        $this->currentDefinition->setPath($this->file);
 
         // File based namespaces do not make much sense, so hand it over here.
-        $this->currentDefinition->namespace = $this->getNamespace();
-        $this->currentDefinition->name = $this->getName($tokens);
-        $this->currentDefinition->usedNamespaces = $this->getUsedNamespaces();
+        $this->currentDefinition->setNamespace($this->getNamespace());
+        $this->currentDefinition->setName($this->getName($tokens));
+        $this->currentDefinition->setUsedStructures($this->getUsedStructures());
 
         // For our next step we would like to get the doc comment (if any)
-        $this->currentDefinition->docBlock = $this->getDocBlock($tokens, self::TOKEN);
+        $this->currentDefinition->setDocBlock($this->getDocBlock($tokens, self::TOKEN));
 
         // Lets get the attributes the class might have
-        $this->currentDefinition->attributeDefinitions = $this->getAttributes(
+        $this->currentDefinition->setAttributeDefinitions($this->getAttributes(
             $tokens
-        );
+        ));
 
         // So we got our docBlock, now we can parse the invariant annotations from it
         $annotationParser = new AnnotationParser($this->file, $this->config, $this->tokens, $this->currentDefinition);
@@ -108,7 +108,7 @@ class ClassParser extends AbstractStructureParser
         );
         if (!is_bool($invariantConditions)) {
 
-            $this->currentDefinition->invariantConditions = $invariantConditions;
+            $this->currentDefinition->setInvariantConditions($invariantConditions);
         }
 
         // we would be also interested in introductions
@@ -120,33 +120,32 @@ class ClassParser extends AbstractStructureParser
         foreach ($introductionAnnotations as $introductionAnnotation) {
 
             $introduction = new Introduction();
-            $introduction->target = $this->currentDefinition->getQualifiedName();
-            $introduction->implementation = $introductionAnnotation->values['implementation'];
-            $introduction->interface = $introductionAnnotation->values['interface'];
-            $introduction->lock();
+            $introduction->setTarget($this->currentDefinition->getQualifiedName());
+            $introduction->setImplementation($introductionAnnotation->values['implementation']);
+            $introduction->setInterface($introductionAnnotation->values['interface']);
 
             $introductions->add($introduction);
         }
 
-        $this->currentDefinition->introductions = $introductions;
+        $this->currentDefinition->setIntroductions($introductions);
 
         // Get the class identity
-        $this->currentDefinition->isFinal = $this->hasSignatureToken($this->tokens, T_FINAL, self::TOKEN);
-        $this->currentDefinition->isAbstract = $this->hasSignatureToken($this->tokens, T_ABSTRACT, self::TOKEN);
+        $this->currentDefinition->setIsFinal($this->hasSignatureToken($this->tokens, T_FINAL, self::TOKEN));
+        $this->currentDefinition->setIsAbstract($this->hasSignatureToken($this->tokens, T_ABSTRACT, self::TOKEN));
 
         // Lets check if there is any inheritance, or if we implement any interfaces
-        $this->currentDefinition->extends = trim(
+        $this->currentDefinition->setExtends(trim(
             $this->resolveUsedNamespace(
                 $this->currentDefinition,
                 $this->getParent($tokens)
             ),
             '\\'
-        );
+        ));
         // Get all the interfaces we have
-        $this->currentDefinition->implements = $this->getInterfaces($this->currentDefinition);
+        $this->currentDefinition->setImplements($this->getInterfaces($this->currentDefinition));
 
         // Get all class constants
-        $this->currentDefinition->constants = $this->getConstants($tokens);
+        $this->currentDefinition->setConstants($this->getConstants($tokens));
 
         // Only thing still missing are the methods, so ramp up our FunctionParser
         $functionParser = new FunctionParser(
@@ -164,7 +163,7 @@ class ClassParser extends AbstractStructureParser
         );
         if ($functionDefinitions !== false) {
 
-            $this->currentDefinition->functionDefinitions = $functionDefinitions;
+            $this->currentDefinition->setFunctionDefinitions($functionDefinitions);
         }
 
         // If we have to parse the definition in a recursive manner, we have to get the parent invariants
@@ -175,13 +174,10 @@ class ClassParser extends AbstractStructureParser
         }
 
         // Lets get the attributes the class might have
-        $this->currentDefinition->attributeDefinitions = $this->getAttributes(
+        $this->currentDefinition->setAttributeDefinitions($this->getAttributes(
             $tokens,
             $this->currentDefinition->getInvariants()
-        );
-
-        // Lock the definition
-        $this->currentDefinition->lock();
+        ));
 
         // Before exiting we will add the entry to the current structure definition hierarchy
         $this->structureDefinitionHierarchy->insert($this->currentDefinition);

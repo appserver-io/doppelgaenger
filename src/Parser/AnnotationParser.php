@@ -236,11 +236,10 @@ class AnnotationParser extends AbstractParser
 
             // build the joinpoint
             $joinpoint = new Joinpoint();
-            $joinpoint->target = $targetType;
-            $joinpoint->codeHook = $annotation->name;
-            $joinpoint->structure = $this->currentDefinition->getQualifiedName();
-            $joinpoint->targetName = $targetName;
-            $joinpoint->lock();
+            $joinpoint->setTarget($targetType);
+            $joinpoint->setCodeHook($annotation->name);
+            $joinpoint->setStructure($this->currentDefinition->getQualifiedName());
+            $joinpoint->setTargetName($targetName);
 
             // build the pointcut(s)
             foreach ($annotation->values as $rawAdvice) {
@@ -254,8 +253,7 @@ class AnnotationParser extends AbstractParser
 
                     // create the pointcut
                     $pointcutExpression = new PointcutExpression($adviceString);
-                    $pointcutExpression->joinpoint = $joinpoint;
-                    $pointcutExpression->lock();
+                    $pointcutExpression->setJoinpoint($joinpoint);
 
                     $pointcutExpressions->add($pointcutExpression);
                 }
@@ -809,7 +807,7 @@ class AnnotationParser extends AbstractParser
 
                 // If we found something private we can end here
                 if ($attributeDefinition instanceof AttributeDefinition &&
-                    $attributeDefinition->visibility === 'private'
+                    $attributeDefinition->getVisibility() === 'private'
                 ) {
 
                     // Set the private context to true and return it

@@ -161,7 +161,7 @@ class FunctionDefinition extends AbstractDefinition
      *
      * @return boolean
      */
-    public function getIsFinal()
+    public function isFinal()
     {
         return $this->isFinal;
     }
@@ -171,7 +171,7 @@ class FunctionDefinition extends AbstractDefinition
      *
      * @return boolean
      */
-    public function getIsAbstract()
+    public function isAbstract()
     {
         return $this->isAbstract;
     }
@@ -191,7 +191,7 @@ class FunctionDefinition extends AbstractDefinition
      *
      * @return boolean
      */
-    public function getIsStatic()
+    public function isStatic()
     {
         return $this->isStatic;
     }
@@ -234,16 +234,6 @@ class FunctionDefinition extends AbstractDefinition
     public function getAncestralPreconditions()
     {
         return $this->ancestralPreconditions;
-    }
-
-    /**
-     * Getter method for attribute $usesOld
-     *
-     * @return boolean
-     */
-    public function getUsesOld()
-    {
-        return $this->usesOld;
     }
 
     /**
@@ -499,5 +489,195 @@ class FunctionDefinition extends AbstractDefinition
 
         // Still here, that does not sound good
         return true;
+    }
+
+    /**
+     * Setter method for attribute $docBlock
+     *
+     * @param string $docBlock Doc block of the structure
+     *
+     * @return null
+     */
+    public function setDocBlock($docBlock)
+    {
+        $this->docBlock = $docBlock;
+    }
+
+    /**
+     * Setter method for the $isFinal property
+     *
+     * @param boolean $isFinal If the class is defined final
+     *
+     * @return null
+     */
+    public function setIsFinal($isFinal)
+    {
+        $this->isFinal = $isFinal;
+    }
+
+    /**
+     * Setter method for the $isAbstract property
+     *
+     * @param boolean $isAbstract If the class is abstract
+     *
+     * @return null
+     */
+    public function setIsAbstract($isAbstract)
+    {
+        $this->isAbstract = $isAbstract;
+    }
+
+    /**
+     * Setter method for the $isStatic property
+     *
+     * @param boolean $isStatic If the attribute is declared static
+     *
+     * @return null
+     */
+    public function setIsStatic($isStatic)
+    {
+        $this->isStatic = $isStatic;
+    }
+
+    /**
+     * Setter method for attribute $name
+     *
+     * @param string $name Name of the structure
+     *
+     * @return null
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * Setter method for attribute $parameterDefinitions
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\Lists\ParameterDefinitionList $parameterDefinitions List of parameters
+     *
+     * @return null
+     */
+    public function setParameterDefinitions(ParameterDefinitionList $parameterDefinitions)
+    {
+        $this->parameterDefinitions = $parameterDefinitions;
+    }
+
+    /**
+     * Setter method for attribute $preconditions
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList $preconditions List of preconditions
+     *
+     * @return null
+     */
+    public function setPreconditions(AssertionList $preconditions)
+    {
+        $this->preconditions = $preconditions;
+    }
+
+    /**
+     * Setter method for attribute $ancestralPreconditions
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\Lists\TypedListList $ancestralPreconditions Inherited preconditions
+     *
+     * @return null
+     */
+    public function setAncestralPreconditions(TypedListList $ancestralPreconditions)
+    {
+        $this->ancestralPreconditions = $ancestralPreconditions;
+    }
+
+    /**
+     * Setter method for attribute $pointcutExpressions
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\Lists\PointcutExpressionList $pointcutExpressions List of pointcut expressions
+     *
+     * @return null
+     */
+    public function setPointcutExpressions(PointcutExpressionList $pointcutExpressions)
+    {
+        $this->pointcutExpressions = $pointcutExpressions;
+    }
+
+    /**
+     * Getter method for attribute $postconditions
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList $postconditions List of postconditions
+     *
+     * @return null
+     */
+    public function setPostconditions(AssertionList $postconditions)
+    {
+        $this->postconditions = $postconditions;
+    }
+
+    /**
+     * Setter method for attribute $ancestralPostconditions
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\Lists\TypedListList $ancestralPreconditions Inherited preconditions
+     *
+     * @return null
+     */
+    public function setAncestralPostconditions(TypedListList $ancestralPreconditions)
+    {
+        $this->ancestralPreconditions = $ancestralPreconditions;
+    }
+
+    /**
+     * Stter method for attribute $usesOld
+     *
+     * @param boolean $usesOld Does the function use the "old" keyowrd
+     *
+     * @return null
+     */
+    public function setUsesOld($usesOld)
+    {
+        $this->usesOld = $usesOld;
+    }
+
+    /**
+     * Getter method for attribute $body
+     *
+     * @param string $body Body of the function
+     *
+     * @return null
+     */
+    public function setBody($body)
+    {
+        $this->body = $body;
+    }
+
+    /**
+     * Setter method for attribute $structureName
+     *
+     * @param string $structureName Name of the structure containing that function
+     *
+     * @return null
+     */
+    public function setStructureName($structureName)
+    {
+        $this->structureName = $structureName;
+    }
+
+    /**
+     * Setter method for the $visibility property
+     *
+     * @param string $visibility Visibility of the attribute
+     *
+     * @return null
+     */
+    public function setVisibility($visibility)
+    {
+        $this->visibility = $visibility;
+    }
+
+    /**
+     * Getter method for attribute $usesOld
+     *
+     * @return boolean
+     */
+    public function usesOld()
+    {
+        return $this->usesOld;
     }
 }

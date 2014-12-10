@@ -709,7 +709,7 @@ class StructureMap implements MapInterface
             foreach ($annotations as $annotation) {
 
                 // If we found something we can return true
-                if (strpos($haystack, $annotation) !== false) {
+                if (strpos($haystack, '@' . ltrim($annotation, '@')) !== false) {
 
                     return true;
                 }

@@ -93,15 +93,15 @@ class TraitParser extends AbstractStructureParser
         }
 
         // Save the path of the original definition for later use
-        $this->currentDefinition->path = $this->file;
+        $this->currentDefinition->setPath($this->file);
 
         // File based namespaces do not make much sense, so hand it over here.
-        $this->currentDefinition->namespace = $this->getNamespace();
-        $this->currentDefinition->name = $this->getName($tokens);
-        $this->currentDefinition->usedNamespaces = $this->getUsedNamespaces();
+        $this->currentDefinition->setNamespace($this->getNamespace());
+        $this->currentDefinition->setName($this->getName($tokens));
+        $this->currentDefinition->setUsedNamespaces($this->getUsedStructures());
 
         // For our next step we would like to get the doc comment (if any)
-        $this->currentDefinition->docBlock = $this->getDocBlock($tokens, T_CLASS);
+        $this->currentDefinition->setDocBlock($this->getDocBlock($tokens, T_CLASS));
 
         // Lets get the attributes the class might have
         $this->currentDefinition->attributeDefinitions = $this->getAttributes(
@@ -135,9 +135,6 @@ class TraitParser extends AbstractStructureParser
             $tokens,
             $this->currentDefinition->getInvariants()
         );
-
-        // Lock the definition
-        $this->currentDefinition->lock();
 
         // Before exiting we will add the entry to the current structure definition hierarchy
         $this->structureDefinitionHierarchy->insert($this->currentDefinition);

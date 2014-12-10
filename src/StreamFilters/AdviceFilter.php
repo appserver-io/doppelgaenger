@@ -210,9 +210,9 @@ class AdviceFilter extends AbstractFilter
         $pointcutExpressions = new PointcutExpressionList();
         foreach ($this->aspectRegister as $aspect) {
 
-            foreach ($aspect->advices as $advice) {
+            foreach ($aspect->getAdvices() as $advice) {
 
-                foreach ($advice->pointcuts as $pointcut) {
+                foreach ($advice->getPointcuts() as $pointcut) {
 
                     // there should be no other pointcuts than those referencing pointcut definitions
                     if (!$pointcut instanceof PointcutPointcut) {
@@ -228,22 +228,22 @@ class AdviceFilter extends AbstractFilter
                             // Make a clone so that there are no weird reference shenanigans
                             $pointcutExpression = clone $referencedPointcut->getPointcutExpression();
                             $joinpoint = new Joinpoint();
-                            $joinpoint->codeHook = $advice->getCodeHook();
-                            $joinpoint->structure = $functionDefinition->getStructureName();
-                            $joinpoint->target = Joinpoint::TARGET_METHOD;
-                            $joinpoint->targetName = $functionDefinition->getName();
-                            $joinpoint->lock();
-                            $pointcutExpression->joinpoint = $joinpoint;
+                            $joinpoint->setCodeHook($advice->getCodeHook());
+                            $joinpoint->setStructure($functionDefinition->getStructureName());
+                            $joinpoint->setTarget(Joinpoint::TARGET_METHOD);
+                            $joinpoint->setTargetName($functionDefinition->getName());
+
+                            $pointcutExpression->setJoinpoint($joinpoint);
 
                             // "straighten out" structure and function referenced by the pointcut to avoid regex within generated code
                             $pointcutExpression->getPointcut()->straightenExpression($functionDefinition);
 
                             // add the weaving pointcut into the expression
-                            $pointcutExpression->pointcut = new AndPointcut(
-                                AdvisePointcut::TYPE . '(\\' . $advice->getQualifiedName() . ')',
+                            $pointcutExpression->setPointcut(new AndPointcut(
+                                AdvisePointcut::TYPE . str_replace('\\\\', '\\', '(\\' . $advice->getQualifiedName() . ')'),
                                 $pointcutExpression->getPointcut()->getType() . '(' . $pointcutExpression->getPointcut()->getExpression() . ')'
-                            );
-                            $pointcutExpression->string = $pointcutExpression->getPointcut()->getExpression();
+                            ));
+                            $pointcutExpression->setString($pointcutExpression->getPointcut()->getExpression());
 
                             // add it to our result list
                             $pointcutExpressions->add($pointcutExpression);
@@ -278,7 +278,7 @@ class AdviceFilter extends AbstractFilter
             ';
 
         // add the original method call to the callback chain so it can be integrated, add it and get add the context
-        if ($functionDefinition->getIsStatic()) {
+        if ($functionDefinition->isStatic()) {
 
             $contextCode = '__CLASS__';
 
@@ -319,9 +319,9 @@ class AdviceFilter extends AbstractFilter
 
         // continue with the access modifiers
         $code .= $contextCode . ',
-            ' . ($functionDefinition->getIsAbstract() ? 'true' : 'false') . ',
-            ' . ($functionDefinition->getIsFinal() ? 'true' : 'false') . ',
-            ' . ($functionDefinition->getIsStatic() ? 'true' : 'false') . ',
+            ' . ($functionDefinition->isAbstract() ? 'true' : 'false') . ',
+            ' . ($functionDefinition->isFinal() ? 'true' : 'false') . ',
+            ' . ($functionDefinition->isStatic() ? 'true' : 'false') . ',
             ';
 
         // we have to build up manual parameter collection as func_get_args() only returns copies
@@ -398,7 +398,7 @@ class AdviceFilter extends AbstractFilter
         $sortedPointcutExpressions = array();
         foreach ($pointcutExpressions as $pointcutExpression) {
 
-            $sortedPointcutExpressions[$pointcutExpression->getJoinpoint()->codeHook][] = $pointcutExpression;
+            $sortedPointcutExpressions[$pointcutExpression->getJoinpoint()->getCodeHook()][] = $pointcutExpression;
         }
 
         return $sortedPointcutExpressions;

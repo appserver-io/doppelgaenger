@@ -39,7 +39,7 @@ use AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface;
  *
  * @property string                 $path                File path to the class definition
  * @property string                 $namespace           The namespace the class belongs to
- * @property array                  $usedNamespaces      All classes which are referenced by the "use" keyword
+ * @property array                  $usedStructures      All classes which are referenced by the "use" keyword
  * @property string                 $docBlock            The initial class docblock header
  * @property string                 $name                Name of the class
  * @property FunctionDefinitionList $functionDefinitions List of methods
@@ -63,9 +63,9 @@ abstract class AbstractStructureDefinition extends AbstractDefinition implements
     /**
      * All classes which are referenced by the "use" keyword
      *
-     * @var array $usedNamespaces
+     * @var array $usedStructures
      */
-    protected $usedNamespaces;
+    protected $usedStructures;
 
     /**
      * The initial class docblock header
@@ -199,13 +199,13 @@ abstract class AbstractStructureDefinition extends AbstractDefinition implements
     }
 
     /**
-     * Getter method for attribute $usedNamespace
+     * Getter method for attribute $usedStructures
      *
      * @return array
      */
-    public function getUsedNamespaces()
+    public function getUsedStructures()
     {
-        return $this->usedNamespaces;
+        return $this->usedStructures;
     }
 
     /**
@@ -244,5 +244,77 @@ abstract class AbstractStructureDefinition extends AbstractDefinition implements
     public function hasParents()
     {
         return !empty($this->extends);
+    }
+
+    /**
+     * Setter method for attribute $docBlock
+     *
+     * @param string $docBlock Doc block of the structure
+     *
+     * @return null
+     */
+    public function setDocBlock($docBlock)
+    {
+        $this->docBlock = $docBlock;
+    }
+
+    /**
+     * Setter method for attribute $functionDefinitions
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\Lists\FunctionDefinitionList $functionDefinitions List of functions
+     *
+     * @return null
+     */
+    public function setFunctionDefinitions(FunctionDefinitionList $functionDefinitions)
+    {
+        $this->functionDefinitions = $functionDefinitions;
+    }
+
+    /**
+     * Setter method for attribute $name
+     *
+     * @param string $name Name of the structure
+     *
+     * @return null
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * Getter method for attribute $namespace
+     *
+     * @param string $namespace The namespace of the structure
+     *
+     * @return null
+     */
+    public function setNamespace($namespace)
+    {
+        $this->namespace = $namespace;
+    }
+
+    /**
+     * Setter method for attribute $path
+     *
+     * @param string $path Path the definition's file
+     *
+     * @return null
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
+
+    /**
+     * Getter method for attribute $usedStructures
+     *
+     * @param array $usedStructures Array of structures referenced using the "use" statement
+     *
+     * @return null
+     */
+    public function setUsedStructures($usedStructures)
+    {
+        $this->usedStructures = $usedStructures;
     }
 }

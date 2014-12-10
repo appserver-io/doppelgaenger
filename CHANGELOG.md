@@ -1,3 +1,13 @@
+# Version 0.4.0
+
+## Bugfixes
+
+* Magic methods resulted in problems within multithreaded environments, therefore all entities were ported to explicit getters/setters
+
+## Features
+
+* None
+
 # Version 0.3.3
 
 ## Bugfixes

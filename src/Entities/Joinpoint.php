@@ -39,7 +39,7 @@ namespace AppserverIo\Doppelgaenger\Entities;
  * @property string $target     At which part of the housing structure does the joinpoint sit?
  * @property string $targetName Name of the target which describes the targeted piece of code
 */
-class Joinpoint extends AbstractLockableEntity
+class Joinpoint
 {
 
     /**
@@ -104,5 +104,83 @@ class Joinpoint extends AbstractLockableEntity
     public function getCodeHook()
     {
         return $this->codeHook;
+    }
+
+    /**
+     * Getter for the $structure property
+     *
+     * @return string
+     */
+    public function getStructure()
+    {
+        return $this->structure;
+    }
+
+    /**
+     * Getter for the $target property
+     *
+     * @return string
+     */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
+     * Getter for the $targetName property
+     *
+     * @return string
+     */
+    public function getTargetName()
+    {
+        return $this->targetName;
+    }
+
+    /**
+     * Setter for the $codeHook property
+     *
+     * @param string $codeHook The actual point within the targeted piece of code e.g. "Before"
+     *
+     * @return null
+     */
+    public function setCodeHook($codeHook)
+    {
+        $this->codeHook = $codeHook;
+    }
+
+    /**
+     * Setter for the $structure property
+     *
+     * @param string $structure Structure at which the joinpoint resides
+     *
+     * @return null
+     */
+    public function setStructure($structure)
+    {
+        $this->structure = $structure;
+    }
+
+    /**
+     * Setter for the $target property
+     *
+     * @param string $target At which part of the housing structure does the joinpoint sit?
+     *
+     * @return null
+     */
+    public function setTarget($target)
+    {
+        $this->target = $target;
+    }
+
+    /**
+     * Setter for the $targetName property
+     *
+     * @param string $targetName Name of the target which describes the targeted piece of code
+     *
+     * @return null
+     */
+    public function setTargetName($targetName)
+    {
+        $this->targetName = $targetName;
     }
 }

@@ -58,6 +58,8 @@ class AspectRegister extends AbstractTypedList
      */
     public function __construct()
     {
+        parent::__construct();
+
         $this->itemType = '\AppserverIo\Doppelgaenger\Entities\Definitions\Aspect';
         $this->defaultOffset = 'name';
     }
@@ -171,8 +173,8 @@ class AspectRegister extends AbstractTypedList
 
         // create the new aspect and fill it with things we already know
         $aspect = new Aspect();
-        $aspect->name = $aspectDefinition->getName();
-        $aspect->namespace = $aspectDefinition->getNamespace();
+        $aspect->setName($aspectDefinition->getName());
+        $aspect->setNamespace($aspectDefinition->getNamespace());
 
         // prepare the tokenizer we will need for further processing
         $needles = array(
@@ -212,7 +214,7 @@ class AspectRegister extends AbstractTypedList
             if (!$foundNeedle && strpos($functionDefinition->getDocBlock(), PointcutAnnotation::ANNOTATION) !== false) {
 
                 $pointcut = new PointcutDefinition();
-                $pointcut->name = $functionDefinition->getName();
+                $pointcut->setName($functionDefinition->getName());
 
                 $tokens = new Tokens($tokenizer->parse($functionDefinition->getDocBlock()));
 
@@ -221,7 +223,7 @@ class AspectRegister extends AbstractTypedList
                 $annotations = $toArray->convert($tokens);
 
                 // create the entities for the joinpoints and advices the pointcut describes
-                $pointcut->pointcutExpression = new PointcutExpression(array_pop(array_pop($annotations)->values));
+                $pointcut->setPointcutExpression(new PointcutExpression(array_pop(array_pop($annotations)->values)));
                 $aspect->getPointcuts()->add($pointcut);
             }
         }
@@ -234,10 +236,9 @@ class AspectRegister extends AbstractTypedList
 
                 // create our advice
                 $advice = new Advice();
-                $advice->aspectName = $aspectDefinition->getQualifiedName();
-                $advice->name = $scheduledAdviceDefinition->getName();
-                $advice->codeHook = (string) $codeHook;
-                $advice->pointcuts = new TypedList('\AppserverIo\Doppelgaenger\Interfaces\PointcutInterface');
+                $advice->setAspectName($aspectDefinition->getQualifiedName());
+                $advice->setName($scheduledAdviceDefinition->getName());
+                $advice->setCodeHook((string) $codeHook);
 
                 $tokens = new Tokens($tokenizer->parse($scheduledAdviceDefinition->getDocBlock()));
 
@@ -252,17 +253,16 @@ class AspectRegister extends AbstractTypedList
                     if ($pointcut instanceof PointcutPointcut) {
 
                         // get the referenced pointcuts for the split parts of the expression
-                        $pointcut->referencedPointcuts = $this->lookupPointcuts($pointcut->getExpression());
+                        $pointcut->setReferencedPointcuts($this->lookupPointcuts($pointcut->getExpression()));
                     }
 
-                    $advice->pointcuts->add($pointcut);
+                    $advice->getPointcuts()->add($pointcut);
                 }
 
-                $advice->lock();
-                $aspect->advices->add($advice);
+                $aspect->getAdvices()->add($advice);
             }
         }
 
-        $this->set($aspect->name, $aspect);
+        $this->set($aspect->getName(), $aspect);
     }
 }
