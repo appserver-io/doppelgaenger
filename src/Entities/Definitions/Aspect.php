@@ -46,15 +46,6 @@ class Aspect extends AbstractLockableEntity
 {
 
     /**
-     * Default constructor
-     */
-    public function __construct()
-    {
-        $this->pointcuts = new TypedList('\AppserverIo\Doppelgaenger\Entities\Definitions\Pointcut', 'name');
-        $this->advices = new TypedList('\AppserverIo\Doppelgaenger\Entities\Definitions\Advice', 'name');
-    }
-
-    /**
      * List of advices (\AppserverIo\Doppelgaenger\Entities\Definitions\Advice) which are defined within
      * the aspect definition
      *
@@ -83,6 +74,15 @@ class Aspect extends AbstractLockableEntity
      * @var \AppserverIo\Doppelgaenger\Entities\Lists\TypedList $pointcuts
      */
     protected $pointcuts;
+
+    /**
+     * Default constructor
+     */
+    public function __construct()
+    {
+        $this->pointcuts = new TypedList('\AppserverIo\Doppelgaenger\Entities\Definitions\Pointcut', 'name');
+        $this->advices = new TypedList('\AppserverIo\Doppelgaenger\Entities\Definitions\Advice', 'name');
+    }
 
     /**
      * Getter for the $advices property

@@ -21,6 +21,7 @@
 namespace AppserverIo\Doppelgaenger\Entities\Definitions;
 
 use AppserverIo\Doppelgaenger\Entities\AbstractLockableEntity;
+use AppserverIo\Doppelgaenger\Entities\Lists\TypedList;
 
 /**
  * AppserverIo\Doppelgaenger\Entities\Definitions\Advice
@@ -72,6 +73,14 @@ class Advice extends AbstractLockableEntity
      * @var \AppserverIo\Doppelgaenger\Entities\Lists\TypedList $pointcuts
      */
     protected $pointcuts;
+
+    /**
+     * Default constructor
+     */
+    public function __construct()
+    {
+        $this->pointcuts = new TypedList('\AppserverIo\Doppelgaenger\Interfaces\PointcutInterface');
+    }
 
     /**
      * Getter for the $aspectName property
