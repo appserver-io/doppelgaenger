@@ -1,3 +1,13 @@
+# Version 0.4.1
+
+## Bugfixes
+
+* Incompatible implementation of overridden method has been fixed
+
+## Features
+
+* Minor cleanups
+
 # Version 0.4.0
 
 ## Bugfixes

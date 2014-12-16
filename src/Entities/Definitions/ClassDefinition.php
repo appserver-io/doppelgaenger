@@ -241,6 +241,31 @@ class ClassDefinition extends AbstractStructureDefinition implements PropertiedS
     }
 
     /**
+     * Will return a list of all dependencies eg. parent class, interfaces and traits.
+     *
+     * @return array
+     */
+    public function getDependencies()
+    {
+        // Get our interfaces
+        $result = $this->implements;
+
+        // We got an error that this is nor array, weird but build up a final frontier here
+        if (!is_array($result)) {
+
+            $result = array($result);
+        }
+
+        // Add our parent class (if any)
+        if (!empty($this->extends)) {
+
+            $result[] = $this->extends;
+        }
+
+        return $result;
+    }
+
+    /**
      * Getter method for attribute $extends
      *
      * @return string
