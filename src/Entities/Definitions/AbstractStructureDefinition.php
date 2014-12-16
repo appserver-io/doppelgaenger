@@ -89,29 +89,18 @@ abstract class AbstractStructureDefinition extends AbstractDefinition implements
     protected $functionDefinitions;
 
     /**
-     * Will return a list of all dependencies eg. parent class, interfaces and traits.
+     * List of directly defined invariant conditions
      *
-     * @return array
+     * @var \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList $invariantConditions
      */
-    public function getDependencies()
-    {
-        // Get our interfaces
-        $result = $this->implements;
+    protected $invariantConditions;
 
-        // We got an error that this is nor array, weird but build up a final frontier here
-        if (!is_array($result)) {
-
-            $result = array($result);
-        }
-
-        // Add our parent class (if any)
-        if (!empty($this->extends)) {
-
-            $result[] = $this->extends;
-        }
-
-        return $result;
-    }
+    /**
+     * List of lists of any ancestral invariants
+     *
+     * @var \AppserverIo\Doppelgaenger\Entities\Lists\TypedListList $ancestralInvariants
+     */
+    protected $ancestralInvariants;
 
     /**
      * Getter method for attribute $docBlock

@@ -67,20 +67,6 @@ class InterfaceDefinition extends AbstractStructureDefinition
     protected $constants;
 
     /**
-     * List of directly defined invariant conditions
-     *
-     * @var \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList $invariantConditions
-     */
-    protected $invariantConditions;
-
-    /**
-     * List of lists of any ancestral invariants
-     *
-     * @var \AppserverIo\Doppelgaenger\Entities\Lists\TypedListList $ancestralInvariants
-     */
-    protected $ancestralInvariants;
-
-    /**
      * Default constructor
      *
      * TODO The constructor does not use all members
@@ -153,20 +139,6 @@ class InterfaceDefinition extends AbstractStructureDefinition
     public function getExtends()
     {
         return $this->extends;
-    }
-
-    /**
-     * Will return all invariants for this interface, direct or indirect
-     *
-     * @return TypedListList
-     * TODO get rid of this
-     */
-    public function getInvariants()
-    {
-        $invariants = clone $this->ancestralInvariants;
-        $invariants->add($this->invariantConditions);
-
-        return $invariants;
     }
 
     /**
