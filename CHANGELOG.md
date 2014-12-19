@@ -1,3 +1,13 @@
+# Version 0.4.2
+
+## Bugfixes
+
+* Structures with a namespace right after the PHP tag did not get picked up by the structure map
+
+## Features
+
+* None
+
 # Version 0.4.1
 
 ## Bugfixes

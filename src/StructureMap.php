@@ -770,7 +770,7 @@ class StructureMap implements MapInterface
             $count = count($tokens);
 
             // iterate over the current set of tokens and filter out what we found
-            for ($i = 2; $i < $count; $i++) {
+            for ($i = 0; $i < $count; $i++) {
                 if ($tokens[$i][0] == T_NAMESPACE) {
 
                     for ($j = $i; $j < $count; $j++) {
@@ -787,7 +787,8 @@ class StructureMap implements MapInterface
 
                     continue;
 
-                } elseif ($tokens[$i - 2][0] === T_CLASS
+                } elseif ($i > 1
+                    && $tokens[$i - 2][0] === T_CLASS
                     && $tokens[$i - 1][0] === T_WHITESPACE
                     && $tokens[$i][0] === T_STRING
                 ) {
@@ -804,7 +805,8 @@ class StructureMap implements MapInterface
                     $stuctureName = $tokens[$i][1];
                     break 2;
 
-                } elseif ($tokens[$i - 2][0] === T_TRAIT
+                } elseif ($i > 1
+                    && $tokens[$i - 2][0] === T_TRAIT
                     && $tokens[$i - 1][0] === T_WHITESPACE
                     && $tokens[$i][0] === T_STRING
                 ) {
@@ -813,7 +815,8 @@ class StructureMap implements MapInterface
                     $stuctureName = $tokens[$i][1];
                     break 2;
 
-                } elseif ($tokens[$i - 2][0] === T_INTERFACE
+                } elseif ($i > 1
+                    && $tokens[$i - 2][0] === T_INTERFACE
                     && $tokens[$i - 1][0] === T_WHITESPACE
                     && $tokens[$i][0] === T_STRING
                 ) {

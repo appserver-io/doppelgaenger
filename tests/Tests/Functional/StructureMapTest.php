@@ -95,4 +95,15 @@ class StructureMapTest extends \PHPUnit_Framework_TestCase
         // test if we have the entry for the underscored class
         $this->assertTrue($this->structureMap->entryExists('Random\Test\NamespaceName\HugeClassDocBlockClass'));
     }
+
+    /**
+     * Will test if classes which have the namespace in the same line as the PHP tag can be parsed correctly
+     *
+     * @return void
+     */
+    public function testWithNamespaceInFirstLine()
+    {
+        // test if we have the entry for the underscored class
+        $this->assertTrue($this->structureMap->entryExists('Random\Test\NamespaceName\NamespaceInFirstLineClass'));
+    }
 }
