@@ -59,8 +59,6 @@ class InstanceContainerTest extends \PHPUnit_Framework_TestCase
      * Test offsetGet method
      *
      * @return void
-     *
-     * @depends testGetOffset
      */
     public function testSetOffset()
     {
@@ -95,9 +93,6 @@ class InstanceContainerTest extends \PHPUnit_Framework_TestCase
      * Test if static stay of values works
      *
      * @return void
-     *
-     * @depends testSetOffset
-     * @depends testGetOffset
      */
     public function testStaticStay()
     {
@@ -112,8 +107,6 @@ class InstanceContainerTest extends \PHPUnit_Framework_TestCase
      * Test offsetUnset method
      *
      * @return void
-     *
-     * @depends testOffsetExists
      */
     public function testUnsetOffset()
     {

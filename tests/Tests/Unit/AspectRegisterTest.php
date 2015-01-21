@@ -57,9 +57,6 @@ class AspectRegisterTest extends \PHPUnit_Framework_TestCase
      * Test for the lookupAdvice method
      *
      * @return null
-     *
-     * @depends testLookupEntries
-     * @depends testLookupAspects
      */
     public function testLookupAdvice()
     {
@@ -69,8 +66,6 @@ class AspectRegisterTest extends \PHPUnit_Framework_TestCase
      * Test for the lookupAspects method
      *
      * @return null
-     *
-     * @depends testLookupEntries
      */
     public function testLookupAspects()
     {
@@ -89,8 +84,6 @@ class AspectRegisterTest extends \PHPUnit_Framework_TestCase
      * Test for the lookupPointcuts method
      *
      * @return null
-     *
-     * @depends testLookupEntries
      */
     public function testLookupPointcuts()
     {

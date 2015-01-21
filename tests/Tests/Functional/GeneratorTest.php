@@ -98,8 +98,6 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
      * Method to test if an around advice can proceed the advised method AFTER the own logic
      *
      * @return null
-     *
-     * @depends testProceededMethod
      */
     public function testAdviceAfterAdvisedOrder()
     {
@@ -118,8 +116,6 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
      * Method to test if an around advice can proceed the advised method BEFORE the own logic
      *
      * @return null
-     *
-     * @depends testProceededMethod
      */
     public function testAdviceBeforeAdvisedOrder()
     {

@@ -108,8 +108,6 @@ class AspectTest extends \PHPUnit_Framework_TestCase
      * Tests if around advice chaining works in the correct order of advices
      *
      * @return null
-     *
-     * @depends testAroundAdviceChainingWorks
      */
     public function testAroundAdviceChainingOrder()
     {
