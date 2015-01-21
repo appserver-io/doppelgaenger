@@ -86,9 +86,6 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      * Test the extendValue() method
      *
      * @return void
-     *
-     * @depends testSetValue
-     * @depends testGetValue
      */
     public function testExtendValue()
     {
@@ -125,8 +122,6 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      * Test the unsetValue() method
      *
      * @return void
-     *
-     * @depends testHasValue
      */
     public function testUnsetValue()
     {
