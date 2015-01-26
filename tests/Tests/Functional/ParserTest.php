@@ -61,7 +61,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $annotationTestClass->typeCollection(array(new \Exception(), new \Exception(), new \Exception()));
 
         } catch (\Exception $e) {
@@ -75,7 +74,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $annotationTestClass->typeCollectionReturn(array(new \Exception(), new \Exception(), new \Exception()));
 
         } catch (\Exception $e) {
@@ -86,7 +84,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $annotationTestClass->orCombinator(new \Exception());
             $annotationTestClass->orCombinator(null);
 
@@ -102,18 +99,9 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      */
-    public function testMethodParsing()
+    public function testMethodParsingWithoutException()
     {
-        $e = null;
-        try {
-
-            $methodTestClass = new MethodTestClass();
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertNull($e);
+        $methodTestClass = new MethodTestClass();
     }
 
     /**
@@ -121,7 +109,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      */
-    public function testRegexMapping()
+    public function testRegexMappingWithoutException()
     {
         // We have to load the config for regular expressions in the project dirs
         $config = new Config();
@@ -132,7 +120,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $regexTestClass1 = new RegexTestClass1();
 
         } catch (Exception $e) {
@@ -143,7 +130,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $regexTestClass2 = new RegexTestClass2();
 
         } catch (\Exception $e) {
@@ -154,7 +140,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $regexTestClass = new RegexTestClass();
 
         } catch (\Exception $e) {

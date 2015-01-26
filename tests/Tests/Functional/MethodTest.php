@@ -63,32 +63,14 @@ class MethodTest extends \PHPUnit_Framework_TestCase
     {
         $methodTestClass = new MethodTestClass();
 
-        $e = null;
-        try {
-
-            $dir = $methodTestClass->returnDir();
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e and right dir?
-        $this->assertNull($e);
+        $dir = $methodTestClass->returnDir();
         $this->assertEquals($dir, str_replace(DIRECTORY_SEPARATOR . 'Functional', '', __DIR__ . DIRECTORY_SEPARATOR . 'Data'));
 
-        $e = null;
-        try {
-
-            $file = $methodTestClass->returnFile();
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e and right file?
-        $this->assertNull($e);
+        $file = $methodTestClass->returnFile();
         $this->assertEquals(
             $file,
-            str_replace(DIRECTORY_SEPARATOR . 'Functional', '', __DIR__)
-                . DIRECTORY_SEPARATOR . 'Data' . DIRECTORY_SEPARATOR . 'MethodTestClass.php'
+            str_replace(DIRECTORY_SEPARATOR . 'Functional', '', __DIR__) .
+            DIRECTORY_SEPARATOR . 'Data' . DIRECTORY_SEPARATOR . 'MethodTestClass.php'
         );
     }
 }

@@ -52,7 +52,6 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $test->iBreakTheInvariant();
 
         } catch (\Exception $e) {
@@ -81,7 +80,6 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         // These should all fail
         $e = null;
         try {
-
             $test->stringToArray(13);
 
         } catch (\Exception $e) {
@@ -92,7 +90,6 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $test->concatSomeStuff("26", array(), new \Exception());
 
         } catch (\Exception $e) {
@@ -103,7 +100,6 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $test->stringToWelcome(34);
 
         } catch (\Exception $e) {

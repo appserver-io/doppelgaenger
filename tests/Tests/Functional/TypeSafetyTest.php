@@ -54,45 +54,49 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
      * Check if we got enforced type safety for params
      *
      * @return null
+     *
+     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPreconditionException
      */
-    public function testBasicPrecondition()
+    public function testBasicPreconditionFail1()
     {
+        $this->typeSafetyTestClass->iNeedStrings('stringer', 12);
+    }
+
+    /**
+     * Check if we got enforced type safety for params
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPreconditionException
+     */
+    public function testBasicPreconditionFail2()
+
+    {
+        $this->typeSafetyTestClass->iNeedArrays('test', array());
+    }
+
+    /**
+     * Check if we got enforced type safety for params
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPreconditionException
+     */
+    public function testBasicPreconditionFail3()
+    {
+        $this->typeSafetyTestClass->iNeedNumeric('four');
+    }
+
+    /**
+     * Check if we got enforced type safety for params
+     *
+     * @return null
+     */
+    public function testBasicPreconditions()
+    {
+
         $e = null;
         try {
-
-            $this->typeSafetyTestClass->iNeedStrings('stringer', 12);
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPreconditionException", $e);
-
-        $e = null;
-        try {
-
-            $this->typeSafetyTestClass->iNeedArrays('test', array());
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPreconditionException", $e);
-
-        $e = null;
-        try {
-
-            $this->typeSafetyTestClass->iNeedNumeric('four');
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPreconditionException", $e);
-
-        $e = null;
-        try {
-
             $this->typeSafetyTestClass->iNeedStrings('stringer', 'testinger');
 
         } catch (\Exception $e) {
@@ -103,7 +107,6 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $this->typeSafetyTestClass->iNeedArrays(array('test', 'test2'), array());
 
         } catch (\Exception $e) {
@@ -114,7 +117,6 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $this->typeSafetyTestClass->iNeedNumeric(12, 5);
             $this->typeSafetyTestClass->iNeedNumeric(42);
 

@@ -60,7 +60,6 @@ class InterfaceTest extends \PHPUnit_Framework_TestCase
 
         // push the strings into the stack
         foreach ($someStrings as $someString) {
-
             $interfaceClass->push($someString);
         }
         // and pop some of them again
