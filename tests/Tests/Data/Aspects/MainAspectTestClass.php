@@ -20,7 +20,7 @@
 
 namespace AppserverIo\Doppelgaenger\Tests\Data\Aspects;
 
-use AppserverIo\Doppelgaenger\Entities\MethodInvocation;
+use AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface;
 
 /**
  * Test class which provides some advices which can be weaved into test code
@@ -45,13 +45,13 @@ class MainAspectTestClass
     /**
      * Advice used to proceed a method but always replace the result with true
      *
-     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return boolean
      *
      * @Around("pointcut(booleanAdvisedMethods())")
      */
-    public static function trueAdvice1(MethodInvocation $methodInvocation)
+    public static function trueAdvice1(MethodInvocationInterface $methodInvocation)
     {
         $methodInvocation->proceed();
         return true;
@@ -66,13 +66,13 @@ class MainAspectTestClass
     /**
      * Advice used to proceed a method
      *
-     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return mixed
      *
      * @Around("pointcut(regexAdvisedClass())")
      */
-    public static function lazyAroundAdvice(MethodInvocation $methodInvocation)
+    public static function lazyAroundAdvice(MethodInvocationInterface $methodInvocation)
     {
         return $methodInvocation->proceed();
     }
@@ -86,13 +86,13 @@ class MainAspectTestClass
     /**
      * Advice used to proceed a method but always replace the result with false
      *
-     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return mixed
      *
      * @Around("pointcut(regexAdvisedMethod())")
      */
-    public static function falseAdvice(MethodInvocation $methodInvocation)
+    public static function falseAdvice(MethodInvocationInterface $methodInvocation)
     {
         $methodInvocation->proceed();
         return false;
@@ -107,13 +107,13 @@ class MainAspectTestClass
     /**
      * Advice to test around advice method chaining
      *
-     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return mixed
      *
      * @Around("pointcut(aroundChainMethod())")
      */
-    public static function chainingAdvice1(MethodInvocation $methodInvocation)
+    public static function chainingAdvice1(MethodInvocationInterface $methodInvocation)
     {
         $tmp = $methodInvocation->proceed();
         $tmp[] = __FUNCTION__;
@@ -123,13 +123,13 @@ class MainAspectTestClass
     /**
      * Advice to test around advice method chaining
      *
-     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return mixed
      *
      * @Around("pointcut(aroundChainMethod())")
      */
-    public static function chainingAdvice2(MethodInvocation $methodInvocation)
+    public static function chainingAdvice2(MethodInvocationInterface $methodInvocation)
     {
         $tmp = $methodInvocation->proceed();
         $tmp[] = __FUNCTION__;
@@ -151,13 +151,13 @@ class MainAspectTestClass
     /**
      * Advice used to proceed a method but always replace the result with true
      *
-     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return boolean
      *
      * @Around("pointcut(trueAdvisedMethod1())")
      */
-    public static function trueAdvice(MethodInvocation $methodInvocation)
+    public static function trueAdvice(MethodInvocationInterface $methodInvocation)
     {
         $methodInvocation->proceed();
         return true;

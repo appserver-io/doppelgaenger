@@ -1,9 +1,9 @@
 {
-	"enforcement": 
+	"enforcement":
 	{
-		"dirs": 
+		"dirs":
 		[
-			"./../tests/Tests/Data"
+			"./../tests/Tests"
 		]
 	}
 }

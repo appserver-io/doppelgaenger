@@ -20,6 +20,8 @@
 
 namespace AppserverIo\Doppelgaenger\Entities;
 
+use AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface;
+
 /**
  * DTO which will be used to represent an invoked method and will therefor hold information about it as well as the
  * functionality to invoke the initially called logic
@@ -30,7 +32,7 @@ namespace AppserverIo\Doppelgaenger\Entities;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
-class MethodInvocation
+class MethodInvocation implements MethodInvocationInterface
 {
 
     /**
@@ -167,6 +169,16 @@ class MethodInvocation
     }
 
     /**
+     * Getter for the result of the method invocation
+     *
+     * @return mixed
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+    /**
      * Getter method for property $parameters
      *
      * @return array
@@ -204,6 +216,30 @@ class MethodInvocation
     public function getVisibility()
     {
         return $this->visibility;
+    }
+
+    /**
+     * Will be used to inject the result of the original method
+     *
+     * @param mixed $result The result to inject
+     *
+     * @return mixed
+     */
+    public function injectResult($result)
+    {
+        $this->result = $result;
+    }
+
+    /**
+     * Used to injection the thrown exception, if any
+     *
+     * @param \Exception $thrownException The exception instance to inject
+     *
+     * @return null
+     */
+    public function injectThrownException(\Exception $thrownException)
+    {
+        $this->thrownException = $thrownException;
     }
 
     /**

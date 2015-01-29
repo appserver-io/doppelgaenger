@@ -115,4 +115,11 @@ class ReservedKeywords
      * @var string RESULT
      */
     const RESULT = '$dgResult';
+
+    /**
+     * Name of the local variable representing the exception thrown during method execution
+     *
+     * @var string THROWN_EXCEPTION_OBJECT
+     */
+    const THROWN_EXCEPTION_OBJECT = '$doppelgaengerThrownExceptionObject';
 }

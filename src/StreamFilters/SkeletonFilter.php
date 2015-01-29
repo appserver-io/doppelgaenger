@@ -234,7 +234,7 @@ class SkeletonFilter extends AbstractFilter
         // first of all: the function begin
         $code = Placeholders::FUNCTION_BEGIN . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
 
-        // right after: the "before" joinpoint
+        // right after: the "before" join-point
         $code .= Placeholders::BEFORE_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
 
         $code .= ReservedKeywords::CONTRACT_CONTEXT . ' = \AppserverIo\Doppelgaenger\ContractContext::open();';
@@ -261,11 +261,11 @@ class SkeletonFilter extends AbstractFilter
         ';
 
         // add the second part of the try/catch/finally block
-        $code .= '} catch (\Exception $e) {
+        $code .= '} catch (\Exception ' . ReservedKeywords::THROWN_EXCEPTION_OBJECT . ') {
         ' . Placeholders::AFTERTHROWING_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
 
             // rethrow the exception
-            throw $e;
+            throw ' . ReservedKeywords::THROWN_EXCEPTION_OBJECT . ';
         } finally {
         ';
 
@@ -289,7 +289,7 @@ class SkeletonFilter extends AbstractFilter
         // close of the contract context
         $code .= 'if (' . ReservedKeywords::CONTRACT_CONTEXT . ') {\AppserverIo\Doppelgaenger\ContractContext::close();}';
 
-        // last of all: the "after returning" joinpoint and the final return from the proxy
+        // last of all: the "after returning" join-point and the final return from the proxy
         $code .= Placeholders::AFTERRETURNING_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
             return ' . ReservedKeywords::RESULT . ';}';
 

@@ -129,56 +129,61 @@ class PointcutFactory
      */
     public function getInstance($expression)
     {
-
-        // first of all we have to get the type of the pointcut
-        // check for connector pointcuts first
-        $expression = trim($expression);
-
-        // if we are already in a wrapping connector pointcut then we will cut it off as those are not distinguished
-        // by type but rather by their connector
-        if (strpos($expression, AndPointcut::TYPE) === 0) {
-            $expression = str_replace(AndPointcut::TYPE, '', $expression);
-
-        } elseif (strpos($expression, OrPointcut::TYPE) === 0) {
-            $expression = str_replace(OrPointcut::TYPE, '', $expression);
-        }
-
-        // now lets have a look if we are wrapped in some outer brackets
-        if (strlen($expression) === $this->getBracketSpan($expression)) {
-            $expression = substr($expression, 1, strlen($expression) - 2);
-        }
-
-        // now check if we do have any "and" connectors here
-        if (strpos($expression, AndPointcut::CONNECTOR) !== false) {
-            $class = '\AppserverIo\Doppelgaenger\Entities\Pointcuts\AndPointcut';
-            $tmp = $this->findConnectorPointcut($expression, $class);
-            if ($tmp !== false) {
-                return $tmp;
-            }
-        }
-
-        // or-connection comes secondly
-        if (strpos($expression, OrPointcut::CONNECTOR) !== false) {
-            $class = '\AppserverIo\Doppelgaenger\Entities\Pointcuts\OrPointcut';
-            $tmp = $this->findConnectorPointcut($expression, $class);
-            if ($tmp !== false) {
-                return $tmp;
-            }
-        }
-
         // might be a simple type of pointcut
         $isNegated = false;
 
-        // trim the expression from containing brackets first
-        while ($expression[0] === '(' && $expression[strlen($expression) - 1] === ')') {
-            $expression = substr($expression, 1, strlen($expression) - 2);
-        }
+        // there are advices which do not reference any pointcuts, spare them the parsing
+        if (empty($expression)) {
+            $type = 'blank';
 
-        if (strpos($expression, '!') !== false) {
-            $isNegated = true;
-            $expression = str_replace('!', '', $expression);
+        } else {
+            // first of all we have to get the type of the pointcut
+            // check for connector pointcuts first
+            $expression = trim($expression);
+
+            // if we are already in a wrapping connector pointcut then we will cut it off as those are not distinguished
+            // by type but rather by their connector
+            if (strpos($expression, AndPointcut::TYPE) === 0) {
+                $expression = str_replace(AndPointcut::TYPE, '', $expression);
+
+            } elseif (strpos($expression, OrPointcut::TYPE) === 0) {
+                $expression = str_replace(OrPointcut::TYPE, '', $expression);
+            }
+
+            // now lets have a look if we are wrapped in some outer brackets
+            if (strlen($expression) === $this->getBracketSpan($expression)) {
+                $expression = substr($expression, 1, strlen($expression) - 2);
+            }
+
+            // now check if we do have any "and" connectors here
+            if (strpos($expression, AndPointcut::CONNECTOR) !== false) {
+                $class = '\AppserverIo\Doppelgaenger\Entities\Pointcuts\AndPointcut';
+                $tmp = $this->findConnectorPointcut($expression, $class);
+                if ($tmp !== false) {
+                    return $tmp;
+                }
+            }
+
+            // or-connection comes secondly
+            if (strpos($expression, OrPointcut::CONNECTOR) !== false) {
+                $class = '\AppserverIo\Doppelgaenger\Entities\Pointcuts\OrPointcut';
+                $tmp = $this->findConnectorPointcut($expression, $class);
+                if ($tmp !== false) {
+                    return $tmp;
+                }
+            }
+
+            // trim the expression from containing brackets first
+            while ($expression[0] === '(' && $expression[strlen($expression) - 1] === ')') {
+                $expression = substr($expression, 1, strlen($expression) - 2);
+            }
+
+            if (strpos($expression, '!') !== false) {
+                $isNegated = true;
+                $expression = str_replace('!', '', $expression);
+            }
+            $type = trim(strstr($expression, '(', true));
         }
-        $type = trim(strstr($expression, '(', true));
 
         // build up the class name and check if we know a class like that
         $class = '\AppserverIo\Doppelgaenger\Entities\Pointcuts\\' . ucfirst($type) . 'Pointcut';

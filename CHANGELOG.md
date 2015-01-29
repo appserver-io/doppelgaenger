@@ -1,3 +1,15 @@
+# Version 0.5.0
+
+## Bugfixes
+
+* Some minor bugfixes
+
+## Features
+
+* Introduced MethodInvocationInterface
+* Extended the functionality of AfterThrowing and AfterReturning advice by enhancing the MethodInvocation object
+* New coding coneventions
+
 # Version 0.4.2
 
 ## Bugfixes

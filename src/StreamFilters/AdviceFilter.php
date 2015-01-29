@@ -113,6 +113,12 @@ class AdviceFilter extends AbstractFilter
                             // before we weave in any advice code we have to make a MethodInvocation object ready
                             $this->injectInvocationCode($bucket->data, $functionDefinition, $callbackChain);
 
+                            // as we need the result of the method invocation we have to collect it
+                            $this->injectResultInjection($bucket->data, $functionName);
+
+                            // we need the exception (if any) within our method invocation object
+                            $this->injectExceptionInjection($bucket->data, $functionName);
+
                             // inject the advice code
                             $this->injectAdviceCode($bucket->data, $sortedFunctionPointcuts, $functionName);
                         }
@@ -178,6 +184,43 @@ class AdviceFilter extends AbstractFilter
         }
 
         return true;
+    }
+
+    /**
+     * Will inject the result of the original method invocation into our method invocation object as we need it for later use
+     *
+     * @param string $bucketData   Reference on the current bucket's data
+     * @param string $functionName Name of the function to inject the advices into
+     *
+     * @return boolean
+     */
+    protected function injectResultInjection(& $bucketData, $functionName)
+    {
+        $placeholderHook = Placeholders::AROUND_JOINPOINT . $functionName . Placeholders::PLACEHOLDER_CLOSE;
+        $bucketData = str_replace(
+            $placeholderHook,
+            $placeholderHook . ReservedKeywords::METHOD_INVOCATION_OBJECT . '->injectResult(' . ReservedKeywords::RESULT . ');',
+            $bucketData
+        );
+    }
+
+    /**
+     * Will inject the injection of any thrown exception into our method invocation object as we need it for later use
+     *
+     * @param string $bucketData   Reference on the current bucket's data
+     * @param string $functionName Name of the function to inject the advices into
+     *
+     * @return boolean
+     */
+    protected function injectExceptionInjection(& $bucketData, $functionName)
+    {
+        $placeholderHook = Placeholders::AFTERTHROWING_JOINPOINT . $functionName . Placeholders::PLACEHOLDER_CLOSE;
+        $bucketData = str_replace(
+            $placeholderHook,
+            ReservedKeywords::METHOD_INVOCATION_OBJECT . '->injectThrownException(' . ReservedKeywords::THROWN_EXCEPTION_OBJECT . ');
+            ' . $placeholderHook,
+            $bucketData
+        );
     }
 
     /**
