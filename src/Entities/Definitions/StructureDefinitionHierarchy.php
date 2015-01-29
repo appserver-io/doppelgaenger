@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Definitions\StructureDefinitionHierarchy
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Definitions;
@@ -23,17 +23,13 @@ namespace AppserverIo\Doppelgaenger\Entities\Definitions;
 use AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Definitions\StructureDefinitionHierarchy
- *
  * Keeps track of structure definitions which are directly or indirectly related to each other
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class StructureDefinitionHierarchy
 {
@@ -54,7 +50,6 @@ class StructureDefinitionHierarchy
         // Already here? Nothing to do then
         $qualifiedName = $node->getQualifiedName();
         if (!empty($this->nodes[$qualifiedName])) {
-
             return true;
         }
 
@@ -64,13 +59,10 @@ class StructureDefinitionHierarchy
         // Add empty entries for the dependencies so we can check if all where added
         $dependencies = $node->getDependencies();
         foreach ($dependencies as $dependency) {
-
             if (!empty($this->nodes[$dependency])) {
-
                 continue;
 
             } else {
-
                 $this->nodes[$dependency] = null;
             }
         }
@@ -89,7 +81,6 @@ class StructureDefinitionHierarchy
     public function getEntry($entryName)
     {
         if (!isset($this->nodes[$entryName]) || !is_null($this->nodes[$entryName])) {
-
             return false;
         }
 
@@ -106,11 +97,9 @@ class StructureDefinitionHierarchy
     public function entryExists($entryName)
     {
         if (!isset($this->nodes[$entryName]) || !is_null($this->nodes[$entryName])) {
-
             return false;
 
         } else {
-
             return true;
         }
     }
@@ -123,9 +112,7 @@ class StructureDefinitionHierarchy
     public function isComplete()
     {
         foreach ($this->nodes as $node) {
-
             if (is_null($node)) {
-
                 return false;
             }
         }

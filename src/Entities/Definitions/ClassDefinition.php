@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Definitions\ClassDefinition
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Definitions;
@@ -28,18 +28,14 @@ use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
 use AppserverIo\Doppelgaenger\Interfaces\PropertiedStructureInterface;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Definitions\ClassDefinition
- *
  * This class acts as a DTO-like (we are not immutable due to protected visibility)
  * entity for describing class definitions
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  *
  * @property \AppserverIo\Doppelgaenger\Entities\Lists\IntroductionList        $introductions        List of introductions
  * @property boolean                                                           $isFinal              Is this a final class
@@ -193,17 +189,16 @@ class ClassDefinition extends AbstractStructureDefinition implements PropertiedS
         // function definitions as well
         $ancestralConditionIterator = $this->ancestralInvariants->getIterator();
         foreach ($ancestralConditionIterator as $conditionList) {
-
+            // iterate all condition lists
             $conditionListIterator = $conditionList->getIterator();
             foreach ($conditionListIterator as $assertion) {
-
             }
         }
 
         // No flatten all the function definitions we got
         $functionDefinitionIterator = $this->functionDefinitions->getIterator();
         foreach ($functionDefinitionIterator as $functionDefinition) {
-
+            // iterate over all function definitions
             $functionDefinition->flattenConditions();
         }
 
@@ -252,13 +247,11 @@ class ClassDefinition extends AbstractStructureDefinition implements PropertiedS
 
         // We got an error that this is nor array, weird but build up a final frontier here
         if (!is_array($result)) {
-
             $result = array($result);
         }
 
         // Add our parent class (if any)
         if (!empty($this->extends)) {
-
             $result[] = $this->extends;
         }
 

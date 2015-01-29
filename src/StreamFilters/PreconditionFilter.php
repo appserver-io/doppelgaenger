@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\StreamFilters\PreconditionFilter
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage StreamFilters
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\StreamFilters;
@@ -26,18 +26,14 @@ use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 
 /**
- * AppserverIo\Doppelgaenger\StreamFilters\PreconditionFilter
- *
  * This filter will buffer the input stream and add all precondition related information at prepared locations
  * (see $dependencies)
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage StreamFilters
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class PreconditionFilter extends AbstractFilter
 {
@@ -72,17 +68,14 @@ class PreconditionFilter extends AbstractFilter
     {
         // Get our buckets from the stream
         while ($bucket = stream_bucket_make_writeable($in)) {
-
             // Get the tokens
             $tokens = token_get_all($bucket->data);
 
             // Go through the tokens and check what we found
             $tokensCount = count($tokens);
             for ($i = 0; $i < $tokensCount; $i++) {
-
                 // Did we find a function? If so check if we know that thing and insert the code of its preconditions.
                 if (is_array($tokens[$i]) && $tokens[$i][0] === T_FUNCTION && is_array($tokens[$i + 2])) {
-
                     // Get the name of the function
                     $functionName = $tokens[$i + 2][1];
 
@@ -90,11 +83,9 @@ class PreconditionFilter extends AbstractFilter
                     $functionDefinition = $this->params->get($functionName);
 
                     if (!$functionDefinition instanceof FunctionDefinition) {
-
                         continue;
 
                     } else {
-
                         // Get the code for the assertions
                         $code = $this->generateCode($functionDefinition->getAllPreconditions());
 
@@ -141,13 +132,11 @@ class PreconditionFilter extends AbstractFilter
         $conditionCounter = 0;
         $listIterator = $assertionLists->getIterator();
         for ($i = 0; $i < $listIterator->count(); $i++) {
-
             // Create the inner loop for the different assertions
             $assertionIterator = $listIterator->current()->getIterator();
 
             // Only act if we got actual entries
             if ($assertionIterator->count() === 0) {
-
                 // increment the outer loop
                 $listIterator->next();
                 continue;
@@ -155,7 +144,6 @@ class PreconditionFilter extends AbstractFilter
 
             $codeFragment = array();
             for ($j = 0; $j < $assertionIterator->count(); $j++) {
-
                 $codeFragment[] = $assertionIterator->current()->getString();
 
                 $assertionIterator->next();
@@ -186,7 +174,6 @@ class PreconditionFilter extends AbstractFilter
 
         // If there were no assertions we will just return a comment
         if ($conditionCounter === 0) {
-
             return '/* No preconditions for this function/method */';
         }
 

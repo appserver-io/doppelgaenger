@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\StreamFilters\SkeletonFilter
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage StreamFilters
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\StreamFilters;
@@ -26,20 +26,16 @@ use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 
 /**
- * AppserverIo\Doppelgaenger\StreamFilters\SkeletonFilter
- *
  * This filter is the most important one!
  * It will analyze the need to act upon the content we get and prepare placeholder for coming filters so they
  * do not have to do the analyzing part again.
  * This placeholder system also makes them highly optional, configur- and interchangeable.
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage StreamFilters
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class SkeletonFilter extends AbstractFilter
 {
@@ -77,10 +73,8 @@ class SkeletonFilter extends AbstractFilter
         $functionHook = '';
         $firstIteration = true;
         while ($bucket = stream_bucket_make_writeable($in)) {
-
             // Lets cave in the original filepath and the modification time
             if ($firstIteration === true) {
-
                 $this->injectOriginalPathHint($bucket->data, $structureDefinition->getPath());
 
                 $firstIteration = false;
@@ -92,33 +86,25 @@ class SkeletonFilter extends AbstractFilter
             // Go through the tokens and check what we found
             $tokensCount = count($tokens);
             for ($i = 0; $i < $tokensCount; $i++) {
-
                 // Has to be done only once at the beginning of the definition
                 if (empty($functionHook)) {
-
                     // We need something to hook into, right after class header seems fine
                     if (is_array($tokens[$i]) && $tokens[$i][0] === T_CLASS) {
-
                         for ($j = $i; $j < $tokensCount; $j++) {
-
                             if (is_array($tokens[$j])) {
-
                                 $functionHook .= $tokens[$j][1];
                             } else {
-
                                 $functionHook .= $tokens[$j];
                             }
 
                             // If we got the opening bracket we can break
                             if ($tokens[$j] === '{' || $tokens[$j][0] === T_CURLY_OPEN) {
-
                                 break;
                             }
                         }
 
                         // If the function hook is empty we failed and should stop what we are doing
                         if (empty($functionHook)) {
-
                             throw new GeneratorException();
                         }
 
@@ -139,7 +125,6 @@ class SkeletonFilter extends AbstractFilter
                 }
                 // Did we find a function? If so check if we know that thing and insert the code of its preconditions.
                 if (is_array($tokens[$i]) && $tokens[$i][0] === T_FUNCTION && @$tokens[$i + 2][0] === T_STRING) {
-
                     // Get the name of the function
                     $functionName = $tokens[$i + 2][1];
 
@@ -148,7 +133,6 @@ class SkeletonFilter extends AbstractFilter
                     if (!$functionDefinition instanceof FunctionDefinition ||
                         $functionDefinition->isAbstract() === true
                     ) {
-
                         continue;
                     }
 
@@ -157,7 +141,6 @@ class SkeletonFilter extends AbstractFilter
 
                     // Were we able to inject into the definition? If not we have to fail here
                     if (!$tmp) {
-
                         throw new GeneratorException(sprintf('Not able to inject condition code for %s', $functionName));
                     }
 
@@ -198,19 +181,15 @@ class SkeletonFilter extends AbstractFilter
         $tokensCount = count($tokens);
         $tmp = '';
         for ($i = $indexStart; $i < $tokensCount; $i++) {
-
             if (is_array($tokens[$i])) {
-
                 $tmp .= $tokens[$i][1];
 
             } else {
-
                 $tmp .= $tokens[$i];
             }
 
             // If we got the bracket opening the function body we can exit the loop
             if ($tokens[$i] === '{' || $tokens[$i][0] === T_CURLY_OPEN) {
-
                 break;
             }
         }
@@ -220,7 +199,6 @@ class SkeletonFilter extends AbstractFilter
 
         // Did we find something? If not we will fail here
         if ($beforeIndexIndicator === false) {
-
             return false;
         }
 
@@ -230,7 +208,6 @@ class SkeletonFilter extends AbstractFilter
         // __get and __set need some special steps so we can inject our own logic into them
         $injectNeeded = false;
         if ($functionDefinition->getName() === '__get' || $functionDefinition->getName() === '__set') {
-
             $injectNeeded = true;
         }
 
@@ -267,7 +244,6 @@ class SkeletonFilter extends AbstractFilter
         if ($functionDefinition->getVisibility() !== 'private' &&
             !$functionDefinition->isStatic() && $functionDefinition->getName() !== '__construct'
         ) {
-
             $code .= Placeholders::INVARIANT . Placeholders::PLACEHOLDER_CLOSE . '
             ';
         }
@@ -295,7 +271,6 @@ class SkeletonFilter extends AbstractFilter
 
         // if we have to inject additional code, we might do so here
         if ($injectNeeded === true) {
-
             $code .= Placeholders::METHOD_INJECT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
         }
 
@@ -308,7 +283,6 @@ class SkeletonFilter extends AbstractFilter
 
         // Invariant is not needed in private or static functions
         if ($functionDefinition->getVisibility() !== 'private' && !$functionDefinition->isStatic()) {
-
             $code .= Placeholders::INVARIANT . Placeholders::PLACEHOLDER_CLOSE;
         }
 
@@ -358,7 +332,6 @@ class SkeletonFilter extends AbstractFilter
     {
         // Do need to do this?
         if ($this->neededActions[__FUNCTION__] <= 0 || strpos($bucketData, '<?php') === false) {
-
             return false;
         }
 
@@ -392,7 +365,6 @@ class SkeletonFilter extends AbstractFilter
         $functionHook = Placeholders::FUNCTION_HOOK . Placeholders::PLACEHOLDER_CLOSE;
 
         if ($this->neededActions[__FUNCTION__] <= 0 || strpos($bucketData, $functionHook) === false) {
-
             return false;
         }
 

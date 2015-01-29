@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Parser\TraitParser
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Parser
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Parser;
@@ -25,18 +25,14 @@ use AppserverIo\Doppelgaenger\Dictionaries\Annotations;
 use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
 
 /**
- * AppserverIo\Doppelgaenger\Parser\TraitParser
- *
  * Parser which is used to parse trait definitions.
  * Does inherit from the class parser, as both have a lot in common
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Parser
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class TraitParser extends AbstractStructureParser
 {
@@ -81,11 +77,9 @@ class TraitParser extends AbstractStructureParser
     {
         // First of all we need a new TraitDefinition to fill
         if (is_null($this->currentDefinition)) {
-
             $this->currentDefinition = new TraitDefinition();
 
         } elseif (!$this->currentDefinition instanceof TraitDefinition) {
-
             throw new GeneratorException(sprintf(
                 'The structure definition %s does not seem to be a trait definition.',
                 $this->currentDefinition->getQualifiedName()

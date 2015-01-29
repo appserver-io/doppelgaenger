@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Pointcuts\SignaturePointcut
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
@@ -25,17 +25,13 @@ use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
 use AppserverIo\Doppelgaenger\Entities\Definitions\AttributeDefinition;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Pointcuts\SignaturePointcut
- *
  * Abstract parent class for pointcuts which accept expressions which express a signature like pattern
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 abstract class AbstractSignaturePointcut extends AbstractPointcut
 {
@@ -96,11 +92,9 @@ abstract class AbstractSignaturePointcut extends AbstractPointcut
 
         // filter what we need
         if (strpos($expression, self::CALL_TYPE_OBJECT) !== false || strpos($expression, self::CALL_TYPE_STATIC) !== false) {
-
             // assume an object call but correct the call type in the unlikely case we did get a static call
             $this->callType = self::CALL_TYPE_OBJECT;
             if (strpos($expression, self::CALL_TYPE_STATIC) !== false) {
-
                 $this->callType = self::CALL_TYPE_STATIC;
             }
 
@@ -109,7 +103,6 @@ abstract class AbstractSignaturePointcut extends AbstractPointcut
             $this->function = str_replace($this->structure . $this->callType, '', $expression);
 
         } else {
-
             $this->callType = null;
             $this->structure = null;
             $this->function = null;
@@ -124,11 +117,9 @@ abstract class AbstractSignaturePointcut extends AbstractPointcut
     public function getCallbackChain()
     {
         if ($this->callType === self::CALL_TYPE_STATIC) {
-
             return array(array('__CLASS__', $this->function));
 
         } else {
-
             return array(array('new ' . $this->structure . '()', $this->function));
         }
     }

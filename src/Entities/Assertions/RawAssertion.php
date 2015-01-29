@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Assertions\RawAssertion
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,29 +11,23 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Assertions;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Assertions\RawAssertion
- *
  * This class provides a way of using php syntax assertions
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class RawAssertion extends AbstractAssertion
 {
@@ -70,14 +66,12 @@ class RawAssertion extends AbstractAssertion
     public function invert()
     {
         if ($this->inverted === false) {
-
             $this->content = '!(' . $this->content . ')';
             $this->inverted = true;
 
             return true;
 
         } elseif ($this->inverted === true) {
-
             // Just unset the parts of $this->content we do not need
             unset($this->content[0]);
             unset($this->content[1]);
@@ -88,7 +82,6 @@ class RawAssertion extends AbstractAssertion
             return true;
 
         } else {
-
             return false;
         }
     }

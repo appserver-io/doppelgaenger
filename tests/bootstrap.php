@@ -11,13 +11,11 @@
  *
  * File bootstrapping the PHPUnit test environment
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Tests
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 use AppserverIo\Doppelgaenger\Config;
@@ -25,11 +23,9 @@ use AppserverIo\Doppelgaenger\Config;
 // Get the vendor dir
 $vendorDir = '';
 if (realpath(__DIR__ . "/../../vendor")) {
-
     $vendorDir = realpath(__DIR__ . "/../../vendor");
 
 } else {
-
     throw new Exception('Could not locate vendor dir');
 }
 

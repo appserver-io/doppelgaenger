@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Assertions\BasicAssertion
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,29 +11,23 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Assertions;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Assertions\BasicAssertion
- *
  * Basic assertions to compare two values
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class BasicAssertion extends AbstractAssertion
 {
@@ -103,7 +99,7 @@ class BasicAssertion extends AbstractAssertion
     public function getInvertString()
     {
         if (isset($this->inversionMapping[$this->operator])) {
-
+            // only return if we found something
             return (string)$this->firstOperand . ' ' .
             $this->inversionMapping[$this->operator] . ' ' . $this->secondOperand;
         }
@@ -117,23 +113,19 @@ class BasicAssertion extends AbstractAssertion
     public function invert()
     {
         if (isset($this->inversionMapping[$this->operator])) {
-
             // Invert the operator
             $this->operator = $this->inversionMapping[$this->operator];
             // Don't forget to mark this assertion as inverted
             if ($this->inverted === true) {
-
                 $this->inverted = false;
 
             } else {
-
                 $this->inverted = true;
             }
 
             return true;
 
         } else {
-
             return false;
         }
     }

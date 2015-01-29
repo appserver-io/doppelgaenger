@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Lists\AbstractTypedList
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Lists;
@@ -23,18 +23,14 @@ namespace AppserverIo\Doppelgaenger\Entities\Lists;
 use AppserverIo\Doppelgaenger\Interfaces\TypedListInterface;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Lists\AbstractTypedList
- *
  * Abstract parent class for type safe list structures
  * This class has dynamically defined properties as there are problems with earlier versions of extensions like pthreads!
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  *
  * @property array   $container     The actual container holding the entries
  * @property integer $position      Keeps track of the currently iterated position
@@ -69,35 +65,27 @@ abstract class AbstractTypedList implements TypedListInterface, \Iterator
     public function add($value)
     {
         if (!is_a($value, $this->itemType)) {
-
             throw new \UnexpectedValueException(sprintf('The added value does not have the expected type %s', $this->itemType));
 
         } else {
-
             $tmp = $this->defaultOffset;
 
             // Do we have a default offset?
             if (!empty($tmp)) {
-
                 // Default offset is a member of the object to store, but how to access it? Try getter and direct access
                 $getter = 'get' . ucfirst($tmp);
                 if (method_exists($value, $getter)) {
-
                     $this->container[$value->$getter()] = $value;
 
                 } elseif (property_exists($value, $tmp)) {
-
                     $this->container[$value->$tmp] = $value;
                 }
 
             } else {
-
                 // Lets check if we already got this entry, nothing we want!
                 foreach ($this->container as $entry) {
-
                     // Doe we have this entry already? If so we did our duty
                     if ($value == $entry) {
-
                         return true;
                     }
                 }
@@ -124,13 +112,10 @@ abstract class AbstractTypedList implements TypedListInterface, \Iterator
     {
         $iterator = $foreignList->getIterator();
         for ($i = 0; $i < $iterator->count(); $i++) {
-
             try {
-
                 $this->add($iterator->current());
 
             } catch (\UnexpectedValueException $e) {
-
                 throw $e;
             }
 
@@ -193,11 +178,9 @@ abstract class AbstractTypedList implements TypedListInterface, \Iterator
     public function get($offset)
     {
         if (isset($this->container[$offset])) {
-
             return $this->container[$offset];
 
         } else {
-
             return false;
         }
     }
@@ -223,9 +206,7 @@ abstract class AbstractTypedList implements TypedListInterface, \Iterator
     {
         $iterator = $this->getIterator();
         for ($i = 0; $i < $iterator->count(); $i++) {
-
             if ($iterator->current() === $value) {
-
                 return true;
             }
 
@@ -293,11 +274,9 @@ abstract class AbstractTypedList implements TypedListInterface, \Iterator
     public function set($offset, $value)
     {
         if (!is_a($value, $this->itemType)) {
-
             throw new \UnexpectedValueException();
 
         } else {
-
             $this->container[$offset] = $value;
 
             // update the key tracking

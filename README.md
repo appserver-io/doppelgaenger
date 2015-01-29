@@ -2,7 +2,7 @@
 
 Make PHP structure definition clones which look the same but behave differently
 
-[![Latest Stable Version](https://poser.pugx.org/appserver-io/doppelgaenger/v/stable.png)](https://packagist.org/packages/appserver-io/doppelgaenger) [![Total Downloads](https://poser.pugx.org/appserver-io/doppelgaenger/downloads.png)](https://packagist.org/packages/appserver-io/doppelgaenger) [![License](https://poser.pugx.org/appserver-io/doppelgaenger/license.png)](https://packagist.org/packages/appserver-io/doppelgaenger) [![Build Status](https://travis-ci.org/appserver-io/doppelgaenger.png)](https://travis-ci.org/appserver-io/doppelgaenger) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/appserver-io/doppelgaenger/v/stable.png)](https://packagist.org/packages/appserver-io/doppelgaenger) [![Total Downloads](https://poser.pugx.org/appserver-io/doppelgaenger/downloads.png)](https://packagist.org/packages/appserver-io/doppelgaenger) [![License](https://poser.pugx.org/appserver-io/doppelgaenger/license.png)](https://packagist.org/packages/appserver-io/doppelgaenger) [![Build Status](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/badges/build.png?b=master)](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/build-status/master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/?branch=master)
 
 # Introduction
 
@@ -47,7 +47,7 @@ You also have to specify your project's root path(s) within the `config.default.
 You can specify multiple directories and additionally use [`glob-like`](<http://php.net/manual/en/function.glob.php>) regex
 for more complicated paths.
 
-## Design by Contract
+# Design by Contract
 
 php-by-contract strives to be a lightweight [`Design by Contract`](<http://en.wikipedia.org/wiki/Design_by_contract>) library for PHP which can be added with minimal changes
 to any existing projects.
@@ -71,7 +71,7 @@ public function pop()
 
 Check out more ways to use contracts in the included tests.
 
-### What can be done?
+## What can be done?
 
 As stated above this library aims to bring you the power of [`Design by Contract`](<http://en.wikipedia.org/wiki/Design_by_contract>),
 a concept first outlined by Bertrand Meyer in 1986, to make your applications more robust and easier to debug.
@@ -84,7 +84,7 @@ This contains basic features as:
 - The above (not including type safety) will be inherited by every child structure, strengthening your object hierarchies
 - The library will warn you (exception or log message) on violation of these contracts
 
-### A note on inheritance
+## A note on inheritance
 
 It says above that all conditions will get inherited by child structures, but this is only half true. To understand that
 we have to consider the PHP inheritance system which includes `private` visibility and a possible change of an
@@ -96,7 +96,7 @@ PBC takes these things into account and will therefore not pass down:
 
 These exceptions are made **WITHOUT any warning** so please keep this in mind when relying on contract inheritance.
 
-### How does it work?
+## How does it work?
 
 We use a system of autoloading and code creation to ensure our annotations will get enforced.
 This features a 4 step process:
@@ -108,7 +108,7 @@ This features a 4 step process:
 - Generator : Will use stream filters to create a new file structure definition containing configured enforcement
 - Cache : Will allow us to omit Parser and Generator for future calls, to speed up usage significantly.
 
-### Configuration
+## Configuration
 
 The php-by-contract library can be configured via JSON config files.
 The library contains a default configuration named `config.default.json` which contains a default configuration to
@@ -191,7 +191,7 @@ Any of the above values can also be set programmatically in the `Config` class b
 This also allow to pass more complex values to the configuration. So you might pass an already configured instance of a `PSR-3`
 compatible logger into `enforcement/logger` to make use of any integrated logging mechanism your application might have.
 
-##Aspect-oriented programming
+#Aspect-oriented programming
 
 [Aspect-oriented programming](http://en.wikipedia.org/wiki/Aspect-oriented_programming) is the concept of decoupling so called *cross-cutting concerns*, logic which is logic duplicated throughout the complete  codebase, and implemented them at a central point.
 These cross-cutting concerns often is logic which is needed in a manifold of places but has a simple implementation. Examples would be security/authentication or logging.
@@ -199,12 +199,28 @@ Implementing logging at several places is either a huge duplication mess or resu
 With AOP logging gets implemented once and you can centrally (or at the actual place of use if you like) define where to use it.
 This allows for very easy reactions to changes within your infrastructure.
 
-### How does it work
+## How does it work
+
+## Join-points
 
 
-### Advices
 
+## Advices
 
+## Pointcuts
+A pointcut is basically a definition of a certain point within the flow of the application code. This might e.g. be the execution of a certain method or a method of a certain kind throwing an exception.
+You can specify these certain points using something called a [join-point model](https://en.wikipedia.org/wiki/Aspect-oriented_programming#Join_point_models). This model explains how a pointcut
+sets advices and join-points in relation to build an actual execution of aspect code.
+
+Pseudocode might be `execute AdviceA at call to MethodB`.
+ 
+Pointcuts can be specified in three different ways:
+
+### Direct annotation aka interceptors
+
+### Generic annotations within aspects
+
+### Generic configuration in XML 
 
 # Roadmap
 

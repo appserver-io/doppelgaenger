@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Pointcuts\AndPointcut
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,29 +11,23 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Pointcuts\AndPointcut
- *
  * Pointcut to and-connect two other pointcuts logically
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  *
  * @Target({"ADVICE", "METHOD","PROPERTY"})
  */
@@ -61,19 +57,15 @@ class AndPointcut extends AbstractConnectorPointcut
     {
         // we have to check if any of these conditions can be omitted in terms of boolean algebra
         if ($this->leftPointcut->getConditionString() === 'true' && $this->rightPointcut->getConditionString() === 'true') {
-
             return 'true';
 
         } elseif ($this->leftPointcut->getConditionString() === 'true') {
-
             return $this->rightPointcut->getConditionString();
 
         } elseif ($this->rightPointcut->getConditionString() === 'true') {
-
             return $this->leftPointcut->getConditionString();
 
         } else {
-
             return '(' . $this->leftPointcut->getConditionString() . $this->getConnector().
             $this->rightPointcut->getConditionString() . ')';
         }

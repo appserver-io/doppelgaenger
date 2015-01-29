@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Parser\AnnotationParser
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Parser
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Parser;
@@ -25,7 +25,6 @@ use AppserverIo\Doppelgaenger\Entities\Assertions\RawAssertion;
 use AppserverIo\Doppelgaenger\Entities\Assertions\TypedCollectionAssertion;
 use AppserverIo\Doppelgaenger\Entities\Definitions\AttributeDefinition;
 use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
-use AppserverIo\Doppelgaenger\Entities\Definitions\StructureDefinitionHierarchy;
 use AppserverIo\Doppelgaenger\Entities\Joinpoint;
 use AppserverIo\Doppelgaenger\Entities\Lists\AssertionList;
 use AppserverIo\Doppelgaenger\Entities\Assertions\ChainedAssertion;
@@ -43,17 +42,13 @@ use Herrera\Annotations\Tokens;
 use Herrera\Annotations\Convert\ToArray;
 
 /**
- * AppserverIo\Doppelgaenger\Parser\AnnotationParser
- *
  * The AnnotationParser class which is used to get all usable parts from within DocBlock annotation
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Parser
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class AnnotationParser extends AbstractParser
 {
@@ -135,11 +130,9 @@ class AnnotationParser extends AbstractParser
     {
         // we rely on a leading "@" symbol, so sanitize the input
         if (!is_string($annotationString)) {
-
             return false;
 
         } elseif (substr($annotationString, 0, 1) === '@') {
-
             $annotationString = '@' . $annotationString;
         }
 
@@ -156,7 +149,6 @@ class AnnotationParser extends AbstractParser
     public function addAnnotations(array $annotationStrings)
     {
         foreach ($annotationStrings as $annotationString) {
-
             $this->addAnnotation($annotationString);
         }
     }
@@ -184,9 +176,7 @@ class AnnotationParser extends AbstractParser
 
         // only collect annotations we want
         foreach ($annotations as $annotation) {
-
             if ($annotation->name === $annotationType) {
-
                 $collectedAnnotations[] = $annotation;
             }
         }
@@ -227,10 +217,8 @@ class AnnotationParser extends AbstractParser
 
         // create the entities for the joinpoints and advices the pointcut describes
         foreach ($annotations as $annotation) {
-
             // filter out the annotations which are no proper joinpoints
             if (!class_exists('\AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\\' . $annotation->name)) {
-
                 continue;
             }
 
@@ -243,14 +231,11 @@ class AnnotationParser extends AbstractParser
 
             // build the pointcut(s)
             foreach ($annotation->values as $rawAdvice) {
-
                 // as it might be an array we have to sanitize it first
                 if (!is_array($rawAdvice)) {
-
                     $rawAdvice = array($rawAdvice);
                 }
                 foreach ($rawAdvice as $adviceString) {
-
                     // create the pointcut
                     $pointcutExpression = new PointcutExpression($adviceString);
                     $pointcutExpression->setJoinpoint($joinpoint);
@@ -279,42 +264,34 @@ class AnnotationParser extends AbstractParser
         if ($conditionKeyword !== Annotations::PRECONDITION && $conditionKeyword !== Annotations::POSTCONDITION
             && $conditionKeyword !== Annotations::INVARIANT
         ) {
-
             return false;
         }
 
         // Get our conditions
         $rawConditions = array();
         if ($conditionKeyword === Annotations::POSTCONDITION) {
-
             // Check if we need @return as well
             if ($this->config->getValue('enforcement/enforce-default-type-safety') === true) {
-
                 $regex = '/' . str_replace('\\', '\\\\', $conditionKeyword) . '.+?\n|' . '@return' . '.+?\n/s';
 
             } else {
-
                 $regex = '/' . str_replace('\\', '\\\\', $conditionKeyword) . '.+?\n/s';
             }
 
             preg_match_all($regex, $docBlock, $rawConditions);
 
         } elseif ($conditionKeyword === Annotations::PRECONDITION) {
-
             // Check if we need @return as well
             if ($this->config->getValue('enforcement/enforce-default-type-safety') === true) {
-
                 $regex = '/' . str_replace('\\', '\\\\', $conditionKeyword) . '.+?\n|' . '@param' . '.+?\n/s';
 
             } else {
-
                 $regex = '/' . str_replace('\\', '\\\\', $conditionKeyword) . '.+?\n/s';
             }
 
             preg_match_all($regex, $docBlock, $rawConditions);
 
         } else {
-
             preg_match_all('/' . str_replace('\\', '\\\\', $conditionKeyword) . '.+?\n/s', $docBlock, $rawConditions);
         }
 
@@ -322,18 +299,14 @@ class AnnotationParser extends AbstractParser
         $result = new AssertionList();
         if (empty($rawConditions) === false) {
             foreach ($rawConditions[0] as $condition) {
-
                 $assertion = $this->parseAssertion($condition);
                 if ($assertion !== false) {
-
                     // Do we already got a private context we can set? If not we have to find out four ourselves
                     if ($privateContext !== null) {
-
                         // Add the context (wether private or not)
                         $assertion->setPrivateContext($privateContext);
 
                     } else {
-
                         // Add the context (private or not)
                         $this->determinePrivateContext($assertion);
                     }
@@ -364,15 +337,12 @@ class AnnotationParser extends AbstractParser
     protected function parseAssertion($docString, $usedAnnotation = null)
     {
         if ($usedAnnotation === null) {
-
             // We have to differ between several types of assertions, so lets check which one we got
             $annotations = array('@param', '@return', Annotations::POSTCONDITION, Annotations::PRECONDITION, Annotations::INVARIANT);
 
             $usedAnnotation = '';
             foreach ($annotations as $annotation) {
-
                 if (strpos($docString, $annotation) !== false) {
-
                     $usedAnnotation = $annotation;
                     break;
                 }
@@ -381,27 +351,22 @@ class AnnotationParser extends AbstractParser
 
         // Do we have an or combinator aka |?
         if ($this->filterOrCombinator($docString)) {
-
             // If we got invalid arguments then we will fail
             try {
-
                 return $this->parseChainedAssertion('|', $docString);
 
             } catch (\InvalidArgumentException $e) {
-
                 return false;
             }
         }
 
         // If we got invalid arguments then we will fail
         try {
-
             $variable = $this->filterVariable($docString);
             $type = $this->filterType($docString);
             $class = $this->filterClass($docString);
 
         } catch (\InvalidArgumentException $e) {
-
             return false;
         }
 
@@ -412,22 +377,18 @@ class AnnotationParser extends AbstractParser
             case '@return':
 
                 if ($usedAnnotation === '@return') {
-
                     $variable = ReservedKeywords::RESULT;
                 }
 
                 // Now we have to check what we got
                 // First of all handle if we got a simple type
                 if ($type !== false && !empty($type)) {
-
                     $assertionType = 'AppserverIo\Doppelgaenger\Entities\Assertions\TypeAssertion';
 
                 } elseif ($class !== false && !empty($class)) {
-
                     // We might also have a typed collection
                     $type = $this->filterTypedCollection($class);
                     if ($type !== false && $variable !== false) {
-
                         $assertion = new TypedCollectionAssertion($variable, $type);
                         break;
                     }
@@ -436,21 +397,17 @@ class AnnotationParser extends AbstractParser
                     $assertionType = 'AppserverIo\Doppelgaenger\Entities\Assertions\InstanceAssertion';
 
                 } else {
-
                     return false;
                 }
 
                 // We handled what kind of assertion we need, now check what we will assert
                 if ($variable !== false) {
-
                     $assertion = new $assertionType($variable, $type);
 
                 } elseif ($usedAnnotation === '@return') {
-
                     $assertion = new $assertionType(ReservedKeywords::RESULT, $type);
 
                 } else {
-
                     return false;
                 }
 
@@ -464,15 +421,12 @@ class AnnotationParser extends AbstractParser
                 // Now we have to check what we got
                 // First of all handle if we got a simple type
                 if ($type !== false) {
-
                     $assertionType = 'AppserverIo\Doppelgaenger\Entities\Assertions\TypeAssertion';
 
                 } elseif ($class !== false && !empty($class)) {
-
                     // We might also have a typed collection
                     $type = $this->filterTypedCollection($docString);
                     if ($type !== false && $variable !== false) {
-
                         $assertion = new TypedCollectionAssertion($variable, $type);
                         break;
                     }
@@ -481,18 +435,15 @@ class AnnotationParser extends AbstractParser
                     $assertionType = 'AppserverIo\Doppelgaenger\Entities\Assertions\InstanceAssertion';
 
                 } else {
-
                     $assertion = new RawAssertion(trim(str_replace($usedAnnotation, '', $docString)));
                     break;
                 }
 
                 // We handled what kind of assertion we need, now check what we will assert
                 if ($variable !== false && !empty($assertionType)) {
-
                     $assertion = new $assertionType($variable, $type);
 
                 } else {
-
                     $assertion = new RawAssertion(trim(str_replace($usedAnnotation, '', $docString)));
                 }
 
@@ -521,10 +472,8 @@ class AnnotationParser extends AbstractParser
         $combinedPart = '';
         $combinedIndex = 0;
         foreach ($assertionArray as $key => $assertionPart) {
-
             // Check which part contains the | but does not only consist of it
             if ($this->filterOrCombinator($assertionPart) && trim($assertionPart) !== '|') {
-
                 $combinedPart = trim($assertionPart);
                 $combinedIndex = $key;
                 break;
@@ -533,25 +482,21 @@ class AnnotationParser extends AbstractParser
 
         // Check if we got anything of value
         if (empty($combinedPart)) {
-
             throw new ParserException(sprintf('Error parsing what seems to be a |-combined assertion %s', $docString));
         }
 
         // Now we have to create all the separate assertions for each part of the $combinedPart string
         $assertionList = new AssertionList();
         foreach (explode('|', $combinedPart) as $partString) {
-
             // Rebuild the assertion string with one partial string of the combined part
             $tmp = $assertionArray;
             $tmp[$combinedIndex] = $partString;
             $assertion = $this->parseAssertion(implode(' ', $tmp));
 
             if (is_bool($assertion)) {
-
                 continue;
 
             } else {
-
                 $assertionList->add($assertion);
             }
             $assertion = false;
@@ -575,7 +520,6 @@ class AnnotationParser extends AbstractParser
 
         // Filter for the first variable. The first as there might be a variable name in any following description
         foreach ($explodedString as $stringPiece) {
-
             // Check if we got a variable
             $stringPiece = trim($stringPiece);
             $dollarPosition = strpos(
@@ -585,7 +529,6 @@ class AnnotationParser extends AbstractParser
 
             if ($dollarPosition === 0 || $stringPiece === ReservedKeywords::RESULT || $stringPiece === ReservedKeywords::OLD
             ) {
-
                 return $stringPiece;
             }
         }
@@ -624,7 +567,6 @@ class AnnotationParser extends AbstractParser
 
         $results = array();
         foreach ($tmp[2] as $rawAttribute) {
-
             $results[] = '$' . $rawAttribute;
         }
 
@@ -642,7 +584,6 @@ class AnnotationParser extends AbstractParser
     protected function filterOrCombinator($docString)
     {
         if (strpos($docString, '|')) {
-
             return true;
         }
 
@@ -661,7 +602,6 @@ class AnnotationParser extends AbstractParser
     {
         $tmp = strpos($docString, 'array<');
         if ($tmp !== false && strpos($docString, '>') > $tmp) {
-
             $stringPiece = explode('array<', $docString);
             $stringPiece = $stringPiece[1];
 
@@ -689,25 +629,20 @@ class AnnotationParser extends AbstractParser
         // Filter for the first variable. The first as there might be a variable name in any following description
         $validTypes = array_flip($this->validSimpleTypes);
         foreach ($explodedString as $stringPiece) {
-
             // If we got a variable before any type we do not have proper doc syntax
             if (strpos($stringPiece, '$') !== false) {
-
                 return false;
             }
 
             // Check if we got a type we recognize
             $stringPiece = strtolower(trim($stringPiece));
             if (isset($validTypes[$stringPiece])) {
-
                 return $stringPiece;
 
             } elseif (isset($this->simpleTypeMappings[$stringPiece])) {
-
                 return $this->simpleTypeMappings[$stringPiece];
 
             } elseif ($stringPiece === 'mixed') {
-
                 throw new \InvalidArgumentException;
             }
         }
@@ -732,7 +667,6 @@ class AnnotationParser extends AbstractParser
 
         // Check if we got a valid docsting, if so the first part must begin with @
         if (strpos($explodedString[0], '@') !== 0) {
-
             return false;
         }
 
@@ -740,10 +674,8 @@ class AnnotationParser extends AbstractParser
         $validTypes = array_flip($this->validSimpleTypes);
         $stringPiece = trim($explodedString[1]);
         if (strpos($stringPiece, '$') === false && !isset($validTypes[strtolower($stringPiece)])) {
-
             // If we got "void" we do not need to bother
             if ($stringPiece !== 'void') {
-
                 return $stringPiece;
             }
         }
@@ -764,7 +696,6 @@ class AnnotationParser extends AbstractParser
     {
         // we only have to act if the current definition has functions and properties
         if (!$this->currentDefinition instanceof PropertiedStructureInterface || !$this->currentDefinition instanceof StructureDefinitionInterface) {
-
             return;
         }
 
@@ -775,10 +706,8 @@ class AnnotationParser extends AbstractParser
         $methodCalls = $this->filterMethodCalls($assertionString);
 
         if (!empty($methodCalls)) {
-
             // Iterate over all method calls and check if they are private
             foreach ($methodCalls as $methodCall) {
-
                 // Get the function definition, but do not get recursive conditions
                 $functionDefinition = $this->currentDefinition->getFunctionDefinitions()->get($methodCall);
 
@@ -786,7 +715,6 @@ class AnnotationParser extends AbstractParser
                 if ($functionDefinition instanceof FunctionDefinition &&
                     $functionDefinition->getVisibility() === 'private'
                 ) {
-
                     // Set the private context to true and return it
                     $assertion->setPrivateContext(true);
 
@@ -799,17 +727,14 @@ class AnnotationParser extends AbstractParser
         $attributes = $this->filterAttributes($assertionString);
 
         if (!empty($attributes)) {
-
             // Iterate over all attributes and check if they are private
             foreach ($attributes as $attribute) {
-
                 $attributeDefinition = $this->currentDefinition->getAttributeDefinitions()->get($attribute);
 
                 // If we found something private we can end here
                 if ($attributeDefinition instanceof AttributeDefinition &&
                     $attributeDefinition->getVisibility() === 'private'
                 ) {
-
                     // Set the private context to true and return it
                     $assertion->setPrivateContext(true);
 
@@ -835,14 +760,12 @@ class AnnotationParser extends AbstractParser
         // Do we have method calls? If so we have at least structure scope
         $methodCalls = $this->filterMethodCalls($assertionString);
         if (!empty($methodCalls)) {
-
             $assertion->setMinScope('structure');
         }
 
         // Do we have any attributes? If so we have at least structure scope
         $attributes = $this->filterAttributes($assertionString);
         if (!empty($attributes)) {
-
             $assertion->setMinScope('structure');
         }
     }

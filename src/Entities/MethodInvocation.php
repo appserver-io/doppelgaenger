@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\MethodInvocation
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,30 +11,24 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\MethodInvocation
- *
  * DTO which will be used to represent an invoked method and will therefor hold information about it as well as the
  * functionality to invoke the initially called logic
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class MethodInvocation
 {
@@ -255,7 +251,6 @@ class MethodInvocation
         // implementation.
         // but lets throw a warning so the user knows
         if (empty($this->callbackChain)) {
-
             trigger_error(
                 'The callback chain for ' . $this->getStructureName() . '::' . $this->getName() . ' was empty, invoking original implementation.',
                 E_USER_NOTICE
@@ -270,19 +265,15 @@ class MethodInvocation
         unset($this->callbackChain[key($this->callbackChain)]);
 
         try {
-
             // pass over the method invocation object (instead of original params) as long as we got something in the chain
             if (!empty($this->callbackChain)) {
-
                 $this->result = call_user_func_array($callback, array($this));
 
             } else {
-
                 $this->result = call_user_func_array($callback, $this->getParameters());
             }
 
         } catch (\Exception $e) {
-
             $this->thrownException = $e;
             throw $e;
         }

@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Pointcut\WeavePointcut
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,30 +11,24 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Pointcut\WeavePointcut
- *
  * Pointcut for direct weaving of advice logic.
  * Can only be used with a qualified method signature e.g. \AppserverIo\Doppelgaenger\Logger->log(__METHOD__)
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  *
  * @Target({"METHOD","PROPERTY"})
  */
@@ -76,7 +72,6 @@ class WeavePointcut extends AbstractSignaturePointcut
     {
         $assignmentPrefix = '';
         if (!is_null($assignTo)) {
-
             $assignmentPrefix = $assignTo . ' = ';
         }
 
@@ -85,7 +80,6 @@ class WeavePointcut extends AbstractSignaturePointcut
         $string = '';
         $expression = $this->getExpression();
         if ($this->callType === self::CALL_TYPE_OBJECT) {
-
             // don't forget to create an instance first
             $variable = '$' . lcfirst(str_replace('\\', '', $this->structure));
             $string .= $variable . ' = new ' . $this->structure . '();
@@ -94,7 +88,6 @@ class WeavePointcut extends AbstractSignaturePointcut
             ';
 
         } else {
-
             $string .= $assignmentPrefix . $expression . ';
             ';
         }

@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\StreamFilters\IntroductionFilter
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,29 +11,23 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage StreamFilters
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\StreamFilters;
 
 /**
- * AppserverIo\Doppelgaenger\StreamFilters\IntroductionFilter
- *
  * This filter will add given interfaces to already defined classes
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage StreamFilters
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class IntroductionFilter extends AbstractFilter
 {
@@ -68,56 +64,45 @@ class IntroductionFilter extends AbstractFilter
         $interfaceHook = '';
         $keywordNeeded = true;
         while ($bucket = stream_bucket_make_writeable($in)) {
-
             // Has to be done only once at the beginning of the definition
             if (empty($interfaceHook) && $introductions->count() > 0) {
-
                 // Get the tokens
                 $tokens = token_get_all($bucket->data);
 
                 // Go through the tokens and check what we found
                 $tokensCount = count($tokens);
                 for ($i = 0; $i < $tokensCount; $i++) {
-
                     // We need something to hook into, right after class header seems fine
                     if (is_array($tokens[$i]) && $tokens[$i][0] === T_CLASS) {
-
                         for ($j = $i; $j < $tokensCount; $j++) {
-
                             // If we got the opening bracket we can break
                             if ($tokens[$j] === '{' || $tokens[$j][0] === T_CURLY_OPEN) {
-
                                 break;
                             }
 
                             if (is_array($tokens[$j])) {
-
                                 // we have to check if there already are interfaces
                                 if ($tokens[$j][0] === T_IMPLEMENTS) {
-
                                     $keywordNeeded = false;
                                 }
 
                                 $interfaceHook .= $tokens[$j][1];
-                            } else {
 
+                            } else {
                                 $interfaceHook .= $tokens[$j];
                             }
                         }
 
                         // build up the injected code and make the injection
                         if ($keywordNeeded) {
-
                             $implementsCode = ' implements ';
 
                         } else {
-
                             $implementsCode = ', ';
                         }
                         $useCode = '';
                         $interfaces = array();
                         foreach ($introductions as $introduction) {
-
                             $interfaces[] = $introduction->getInterface();
 
                             // build up code for the trait usage
@@ -163,19 +148,15 @@ class IntroductionFilter extends AbstractFilter
 
         // filter the params
         if (is_array($this->params)) {
-
             $interfaces = $this->params;
 
         } else {
-
             $interfaces[] = $this->params;
         }
 
         // filter out everything which might not be right
         foreach ($interfaces as $key => $interfaceCandidate) {
-
             if (!is_string($interfaceCandidate)) {
-
                 unset($interfaces[$key]);
             }
         }

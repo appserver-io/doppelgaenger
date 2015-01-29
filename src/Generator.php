@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Generator
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,20 +11,16 @@
  *
  * PHP version 5
  *
- * @category  Library
- * @package   Doppelgaenger
  * @author    Bernhard Wick <bw@appserver.io>
- * @copyright 2014 TechDivision GmbH - <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger;
 
-use AppserverIo\Doppelgaenger\CacheMap;
-use AppserverIo\Doppelgaenger\Entities\Annotations\Aspect as AspectAnnotation;
 use AppserverIo\Doppelgaenger\Entities\Definitions\AspectDefinition;
-use AppserverIo\Doppelgaenger\StructureMap;
 use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
 use AppserverIo\Doppelgaenger\Entities\Definitions\ClassDefinition;
 use AppserverIo\Doppelgaenger\Entities\Definitions\InterfaceDefinition;
@@ -30,19 +28,15 @@ use AppserverIo\Doppelgaenger\Entities\Definitions\StructureDefinitionHierarchy;
 use AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface;
 use AppserverIo\Doppelgaenger\Entities\Definitions\Structure;
 use AppserverIo\Doppelgaenger\Parser\StructureParserFactory;
-use AppserverIo\Doppelgaenger\Config;
 use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
 
 /**
- * AppserverIo\Doppelgaenger\Generator
- *
  * This class initiates the creation of enforced structure definitions.
  *
- * @category  Library
- * @package   Doppelgaenger
  * @author    Bernhard Wick <bw@appserver.io>
- * @copyright 2014 TechDivision GmbH - <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
 class Generator
@@ -94,13 +88,9 @@ class Generator
     public function __construct(StructureMap $structureMap, CacheMap $cacheMap, Config $config, AspectRegister $aspectRegister)
     {
         $this->cacheMap = $cacheMap;
-
         $this->structureMap = $structureMap;
-
         $this->config = $config;
-
         $this->aspectRegister = $aspectRegister;
-
         $this->structureDefinitionHierarchy = new StructureDefinitionHierarchy();
     }
 
@@ -131,7 +121,7 @@ class Generator
         $structureDefinition = $parser->getDefinition($mapEntry->getIdentifier(), $createRecursive);
 
         if (!$structureDefinition instanceof StructureDefinitionInterface) {
-
+            // we did not get what we need, so fail
             return false;
         }
 
@@ -144,7 +134,7 @@ class Generator
         $tmp = $this->createFileFromDefinition($filePath, $structureDefinition);
 
         if ($tmp === false) {
-
+            // we were not able to create a new definition file, fail
             throw new GeneratorException(sprintf('Could not create altered definition for %s', $qualifiedName));
         }
         // Now get our new file into the cacheMap
@@ -203,7 +193,7 @@ class Generator
 
         // Check if we got something, if not we will default to class
         if (!method_exists($this, $creationMethod)) {
-
+            // per default we will try to create a class definition
             $creationMethod = 'createFileFromClassDefinition';
         }
 
@@ -297,13 +287,11 @@ class Generator
 
         // Did we write something?
         if ($tmp > 0) {
-
             fclose($res);
 
             return true;
 
         } else {
-
             // Delete the empty file stub we made
             unlink(
                 $this->createFilePath(
@@ -336,7 +324,6 @@ class Generator
         // Lets get the enforcement level
         $levelArray = array();
         if ($this->config->hasValue('enforcement/level')) {
-
             $levelArray = array_reverse(str_split(decbin($this->config->getValue('enforcement/level'))));
         }
 
@@ -352,21 +339,17 @@ class Generator
         // Now lets register and append the filters if they are mapped to a 1
         // Lets have a look at the precondition filter first
         if (isset($levelArray[0]) && $levelArray[0] == 1) {
-
             // Do we even got any preconditions?
             $filterNeeded = false;
             $iterator = $structureDefinition->getFunctionDefinitions()->getIterator();
             foreach ($iterator as $functionDefinition) {
-
                 if ($functionDefinition->getAllPreconditions()->count() !== 0) {
-
                     $filterNeeded = true;
                     break;
                 }
             }
 
             if ($filterNeeded) {
-
                 stream_filter_register('PreconditionFilter', 'AppserverIo\Doppelgaenger\StreamFilters\PreconditionFilter');
                 $filters['PreconditionFilter'] = stream_filter_append(
                     $res,
@@ -379,21 +362,17 @@ class Generator
 
         // What about the postcondition filter?
         if (isset($levelArray[1]) && $levelArray[1] == 1) {
-
             // Do we even got any postconditions?
             $filterNeeded = false;
             $iterator = $structureDefinition->getFunctionDefinitions()->getIterator();
             foreach ($iterator as $functionDefinition) {
-
                 if ($functionDefinition->getAllPostconditions()->count() !== 0) {
-
                     $filterNeeded = true;
                     break;
                 }
             }
 
             if ($filterNeeded) {
-
                 stream_filter_register('PostconditionFilter', 'AppserverIo\Doppelgaenger\StreamFilters\PostconditionFilter');
                 $filters['PostconditionFilter'] = stream_filter_append(
                     $res,
@@ -406,10 +385,8 @@ class Generator
 
         // What about the invariant filter?
         if (isset($levelArray[2]) && $levelArray[2] == 1) {
-
             // Do we even got any invariants?
             if ($structureDefinition->getInvariants()->count(true) !== 0) {
-
                 stream_filter_register('InvariantFilter', 'AppserverIo\Doppelgaenger\StreamFilters\InvariantFilter');
                 $filters['InvariantFilter'] = stream_filter_append($res, 'InvariantFilter', STREAM_FILTER_WRITE, $structureDefinition);
             }
@@ -439,7 +416,6 @@ class Generator
     {
         // check if the given filter exists and throw an exception if not
         if (!class_exists($filterClass)) {
-
             throw new GeneratorException(sprintf('Could not find filter class %s', $filterClass));
         }
 
@@ -466,7 +442,7 @@ class Generator
         $mapEntry = $this->cacheMap->getEntry($structureName);
 
         if (!$mapEntry instanceof Structure) {
-
+            // we should fail if we do not get a structure
             return false;
         }
 

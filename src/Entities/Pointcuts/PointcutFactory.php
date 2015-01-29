@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Pointcuts\PointcutFactory
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,29 +11,23 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Pointcuts\PointcutFactory
- *
  * Factory which will produce instances of specific pointcut classes based on their type and expression
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class PointcutFactory
 {
@@ -42,7 +38,7 @@ class PointcutFactory
      * @param string $expression String to be analysed for potential connector pointcut use
      * @param string $class      Type of connector pointcut to look for
      *
-     * @return boolean|\AppserverIo\Doppelgaenger\Interfaces\Pointcut
+     * @return boolean|\AppserverIo\Doppelgaenger\Interfaces\PointcutInterface
      */
     protected function findConnectorPointcut($expression, $class)
     {
@@ -50,20 +46,16 @@ class PointcutFactory
         // an even bracket count on both sides means we found the outermost connection
         $connector = constant($class . '::CONNECTOR');
         if (strpos($expression, $connector) !== false) {
-
             $connectorCount = substr_count($expression, $connector);
             $connectionIndex = 0;
             for ($i = 0; $i < $connectorCount; $i++) {
-
                 $connectionIndex = strpos($expression, $connector, $connectionIndex + 1);
                 $leftCandidate = substr($expression, 0, $connectionIndex);
                 $rightCandidate = str_replace($leftCandidate . $connector, '', $expression);
 
                 $leftBrackets = $this->getBracketCount($leftCandidate);
                 if ($leftBrackets === 0 && !empty($leftCandidate)) {
-
                     if ($this->getBracketCount($rightCandidate) === 0 && !empty($rightCandidate)) {
-
                         return new $class($leftCandidate, $rightCandidate);
                     }
 
@@ -106,24 +98,19 @@ class PointcutFactory
         $strlen = strlen($string);
         $firstBracket = 0;
         for ($i = $offset; $i < $strlen; $i++) {
-
             // count different bracket types by de- and increasing the counter
             if ($stringArray[$i] === '(') {
-
                 if (is_null($bracketCounter)) {
-
                     $firstBracket = $i;
                 }
                 $bracketCounter = (int) $bracketCounter + 1;
 
             } elseif ($stringArray[$i] === ')') {
-
                 $bracketCounter = (int) $bracketCounter - 1;
             }
 
             // if we reach 0 again we have a completely enclosed string
             if ($bracketCounter === 0) {
-
                 return $i + 1 - $firstBracket;
             }
         }
@@ -150,38 +137,31 @@ class PointcutFactory
         // if we are already in a wrapping connector pointcut then we will cut it off as those are not distinguished
         // by type but rather by their connector
         if (strpos($expression, AndPointcut::TYPE) === 0) {
-
             $expression = str_replace(AndPointcut::TYPE, '', $expression);
 
         } elseif (strpos($expression, OrPointcut::TYPE) === 0) {
-
             $expression = str_replace(OrPointcut::TYPE, '', $expression);
         }
 
         // now lets have a look if we are wrapped in some outer brackets
         if (strlen($expression) === $this->getBracketSpan($expression)) {
-
             $expression = substr($expression, 1, strlen($expression) - 2);
         }
 
         // now check if we do have any "and" connectors here
         if (strpos($expression, AndPointcut::CONNECTOR) !== false) {
-
             $class = '\AppserverIo\Doppelgaenger\Entities\Pointcuts\AndPointcut';
             $tmp = $this->findConnectorPointcut($expression, $class);
             if ($tmp !== false) {
-
                 return $tmp;
             }
         }
 
         // or-connection comes secondly
         if (strpos($expression, OrPointcut::CONNECTOR) !== false) {
-
             $class = '\AppserverIo\Doppelgaenger\Entities\Pointcuts\OrPointcut';
             $tmp = $this->findConnectorPointcut($expression, $class);
             if ($tmp !== false) {
-
                 return $tmp;
             }
         }
@@ -191,12 +171,10 @@ class PointcutFactory
 
         // trim the expression from containing brackets first
         while ($expression[0] === '(' && $expression[strlen($expression) - 1] === ')') {
-
             $expression = substr($expression, 1, strlen($expression) - 2);
         }
 
         if (strpos($expression, '!') !== false) {
-
             $isNegated = true;
             $expression = str_replace('!', '', $expression);
         }
@@ -207,7 +185,6 @@ class PointcutFactory
 
         // check if we got a valid class
         if (!class_exists($class)) {
-
             throw new \InvalidArgumentException(sprintf('Could not resolve the expression %s to any known pointcut type', $expression));
         }
 

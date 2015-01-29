@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Definitions;
@@ -28,18 +28,14 @@ use AppserverIo\Doppelgaenger\Entities\Lists\PointcutList;
 use AppserverIo\Doppelgaenger\Interfaces\AssertionInterface;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition
- *
  * Provides a definition of a (generally speaking) function.
  * This includes methods as well
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class FunctionDefinition extends AbstractDefinition
 {
@@ -306,22 +302,17 @@ class FunctionDefinition extends AbstractDefinition
         // a potential child method might want to inherit grandparental conditions which do not make sense for us
         // (but do for them).
         if ($nonPrivateOnly === true || $filterMismatches === true) {
-
             $preconditionListIterator = $preconditions->getIterator();
             foreach ($preconditionListIterator as $preconditionList) {
-
                 $preconditionIterator = $preconditionList->getIterator();
                 foreach ($preconditionIterator as $key => $precondition) {
-
                     // The privacy issue
                     if ($nonPrivateOnly === true && $precondition->isPrivateContext()) {
-
                         $preconditionList->delete($key);
                     }
 
                     // The mismatch filter
                     if ($filterMismatches === true && $this->conditionIsMismatch($precondition)) {
-
                         $preconditionList->delete($key);
                     }
                 }
@@ -346,15 +337,11 @@ class FunctionDefinition extends AbstractDefinition
 
         // If we need to we will filter all the non private conditions from the lists
         if ($nonPrivateOnly === true) {
-
             $postconditionListIterator = $postconditions->getIterator();
             foreach ($postconditionListIterator as $postconditionList) {
-
                 $postconditionIterator = $postconditionList->getIterator();
                 foreach ($postconditionIterator as $key => $postcondition) {
-
                     if ($postcondition->isPrivateContext()) {
-
                         $postconditionList->delete($key);
                     }
                 }
@@ -381,30 +368,24 @@ class FunctionDefinition extends AbstractDefinition
 
         // We have to do some more work if we need the definition header
         if ($type === 'definition') {
-
             // Check for final or abstract (abstract cannot be used if final)
             if ($this->isFinal) {
-
                 $header .= ' final ';
             } elseif ($this->isAbstract) {
-
                 $header .= ' abstract ';
             }
 
             // Do we need to make this function public? If not we will use the original visibility
             if ($showMe === false) {
-
                 // Prepend visibility
                 $header .= $this->visibility;
 
             } else {
-
                 $header .= 'public';
             }
 
             // Are we static?
             if ($this->isStatic) {
-
                 $header .= ' static ';
             }
 
@@ -415,10 +396,8 @@ class FunctionDefinition extends AbstractDefinition
         // If we have to generate code for a call we have to check for either static or normal access
         if ($type === 'call') {
             if ($this->isStatic === true) {
-
                 $header .= 'self::';
             } else {
-
                 $header .= '$this->';
             }
         }
@@ -431,7 +410,6 @@ class FunctionDefinition extends AbstractDefinition
         $parameterString = array();
         $parameterIterator = $this->parameterDefinitions->getIterator();
         for ($k = 0; $k < $parameterIterator->count(); $k++) {
-
             // Our parameter
             $parameter = $parameterIterator->current();
 
@@ -451,7 +429,6 @@ class FunctionDefinition extends AbstractDefinition
             $header .= '(' . $parameterString . ')';
 
         } else {
-
             $header .= '()';
         }
 
@@ -471,7 +448,6 @@ class FunctionDefinition extends AbstractDefinition
         // If the minimal scope is above or below function scope we cannot determine if this is a mismatch in
         // function scope.
         if ($assertion->getMinScope() !== 'function') {
-
             return false;
         }
 
@@ -480,9 +456,7 @@ class FunctionDefinition extends AbstractDefinition
         $assertionString = $assertion->getString();
         $parameterIterator = $this->parameterDefinitions->getIterator();
         foreach ($parameterIterator as $parameter) {
-
             if (strpos($assertionString, $parameter->name) !== false) {
-
                 return false;
             }
         }
@@ -626,7 +600,7 @@ class FunctionDefinition extends AbstractDefinition
     /**
      * Stter method for attribute $usesOld
      *
-     * @param boolean $usesOld Does the function use the "old" keyowrd
+     * @param boolean $usesOld Does the function use the "old" keyword
      *
      * @return null
      */

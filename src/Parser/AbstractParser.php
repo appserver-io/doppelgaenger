@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Parser\AbstractParser
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Parser
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Parser;
@@ -28,17 +28,13 @@ use AppserverIo\Doppelgaenger\Exceptions\ParserException;
 use AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface;
 
 /**
- * AppserverIo\Doppelgaenger\Parser\AbstractParser
- *
  * The abstract class AbstractParser which provides a basic implementation other parsers can inherit from
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Parser
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 abstract class AbstractParser implements ParserInterface
 {
@@ -117,10 +113,8 @@ abstract class AbstractParser implements ParserInterface
         $this->config = $config;
 
         if (empty($tokens)) {
-
             // Check if we can use the file
             if (!is_readable($file)) {
-
                 throw new ParserException(sprintf('Could not read input file %s', $file));
             }
 
@@ -128,7 +122,6 @@ abstract class AbstractParser implements ParserInterface
             $this->tokens = token_get_all(file_get_contents($file));
 
         } else {
-
             $this->tokens = $tokens;
         }
 
@@ -157,10 +150,8 @@ abstract class AbstractParser implements ParserInterface
         $keyword
     ) {
         if (strpos($docBlock, $keyword) === false) {
-
             return false;
         } else {
-
             return true;
         }
     }
@@ -179,13 +170,10 @@ abstract class AbstractParser implements ParserInterface
         $result = 0;
         $tokenCount = count($tokens);
         for ($i = 0; $i < $tokenCount; $i++) {
-
             if (is_array($tokens[$i])) {
-
                 $result += strlen($tokens[$i][1]);
 
             } else {
-
                 $result += strlen($tokens[$i]);
             }
         }
@@ -212,27 +200,21 @@ abstract class AbstractParser implements ParserInterface
     ) {
         // We have to check what kind of structure we will check. Class and function are the only valid ones.
         if ($parsedEntity !== T_FUNCTION && $parsedEntity !== T_CLASS && $parsedEntity !== T_INTERFACE) {
-
             return false;
         }
 
         // Check the tokens
         for ($i = 0; $i < count($tokens); $i++) {
-
             // If we got the function name we have to check if we have the final keyword in front of it.
             // I would say should be within 6 tokens in front of the function keyword.
             if ($tokens[$i][0] === $parsedEntity) {
-
                 // Check if our $i is lower than 6, if so we have to avoid getting into a negative range
                 if ($i < 6) {
-
                     $i = 6;
                 }
 
                 for ($j = $i - 1; $j >= $i - 6; $j--) {
-
                     if ($tokens[$j][0] === $searchedToken) {
-
                         return true;
                     }
                 }
@@ -264,17 +246,14 @@ abstract class AbstractParser implements ParserInterface
         $curlyBrackets = array_flip(array('{', '}'));
 
         if (isset($roundBrackets[$bracket])) {
-
             $openingBracket = '(';
             $closingBracket = ')';
 
         } elseif (isset($curlyBrackets[$bracket])) {
-
             $openingBracket = '{';
             $closingBracket = '}';
 
         } else {
-
             return false;
         }
 
@@ -299,21 +278,16 @@ abstract class AbstractParser implements ParserInterface
         $docBlock = '';
         $passedClass = false;
         for ($i = 0; $i < count($tokens); $i++) {
-
             // If we passed the class token
             if ($tokens[$i][0] === $structureToken) {
-
                 $passedClass = true;
             }
 
             // If we got the docblock without passing the class before
             if ($tokens[$i][0] === T_DOC_COMMENT && $passedClass === false) {
-
                 // Check if we are in front of a class definition
                 for ($j = $i + 1; $j < $i + 8; $j++) {
-
                     if ($tokens[$j][0] === $structureToken) {
-
                         $docBlock = $tokens[$i][1];
                         break;
                     }

@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Assertions\InstanceAssertion
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,29 +11,23 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Assertions;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Assertions\InstanceAssertion
- *
  * This class is used to provide an object base way to pass assertions as e.g. a precondition.
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class InstanceAssertion extends AbstractAssertion
 {
@@ -68,7 +64,6 @@ class InstanceAssertion extends AbstractAssertion
     {
         // We need to add an initial backslash if there is none
         if (strpos($this->class, '\\') > 0) {
-
             $this->class = '\\' . $this->class;
         }
 
@@ -83,21 +78,18 @@ class InstanceAssertion extends AbstractAssertion
     public function invert()
     {
         if ($this->inverted !== true) {
-
             $this->operand = '!' . $this->operand;
             $this->inverted = true;
 
             return true;
 
         } elseif ($this->inverted === true) {
-
             $this->operand = ltrim($this->operand, '!');
             $this->inverted = false;
 
             return true;
 
         } else {
-
             return false;
         }
     }

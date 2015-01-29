@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\ContractContext
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,27 +11,23 @@
  *
  * PHP version 5
  *
- * @category  Library
- * @package   Doppelgaenger
  * @author    Bernhard Wick <bw@appserver.io>
- * @copyright 2014 TechDivision GmbH - <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger;
 
 /**
- * AppserverIo\Doppelgaenger\ContractContext
- *
  * This class will keep track if there is any contract evaluation going on currently.
  * This is used to prevent endless loops of contracts using userland functions which are contracted themselves
  *
- * @category  Library
- * @package   Doppelgaenger
  * @author    Bernhard Wick <bw@appserver.io>
- * @copyright 2014 TechDivision GmbH - <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
 class ContractContext
@@ -44,7 +42,7 @@ class ContractContext
      * @const int MAX_NESTING_DEPTH The maximum depth we allow.
      */
     const MAX_NESTING_DEPTH = 20;
-    
+
     /**
      * Will open a contract context for any current ongoing verification.
      * Will return true if successful (you are the only ongoing contract) and
@@ -55,13 +53,13 @@ class ContractContext
     public static function open()
     {
         if (self::$contractDepth < self::MAX_NESTING_DEPTH) {
-
+            // increment the contract depth
             self::$contractDepth++;
 
             return true;
 
         } else {
-
+            // we reached max nesting level, tell them we were not able to open the contract
             return false;
         }
     }
@@ -88,17 +86,14 @@ class ContractContext
     public static function close()
     {
         if (self::$contractDepth <= self::MAX_NESTING_DEPTH && self::$contractDepth > 0) {
-
             // Decrement the used depth
             self::$contractDepth--;
 
             return true;
 
         } else {
-
             // Did we reach a place where the sun does not shine (metaphorically speaking ;-)
             if (self::$contractDepth < 0) {
-
                 // Reset the used up contract depth and fail
                 self::$contractDepth = 0;
                 throw new \Exception('Contract depth surveillance ran out of bounds!');

@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Pointcut\CallPointcut
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
@@ -23,18 +23,14 @@ namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
 use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Pointcut\CallPointcut
- *
  * Pointcut for specifying functions into which a certain advice has to be weaved.
  * Can only be used with a qualified method signature e.g. \AppserverIo\Doppelgaenger\Logger->log()
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  *
  * @Target({"POINTCUT"})
  */
@@ -103,7 +99,6 @@ class CallPointcut extends AbstractSignaturePointcut
     {
         // if we do not get a function definition we can already assume there is no match
         if (!$candidate instanceof FunctionDefinition) {
-
             return false;
         }
 

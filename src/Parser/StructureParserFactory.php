@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Parser\StructureParserFactory
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Parser
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Parser;
@@ -26,17 +26,13 @@ use AppserverIo\Doppelgaenger\Entities\Definitions\StructureDefinitionHierarchy;
 use AppserverIo\Doppelgaenger\Exceptions\ParserException;
 
 /**
- * AppserverIo\Doppelgaenger\Parser\StructureParserFactory
- *
  * This class helps us getting the right parser for different structures
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Parser
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class StructureParserFactory
 {
@@ -94,7 +90,6 @@ class StructureParserFactory
         $class = __NAMESPACE__ . '\\' . ucfirst(trim($type)) . 'Parser';
 
         if (!class_exists($class)) {
-
             throw new ParserException(sprintf('Unknown parser type %s', $type));
         }
 

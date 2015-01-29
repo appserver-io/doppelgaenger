@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\StreamFilters\EnforcementFilter
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage StreamFilters
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\StreamFilters;
@@ -26,18 +26,14 @@ use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 
 /**
- * AppserverIo\Doppelgaenger\StreamFilters\EnforcementFilter
- *
  * This filter will buffer the input stream and add the processing information into the prepared assertion checks
  * (see $dependencies)
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage StreamFilters
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class EnforcementFilter extends AbstractFilter
 {
@@ -78,7 +74,6 @@ class EnforcementFilter extends AbstractFilter
         $config = $this->params;
 
         if (!$config->hasValue('enforcement/processing')) {
-
             throw new GeneratorException('Configuration does not contain the needed processing section.');
         }
 
@@ -91,7 +86,6 @@ class EnforcementFilter extends AbstractFilter
 
         // Get our buckets from the stream
         while ($bucket = stream_bucket_make_writeable($in)) {
-
             // Insert the code for the static processing placeholders
             $bucket->data = str_replace(
                 array(
@@ -131,13 +125,11 @@ class EnforcementFilter extends AbstractFilter
 
         // If we are in an invariant we should tell them about the method we got called from
         if ($for === 'invariant') {
-
             $place = '$callingMethod';
         }
 
         // What kind of reaction should we create?
         switch ($config->getValue('enforcement/processing')) {
-
             case 'exception':
 
                 $exceptionFactory = new ExceptionFactory();

@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Parser\ClassParser
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Parser
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Parser;
@@ -29,17 +29,13 @@ use AppserverIo\Doppelgaenger\Dictionaries\Annotations;
 use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
 
 /**
- * AppserverIo\Doppelgaenger\Parser\ClassParser
- *
  * This class implements the StructureParserInterface for class structures
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Parser
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class ClassParser extends AbstractStructureParser
 {
@@ -73,11 +69,9 @@ class ClassParser extends AbstractStructureParser
     {
         // First of all we need a new ClassDefinition to fill
         if (is_null($this->currentDefinition)) {
-
             $this->currentDefinition = new ClassDefinition();
 
         } elseif (!$this->currentDefinition instanceof ClassDefinition) {
-
             throw new GeneratorException(sprintf(
                 'The structure definition %s does not seem to be a class definition.',
                 $this->currentDefinition->getQualifiedName()
@@ -107,7 +101,6 @@ class ClassParser extends AbstractStructureParser
             Annotations::INVARIANT
         );
         if (!is_bool($invariantConditions)) {
-
             $this->currentDefinition->setInvariantConditions($invariantConditions);
         }
 
@@ -118,7 +111,6 @@ class ClassParser extends AbstractStructureParser
             Introduce::ANNOTATION
         );
         foreach ($introductionAnnotations as $introductionAnnotation) {
-
             $introduction = new Introduction();
             $introduction->setTarget($this->currentDefinition->getQualifiedName());
             $introduction->setImplementation($introductionAnnotation->values['implementation']);
@@ -162,13 +154,11 @@ class ClassParser extends AbstractStructureParser
             $getRecursive
         );
         if ($functionDefinitions !== false) {
-
             $this->currentDefinition->setFunctionDefinitions($functionDefinitions);
         }
 
         // If we have to parse the definition in a recursive manner, we have to get the parent invariants
         if ($getRecursive === true) {
-
             // Add all the assertions we might get from ancestral dependencies
             $this->addAncestralAssertions($this->currentDefinition);
         }
@@ -198,13 +188,11 @@ class ClassParser extends AbstractStructureParser
     {
         $dependencies = $classDefinition->getDependencies();
         foreach ($dependencies as $dependency) {
-
             // freshly set the dependency definition to avoid side effects
             $dependencyDefinition = null;
 
             $fileEntry = $this->structureMap->getEntry($dependency);
             if (!$fileEntry instanceof Structure) {
-
                 // Continue, don't fail as we might have dependencies which are not under Doppelgaenger surveillance
                 continue;
             }
@@ -227,7 +215,6 @@ class ClassParser extends AbstractStructureParser
 
             // Only classes and traits have invariants
             if ($fileEntry->getType() === 'class') {
-
                 $classDefinition->ancestralInvariants = $dependencyDefinition->getInvariants(true);
             }
 
@@ -249,18 +236,13 @@ class ClassParser extends AbstractStructureParser
         // Check the tokens
         $className = '';
         for ($i = 0; $i < count($tokens); $i++) {
-
             // If we got the class name
             if ($tokens[$i][0] === T_EXTENDS) {
-
                 for ($j = $i + 1; $j < count($tokens); $j++) {
-
                     if ($tokens[$j] === '{' || $tokens[$j][0] === T_CURLY_OPEN || $tokens[$j][0] === T_IMPLEMENTS) {
-
                         return $className;
 
                     } elseif ($tokens[$j][0] === T_STRING) {
-
                         $className .= $tokens[$j][1];
                     }
                 }
@@ -283,20 +265,15 @@ class ClassParser extends AbstractStructureParser
         // Check the tokens
         $interfaces = array();
         for ($i = 0; $i < $this->tokenCount; $i++) {
-
             // If we got the class name
             if ($this->tokens[$i][0] === T_IMPLEMENTS) {
-
                 for ($j = $i + 1; $j < $this->tokenCount; $j++) {
-
                     if ($this->tokens[$j] === '{' || $this->tokens[$j][0] === T_CURLY_OPEN ||
                         $this->tokens[$j][0] === T_EXTENDS
                     ) {
-
                         return $interfaces;
 
                     } elseif ($this->tokens[$j][0] === T_STRING) {
-
                         $interfaces[] = $this->resolveUsedNamespace(
                             $classDefinition,
                             $this->tokens[$j][1]

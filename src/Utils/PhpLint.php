@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Utils\PhpLint
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,29 +11,23 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Utils
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Utils;
 
 /**
- * AppserverIo\Doppelgaenger\Utils\PhpLint
- *
  * Will provide a basic linting function for php code
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Utils
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class PhpLint
 {
@@ -65,19 +61,16 @@ class PhpLint
         error_reporting(0);
 
         try {
-
             // Eval the passed code inside a never entered if clause.
             // That way we can make sure to not execute any bogus code
             $result = eval('if (false){' . $this->removePhpTags($code) . '}');
 
             // eval does not return true if there was no error, but we want to
             if ($result === null) {
-
                 $result = true;
             }
 
         } catch (\Exception $e) {
-
             // Set the error reporting to the intended level and fail
             error_reporting($level);
             throw $e;

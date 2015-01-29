@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Parser\InterfaceParser
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Parser
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Parser;
@@ -27,18 +27,14 @@ use AppserverIo\Doppelgaenger\Dictionaries\Annotations;
 use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
 
 /**
- * AppserverIo\Doppelgaenger\Parser\InterfaceParser
- *
  * The InterfaceParser class which is used to get an \AppserverIo\Doppelgaenger\Entities\Definitions\InterfaceDefinition
  * instance (or several) from a fail containing those definition(s)
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Parser
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class InterfaceParser extends AbstractStructureParser
 {
@@ -63,19 +59,14 @@ class InterfaceParser extends AbstractStructureParser
         // Check the tokens
         $interfaceString = '';
         for ($i = 0; $i < count($tokens); $i++) {
-
             // If we got the interface name
             if ($tokens[$i][0] === T_EXTENDS) {
-
                 for ($j = $i + 1; $j < count($tokens); $j++) {
-
                     if ($tokens[$j] === '{') {
-
                         // We got everything
                         break;
 
                     } elseif ($tokens[$j][0] === T_STRING) {
-
                         $interfaceString .= $tokens[$j][1];
                     }
                 }
@@ -87,14 +78,11 @@ class InterfaceParser extends AbstractStructureParser
 
         // Did we get something useful?
         if (is_array($parents)) {
-
             foreach ($parents as $key => $parent) {
-
                 $parents[$key] = trim($parent);
 
                 // We do not want empty stuff
                 if (empty($parents[$key])) {
-
                     unset($parents[$key]);
                 }
             }
@@ -102,7 +90,6 @@ class InterfaceParser extends AbstractStructureParser
             return $parents;
 
         } else {
-
             return false;
         }
     }
@@ -124,11 +111,9 @@ class InterfaceParser extends AbstractStructureParser
     {
         // First of all we need a new InterfaceDefinition to fill
         if (is_null($this->currentDefinition)) {
-
             $this->currentDefinition = new InterfaceDefinition();
 
         } elseif (!$this->currentDefinition instanceof InterfaceDefinition) {
-
             throw new GeneratorException(sprintf(
                 'The structure definition %s does not seem to be a trait definition.',
                 $this->currentDefinition->getQualifiedName()
@@ -158,27 +143,19 @@ class InterfaceParser extends AbstractStructureParser
         // Lets check if there is any inheritance, or if we implement any interfaces
         $parentNames = $this->getParents($tokens);
         if (count($this->currentDefinition->getUsedStructures()) === 0) {
-
             foreach ($parentNames as $parentName) {
-
                 if (strpos($parentName, '\\') !== false) {
-
                     $this->currentDefinition->getExtends()[] = $parentName;
 
                 } else {
-
                     $this->currentDefinition->getExtends()[] = '\\' . $this->currentDefinition->getNamespace() . '\\' . $parentName;
                 }
             }
 
         } else {
-
             foreach ($this->currentDefinition->getUsedStructures() as $alias) {
-
                 foreach ($parentNames as $parentName) {
-
                     if (strpos($alias, $parentName) !== false) {
-
                         $this->currentDefinition->setExtends('\\' . $alias);
                     }
                 }

@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Definitions\InterfaceDefinition
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,35 +11,28 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Definitions;
 
 use AppserverIo\Doppelgaenger\Entities\Lists\AssertionList;
-use AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\FunctionDefinitionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Definitions\InterfaceDefinition
- *
  * This class acts as a DTO-like (we are not immutable due to protected visibility)
  * entity for describing interface definitions
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  *
  * @property array                                                             $extends              Parental interfaces (if any)
  * @property array                                                             $constants            Possible constants the interface defines
@@ -124,7 +119,6 @@ class InterfaceDefinition extends AbstractStructureDefinition
 
         // We got an error that this is nor array, weird but build up a final frontier here
         if (!is_array($result)) {
-
             $result = array($result);
         }
 

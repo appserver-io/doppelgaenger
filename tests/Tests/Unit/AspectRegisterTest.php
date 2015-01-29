@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Tests\Unit\AspectRegisterTest
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Tests
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Tests\Unit;
@@ -23,17 +23,13 @@ namespace AppserverIo\Doppelgaenger\Tests\Unit;
 use AppserverIo\Doppelgaenger\AspectRegister;
 
 /**
- * AppserverIo\Doppelgaenger\Tests\Unit\AspectRegisterTest
- *
  * Test class for the AspectRegister class
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Tests
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class AspectRegisterTest extends \PHPUnit_Framework_TestCase
 {
@@ -47,6 +43,8 @@ class AspectRegisterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Set the tests up with a new aspect register instance for each test
+     *
+     * @return null
      */
     public function setUp()
     {

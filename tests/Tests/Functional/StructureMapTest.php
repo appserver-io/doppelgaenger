@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Tests\Functional\StructureMapTest
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Tests
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Tests\Functional;
@@ -24,17 +24,13 @@ use AppserverIo\Doppelgaenger\Config;
 use AppserverIo\Doppelgaenger\StructureMap;
 
 /**
- * AppserverIo\Doppelgaenger\Tests\Functional\StructureMapTest
- *
  * Some functional tests for the StructureMap functionality
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Tests
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class StructureMapTest extends \PHPUnit_Framework_TestCase
 {
@@ -55,6 +51,8 @@ class StructureMapTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Set upt the test environment
+     *
+     * @return null
      */
     public function setUp()
     {
@@ -77,7 +75,7 @@ class StructureMapTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test if classes with underscores in their name can get processed the right way
      *
-     * @return void
+     * @return null
      */
     public function testWithUnderscoredClass()
     {
@@ -88,7 +86,7 @@ class StructureMapTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test if classes with huge class doc comments can be picked up correctly
      *
-     * @return void
+     * @return null
      */
     public function testWithHugeClassDocBlockClass()
     {
@@ -99,7 +97,7 @@ class StructureMapTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test if classes which have the namespace in the same line as the PHP tag can be parsed correctly
      *
-     * @return void
+     * @return null
      */
     public function testWithNamespaceInFirstLine()
     {
