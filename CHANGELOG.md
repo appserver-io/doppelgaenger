@@ -3,12 +3,14 @@
 ## Bugfixes
 
 * Some minor bugfixes
+* Fixed a bug with Before advice's parameter altering
 
 ## Features
 
 * Introduced MethodInvocationInterface
 * Extended the functionality of AfterThrowing and AfterReturning advice by enhancing the MethodInvocation object
 * New coding coneventions
+* Extended testing
 
 # Version 0.4.2
 
