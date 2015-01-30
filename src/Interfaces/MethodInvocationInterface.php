@@ -33,6 +33,31 @@ interface MethodInvocationInterface
 {
 
     /**
+     * Default constructor
+     *
+     * @param array<callable> $callbackChain Callback which allows to call the initially invoked
+     * @param object          $context       The context in which the invocation happens e.g. $this
+     * @param boolean         $isAbstract    Is the function abstract?
+     * @param boolean         $isFinal       Is the function final?
+     * @param boolean         $isStatic      Is the method static?
+     * @param string          $name          The name of the function
+     * @param array           $parameters    Array of parameters of the form <PARAMETER_NAME> => <PARAMETER_VALUE>
+     * @param string          $structureName Name of the structure (class/trait/...) which contains the method
+     * @param string          $visibility    Visibility of the method
+     */
+    public function __construct(
+        $callbackChain,
+        $context,
+        $isAbstract,
+        $isFinal,
+        $isStatic,
+        $name,
+        array $parameters,
+        $structureName,
+        $visibility
+    );
+
+    /**
      * Getter method for property $context
      *
      * @return object

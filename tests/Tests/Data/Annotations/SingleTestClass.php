@@ -20,9 +20,6 @@
 
 namespace AppserverIo\Doppelgaenger\Tests\Data\Annotations;
 
-use AppserverIo\Doppelgaenger\Exceptions\BrokenInvariantException;
-use AppserverIo\Doppelgaenger\Tests\Data\Aspects\JustAdvicesAspect;
-
 /**
  * Test class containing directly annotated methods with one advice each, covering all possible join-points
  *
@@ -63,40 +60,6 @@ class SingleTestClass
      * @AfterReturning("weave(Logger->error($param1))")
      */
     public function iHaveAnAfterReturningWeave($param1)
-    {
-
-    }
-
-    /**
-     * @Before("advise(JustAdvicesAspect->basicBeforeAdvice())")
-     */
-    public function iHaveABeforeAdvice($param1)
-    {
-
-    }
-
-    /**
-     * @After("advise(JustAdvicesAspect->basicAfterAdvice())")
-     */
-    public function iHaveAnAfterAdvice($param1)
-    {
-
-    }
-
-    /**
-     * We throw a very weird exception so we can test if we get the right instance in our advice
-     *
-     * @AfterThrowing("advise(JustAdvicesAspect->basicAfterThrowingAdvice())")
-     */
-    public function iHaveAnAfterThrowingAdvice($param1)
-    {
-        throw new BrokenInvariantException(__FUNCTION__);
-    }
-
-    /**
-     * @AfterReturning("advise(JustAdvicesAspect->basicAfterReturningAdvice())")
-     */
-    public function iHaveAnAfterReturningAdvice($param1)
     {
 
     }

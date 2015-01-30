@@ -22,6 +22,7 @@ namespace AppserverIo\Doppelgaenger\StreamFilters;
 
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Around;
+use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Before;
 use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
 use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
 use AppserverIo\Doppelgaenger\Entities\Joinpoint;
@@ -120,7 +121,7 @@ class AdviceFilter extends AbstractFilter
                             $this->injectExceptionInjection($bucket->data, $functionName);
 
                             // inject the advice code
-                            $this->injectAdviceCode($bucket->data, $sortedFunctionPointcuts, $functionName);
+                            $this->injectAdviceCode($bucket->data, $sortedFunctionPointcuts, $functionDefinition);
                         }
 
                         // "destroy" function definition
@@ -138,24 +139,25 @@ class AdviceFilter extends AbstractFilter
     }
 
     /**
-     * Will inject the advice code for the different joinpoints based on sorted joinpoints
+     * Will inject the advice code for the different join-points based on sorted join-points
      *
-     * @param string $bucketData                Reference on the current bucket's data
-     * @param array  $sortedPointcutExpressions Array of pointcut expressions sorted by joinpoints
-     * @param string $functionName              Name of the function to inject the advices into
+     * @param string                                                             $bucketData                Reference on the current bucket's data
+     * @param array                                                              $sortedPointcutExpressions Array of pointcut expressions sorted by join-points
+     * @param \AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition $functionDefinition        Name of the function to inject the advices into
      *
      * @return boolean
      */
-    protected function injectAdviceCode(& $bucketData, array $sortedPointcutExpressions, $functionName)
+    protected function injectAdviceCode(& $bucketData, array $sortedPointcutExpressions, $functionDefinition)
     {
         // iterate over the sorted pointcuts and insert the code
+        $functionName = $functionDefinition->getName();
         foreach ($sortedPointcutExpressions as $joinpoint => $pointcutExpressions) {
             // only do something if we got expressions
             if (empty($pointcutExpressions)) {
                 continue;
             }
 
-            // get placeholder and replacement prefix based on joinpoint
+            // get placeholder and replacement prefix based on join-point
             $placeholderName = strtoupper($joinpoint) . '_JOINPOINT';
             $placeholderHook = constant('\AppserverIo\Doppelgaenger\Dictionaries\Placeholders::' . $placeholderName) .
                 $functionName . Placeholders::PLACEHOLDER_CLOSE;
@@ -168,6 +170,27 @@ class AdviceFilter extends AbstractFilter
                 $bucketData = str_replace(
                     $placeholderHook,
                     $pointcutExpression->toCode(),
+                    $bucketData
+                );
+
+            } elseif ($joinpoint === Before::ANNOTATION) {
+                // before advices have to be woven differently as we have to take changes of the call parameters into account
+
+                // we have to build up an assignment of the potentially altered parameters in our method invocation object
+                // to the original parameters of the method call.
+                // This way we can avoid e.g. broken references by func_get_args and other problems
+                $parameterNames = array();
+                foreach ($functionDefinition->getParameterDefinitions() as $parameterDefinition) {
+                    $parameterNames[] = $parameterDefinition->name;
+                }
+                $parameterAssignmentCode = 'list(' .
+                    implode(',', $parameterNames) .
+                    ') = array_values(' . ReservedKeywords::METHOD_INVOCATION_OBJECT . '->getParameters());';
+
+                $pointcutExpression = $pointcutExpressions[0];
+                $bucketData = str_replace(
+                    $placeholderHook,
+                    $placeholderHook . $pointcutExpression->toCode() . $parameterAssignmentCode,
                     $bucketData
                 );
 
@@ -247,7 +270,7 @@ class AdviceFilter extends AbstractFilter
                     foreach ($pointcut->getReferencedPointcuts() as $referencedPointcut) {
                         if ($referencedPointcut->getPointcutExpression()->getPointcut()->matches($functionDefinition)) {
                             // we found a pointcut of an advice that matches!
-                            // lets create a distinctive joinpoint and add the advice weaving to the pointcut.
+                            // lets create a distinctive join-point and add the advice weaving to the pointcut.
                             // Make a clone so that there are no weird reference shenanigans
                             $pointcutExpression = clone $referencedPointcut->getPointcutExpression();
                             $joinpoint = new Joinpoint();
