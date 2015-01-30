@@ -74,7 +74,7 @@ class ProcessingFilter extends AbstractFilter
             // Go through the tokens and check what we found
             $tokensCount = count($tokens);
             for ($i = 0; $i < $tokensCount; $i++) {
-                // Did we find a function? If so check if we know that thing and insert the code of its preconditions.
+                // Did we find a function? If so check if we know that thing and insert the code of its preconditions
                 if (is_array($tokens[$i]) && $tokens[$i][0] === T_FUNCTION && is_array($tokens[$i + 2])) {
                     // Get the name of the function
                     $functionName = $tokens[$i + 2][1];
@@ -121,7 +121,7 @@ class ProcessingFilter extends AbstractFilter
      */
     protected function generateCode(FunctionDefinition $functionDefinition)
     {
-        // Build up the call to the original function.
+        // Build up the call to the original function
         return ReservedKeywords::RESULT . ' = ' . $functionDefinition->getHeader('call', ReservedKeywords::ORIGINAL_FUNCTION_SUFFIX) . ';';
     }
 }
