@@ -601,11 +601,20 @@ class AnnotationParser extends AbstractParser
     protected function filterTypedCollection($docString)
     {
         $tmp = strpos($docString, 'array<');
-        if ($tmp !== false && strpos($docString, '>') > $tmp) {
-            $stringPiece = explode('array<', $docString);
-            $stringPiece = $stringPiece[1];
+        if ($tmp !== false) {
+            // we have a Java Generics like syntax
 
-            return strstr($stringPiece, '>', true);
+            if (strpos($docString, '>') > $tmp) {
+                $stringPiece = explode('array<', $docString);
+                $stringPiece = $stringPiece[1];
+
+                return strstr($stringPiece, '>', true);
+            }
+
+        } elseif (strpos($docString, '[]')) {
+            // we have a common <TYPE>[] syntax
+
+            return strstr($docString, '[]', true);
         }
 
         // We found nothing; tell them.

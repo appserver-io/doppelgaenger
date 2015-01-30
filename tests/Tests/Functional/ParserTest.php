@@ -52,42 +52,166 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testAnnotationParsing()
     {
-        // Get the object to test
         $annotationTestClass = new AnnotationTestClass();
 
-        $e = null;
-        try {
-            $annotationTestClass->typeCollection(array(new \Exception(), new \Exception(), new \Exception()));
+        $annotationTestClass->orCombinator(new \Exception());
+        $annotationTestClass->orCombinator(null);
+    }
 
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertNull($e);
-
+    /**
+     * Will test parsing of special annotations like typed arrays
+     *
+     * @return null
+     */
+    public function testAnnotationParsingTypeCollectionParameter()
+    {
         // Get the object to test
         $annotationTestClass = new AnnotationTestClass();
+        $annotationTestClass->typeCollection(array(new \Exception(), new \Exception(), new \Exception()));
+    }
 
-        $e = null;
-        try {
-            $annotationTestClass->typeCollectionReturn(array(new \Exception(), new \Exception(), new \Exception()));
+    /**
+     * Will test parsing of special annotations like typed arrays
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPreconditionException
+     */
+    public function testAnnotationParsingTypeCollectionParameterFail()
+    {
+        // Get the object to test
+        $annotationTestClass = new AnnotationTestClass();
+        $annotationTestClass->typeCollection(array(new \Exception(), new \stdClass(), new \Exception()));
+    }
 
-        } catch (\Exception $e) {
-        }
+    /**
+     * Will test parsing of special annotations like typed arrays
+     *
+     * @return null
+     */
+    public function testAnnotationParsingTypeCollectionReturn()
+    {
+        // Get the object to test
+        $annotationTestClass = new AnnotationTestClass();
+        $annotationTestClass->typeCollectionReturn();
+    }
 
-        // Did we get the right $e?
-        $this->assertNull($e);
+    /**
+     * Will test parsing of special annotations like typed arrays
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPostconditionException
+     */
+    public function testAnnotationParsingTypeCollectionReturnFail()
+    {
+        // Get the object to test
+        $annotationTestClass = new AnnotationTestClass();
+        $annotationTestClass->typeCollectionReturnFail();
+    }
 
-        $e = null;
-        try {
-            $annotationTestClass->orCombinator(new \Exception());
-            $annotationTestClass->orCombinator(null);
+    /**
+     * Will test parsing of special annotations like typed arrays
+     *
+     * @return null
+     */
+    public function testAnnotationParsingTypeCollectionAlternativeParameter()
+    {
+        // Get the object to test
+        $annotationTestClass = new AnnotationTestClass();
+        $annotationTestClass->typeCollectionAlternative(array(new \Exception(), new \Exception(), new \Exception()));
+    }
 
-        } catch (\Exception $e) {
-        }
+    /**
+     * Will test parsing of special annotations like typed arrays
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPreconditionException
+     */
+    public function testAnnotationParsingTypeCollectionAlternativeParameterFail()
+    {
+        // Get the object to test
+        $annotationTestClass = new AnnotationTestClass();
+        $annotationTestClass->typeCollectionAlternative(array(new \Exception(), new \Exception(), new \stdClass()));
+    }
 
-        // Did we get the right $e?
-        $this->assertNull($e);
+    /**
+     * Will test parsing of special annotations like typed arrays
+     *
+     * @return null
+     */
+    public function testAnnotationParsingTypeCollectionAlternativeReturn()
+    {
+        // Get the object to test
+        $annotationTestClass = new AnnotationTestClass();
+        $annotationTestClass->typeCollectionAlternativeReturn();
+    }
+
+    /**
+     * Will test parsing of special annotations like typed arrays
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPostconditionException
+     */
+    public function testAnnotationParsingTypeCollectionAlternativeReturnFail()
+    {
+        // Get the object to test
+        $annotationTestClass = new AnnotationTestClass();
+        $annotationTestClass->typeCollectionAlternativeReturnFail();
+    }
+
+    /**
+     * Will test parsing of special annotations like typed arrays
+     *
+     * @return null
+     */
+    public function testAnnotationParsingSimpleTypeCollectionParameter()
+    {
+        // Get the object to test
+        $annotationTestClass = new AnnotationTestClass();
+        $annotationTestClass->simpleTypeCollection(array('asd', 'wad', 'awd'));
+    }
+
+    /**
+     * Will test parsing of special annotations like typed arrays
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPreconditionException
+     */
+    public function testAnnotationParsingSimpleTypeCollectionParameterFail()
+    {
+        // Get the object to test
+        $annotationTestClass = new AnnotationTestClass();
+        $annotationTestClass->simpleTypeCollection(array('asd', new \stdClass(), 'awd'));
+    }
+
+    /**
+     * Will test parsing of special annotations like typed arrays
+     *
+     * @return null
+     */
+    public function testAnnotationParsingSimpleTypeCollectionReturn()
+    {
+        // Get the object to test
+        $annotationTestClass = new AnnotationTestClass();
+        $annotationTestClass->simpleTypeCollectionReturn();
+    }
+
+    /**
+     * Will test parsing of special annotations like typed arrays
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPostconditionException
+     */
+    public function testAnnotationParsingSimpleTypeCollectionReturnFail()
+    {
+        // Get the object to test
+        $annotationTestClass = new AnnotationTestClass();
+        $annotationTestClass->simpleTypeCollectionReturnFail();
     }
 
     /**
@@ -118,7 +242,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         try {
             $regexTestClass1 = new RegexTestClass1();
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
         }
 
         // Did we get the right $e?
