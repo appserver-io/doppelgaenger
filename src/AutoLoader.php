@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\AutoLoader
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,11 +11,10 @@
  *
  * PHP version 5
  *
- * @category  Library
- * @package   Doppelgaenger
  * @author    Bernhard Wick <bw@appserver.io>
- * @copyright 2014 TechDivision GmbH - <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
 
@@ -24,15 +25,12 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'Constants.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Dictionaries' . DIRECTORY_SEPARATOR . 'Placeholders.php';
 
 /**
- * AppserverIo\Doppelgaenger\AutoLoader
- *
  * Will provide autoloader functionality as an entry point for parsing and code generation
  *
- * @category  Library
- * @package   Doppelgaenger
  * @author    Bernhard Wick <bw@appserver.io>
- * @copyright 2014 TechDivision GmbH - <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
 class AutoLoader
@@ -80,11 +78,9 @@ class AutoLoader
     {
         // If we got a config we can use it, if not we will get a context less config instance
         if (is_null($config)) {
-
             $this->config = new Config();
 
         } else {
-
             $this->config = $config;
         }
 
@@ -155,13 +151,11 @@ class AutoLoader
 
         // Might the class be a omitted one? If so we can require the original.
         if ($this->config->hasValue('autoloader/omit')) {
-
             $omittedNamespaces = $this->config->getValue('autoloader/omit');
-            foreach ($omittedNamespaces as $omitted) {
 
+            foreach ($omittedNamespaces as $omitted) {
                 // If our class name begins with the omitted part e.g. it's namespace
                 if (strpos($className, str_replace('\\\\', '\\', $omitted)) === 0) {
-
                     return false;
                 }
             }
@@ -169,11 +163,9 @@ class AutoLoader
 
         // Do we have the file in our cache dir? If we are in development mode we have to ignore this.
         if ($this->config->getValue('environment') !== 'development') {
-
             $cachePath = $this->config->getValue('cache/dir') . DIRECTORY_SEPARATOR . str_replace('\\', '_', $className) . '.php';
 
             if (is_readable($cachePath)) {
-
                 $res = fopen($cachePath, 'r');
                 $str = fread($res, 384);
 
@@ -185,14 +177,13 @@ class AutoLoader
                 );
 
                 if ($success > 0) {
-
                     $tmp = explode('#', $tmp[1]);
 
                     $path = $tmp[0];
                     $mTime = $tmp[1];
 
                     if (filemtime($path) == $mTime) {
-
+                        // the cached file is recent, load it
                         require $cachePath;
                         return true;
                     }
@@ -204,13 +195,11 @@ class AutoLoader
         if ((strpos($className, 'AppserverIo\Doppelgaenger') === 0 && strpos($className, 'AppserverIo\Doppelgaenger\Tests') === false) ||
             strpos($className, 'PHP') === 0
         ) {
-
             return false;
         }
 
         // If the structure map did not get filled by now we will do so here
         if ($this->structureMap->isEmpty()) {
-
             $this->structureMap->fill();
         }
 
@@ -219,13 +208,12 @@ class AutoLoader
 
         // Did we get something? If not return false.
         if ($file === false) {
-
             return false;
         }
 
         // We are still here, so we know the class and it is not omitted. Does it contain annotations then?
         if (!$file->hasAnnotations() || !$file->isEnforced()) {
-
+            // on un-enforced classes we will require the original
             require $file->getPath();
 
             return true;
@@ -234,7 +222,6 @@ class AutoLoader
         // So we have to create a new class definition for this original class.
         // Get a current cache instance if we do not have one already.
         if ($this->cache === null) {
-
             // We also require the classes of our maps as we do not have proper autoloading in place
             $this->cache = new CacheMap($this->getConfig()->getValue('cache/dir'), array(), $this->config);
         }
@@ -242,19 +229,16 @@ class AutoLoader
 
         // Create the new class definition
         if ($this->generator->create($file, $this->config->getValue('enforcement/contract-inheritance')) === true) {
-
             // Require the new class, it should have been created now
             $file = $this->generator->getFileName($className);
 
             if ($file !== false && is_readable($file) === true) {
-
                 require $file;
 
                 return true;
             }
 
         } else {
-
             return false;
         }
 

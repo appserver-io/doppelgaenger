@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\StreamFilters\PostconditionFilter
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage StreamFilters
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\StreamFilters;
@@ -27,18 +27,14 @@ use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 
 /**
- * AppserverIo\Doppelgaenger\StreamFilters\PostconditionFilter
- *
  * This filter will buffer the input stream and add all postcondition related information at prepared locations
  * (see $dependencies)
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage StreamFilters
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class PostconditionFilter extends AbstractFilter
 {
@@ -72,17 +68,14 @@ class PostconditionFilter extends AbstractFilter
     {
         // Get our buckets from the stream
         while ($bucket = stream_bucket_make_writeable($in)) {
-
             // Get the tokens
             $tokens = token_get_all($bucket->data);
 
             // Go through the tokens and check what we found
             $tokensCount = count($tokens);
             for ($i = 0; $i < $tokensCount; $i++) {
-
                 // Did we find a function? If so check if we know that thing and insert the code of its preconditions.
                 if (is_array($tokens[$i]) && $tokens[$i][0] === T_FUNCTION && is_array($tokens[$i + 2])) {
-
                     // Get the name of the function
                     $functionName = $tokens[$i + 2][1];
 
@@ -90,11 +83,9 @@ class PostconditionFilter extends AbstractFilter
                     $functionDefinition = $this->params->get($functionName);
 
                     if (!$functionDefinition instanceof FunctionDefinition) {
-
                         continue;
 
                     } else {
-
                         // If we use the old notation we have to insert the statement to make a copy
                         $this->injectOldCode($bucket->data, $functionDefinition);
 
@@ -139,12 +130,10 @@ class PostconditionFilter extends AbstractFilter
     {
         // Do we even need to do anything?
         if ($functionDefinition->usesOld() !== true) {
-
             return false;
         }
         // If the function is static it should not use the dgOld keyword as there is no state to the class!
         if ($functionDefinition->isStatic() === true) {
-
             throw new GeneratorException('Cannot clone class state in static method ' . $functionDefinition->getName());
         }
 
@@ -177,13 +166,11 @@ class PostconditionFilter extends AbstractFilter
         $conditionCounter = 0;
         $listIterator = $assertionLists->getIterator();
         for ($i = 0; $i < $listIterator->count(); $i++) {
-
             // Create the inner loop for the different assertions
             $assertionIterator = $listIterator->current()->getIterator();
 
             // Only act if we got actual entries
             if ($assertionIterator->count() === 0) {
-
                 // increment the outer loop
                 $listIterator->next();
                 continue;
@@ -191,7 +178,6 @@ class PostconditionFilter extends AbstractFilter
 
             $codeFragment = array();
             for ($j = 0; $j < $assertionIterator->count(); $j++) {
-
                 $codeFragment[] = $assertionIterator->current()->getString();
 
                 // Forward the iterator and tell them we got a condition
@@ -201,7 +187,6 @@ class PostconditionFilter extends AbstractFilter
 
             // Lets insert the condition check (if there have been any)
             if (!empty($codeFragment)) {
-
                 $code .= 'if (!((' . implode(') && (', $codeFragment) . '))){' .
                     ReservedKeywords::FAILURE_VARIABLE . ' = \'(' . str_replace(
                         '\'',
@@ -221,7 +206,6 @@ class PostconditionFilter extends AbstractFilter
 
         // Did we get anything at all? If not only give back a comment.
         if ($conditionCounter === 0) {
-
             $code = '/* No postconditions for this function/method */';
         }
 

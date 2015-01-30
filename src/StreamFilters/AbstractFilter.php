@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\StreamFilters\AbstractFilter
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage StreamFilters
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\StreamFilters;
@@ -23,17 +23,13 @@ namespace AppserverIo\Doppelgaenger\StreamFilters;
 use AppserverIo\Doppelgaenger\Interfaces\StreamFilterInterface;
 
 /**
- * AppserverIo\Doppelgaenger\StreamFilters\AbstractFilter
- *
  * This abstract class provides a clean parent class for custom stream filters
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage StreamFilters
- * @author     Bernhard Wick <b.wick@techdivision.com>
- * @copyright  2014 TechDivision GmbH - <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.techdivision.com/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 abstract class AbstractFilter extends \php_user_filter implements StreamFilterInterface
 {
@@ -86,20 +82,16 @@ abstract class AbstractFilter extends \php_user_filter implements StreamFilterIn
         // Go through the tokens and collect what we find
         $tokensCount = count($tokens);
         for ($i = $startIndex; $i < $tokensCount; $i++) {
-
             // upon reaching the stop token we will exit
             if (is_array($tokens[$i]) && $tokens[$i][0] === $stopToken) {
-
                 break;
             }
 
             // collect what we find
             if (is_array($tokens[$i])) {
-
                 $result .= $tokens[$i][1];
 
             } else {
-
                 $result .= $tokens[$i];
             }
         }
@@ -144,10 +136,8 @@ abstract class AbstractFilter extends \php_user_filter implements StreamFilterIn
         // Get our buckets from the stream
         $firstIteration = true;
         while ($bucket = stream_bucket_make_writeable($in)) {
-
             // Lets call the firstRun() hook on the first run
             if ($firstIteration === true) {
-
                 $this->firstRun();
                 $firstIteration = false;
 
@@ -162,7 +152,6 @@ abstract class AbstractFilter extends \php_user_filter implements StreamFilterIn
             // we can append the content and clear the buffer.
             // If not we have to keep buffering and make another iteration.
             if (is_string($filteredContent)) {
-
                 // Tell them how much we already processed
                 $contentLength = strlen($filteredContent);
                 $consumed += $contentLength;
@@ -177,7 +166,6 @@ abstract class AbstractFilter extends \php_user_filter implements StreamFilterIn
                 $this->bucketBuffer = '';
 
             } else {
-
                 // Buffer the bucket data for further use
                 $this->bucketBuffer .= $bucket->data;
             }

@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Definitions\AbstractStructureDefinition
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Definitions;
@@ -24,18 +24,14 @@ use AppserverIo\Doppelgaenger\Entities\Lists\FunctionDefinitionList;
 use AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Definitions\AbstractStructureDefinition
- *
  * This class acts as a DTO-like (we are not immutable due to protected visibility)
  * entity for describing class definitions
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  *
  * @property string                 $path                File path to the class definition
  * @property string                 $namespace           The namespace the class belongs to
@@ -138,15 +134,14 @@ abstract class AbstractStructureDefinition extends AbstractDefinition implements
 
         // If we need to we will filter all the non private conditions from the lists
         if ($nonPrivateOnly === true) {
-
+            // we might want to filter invariants based on their visibility
             $invariantListIterator = $invariants->getIterator();
             foreach ($invariantListIterator as $invariantList) {
-
+                // iterate all invariant lists
                 $invariantIterator = $invariantList->getIterator();
                 foreach ($invariantIterator as $key => $invariant) {
-
+                    // iterate the actual invariants
                     if ($invariant->isPrivateContext()) {
-
                         $invariantList->delete($key);
                     }
                 }
@@ -205,11 +200,9 @@ abstract class AbstractStructureDefinition extends AbstractDefinition implements
     public function getQualifiedName()
     {
         if (empty($this->namespace)) {
-
             return $this->name;
 
         } else {
-
             return ltrim($this->namespace, '\\') . '\\' . $this->name;
         }
     }

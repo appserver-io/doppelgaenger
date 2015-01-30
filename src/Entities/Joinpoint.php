@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Joinpoint
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,55 +11,49 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Joinpoint
- *
- * Definition of a joinpoint.
+ * Definition of a join-point.
  * Specifies a certain point within a code structure where an advice might be weaved in
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  *
  * @property string $codeHook   The actual point within the targeted piece of code e.g. "Before"
- * @property string $structure  Structure at which the joinpoint resides
- * @property string $target     At which part of the housing structure does the joinpoint sit?
+ * @property string $structure  Structure at which the join-point resides
+ * @property string $target     At which part of the housing structure does the join-point sit?
  * @property string $targetName Name of the target which describes the targeted piece of code
 */
 class Joinpoint
 {
 
     /**
-     * Constant which holds the identifier for one possible target of a joinpoint
+     * Constant which holds the identifier for one possible target of a join-point
      *
      * @var string TARGET_METHOD
      */
     const TARGET_METHOD = 'Method';
 
     /**
-     * Constant which holds the identifier for one possible target of a joinpoint
+     * Constant which holds the identifier for one possible target of a join-point
      *
      * @var string TARGET_PROPERTY
      */
     const TARGET_PROPERTY = 'Property';
 
     /**
-     * Constant which holds the identifier for one possible target of a joinpoint
+     * Constant which holds the identifier for one possible target of a join-point
      *
      * @var string TARGET_STRUCTURE
      */
@@ -80,7 +76,7 @@ class Joinpoint
     protected $structure;
 
     /**
-     * At which part of the housing structure does the joinpoint sit?
+     * At which part of the housing structure does the join-point sit?
      * Possible values as mentioned below in the @Enum annotation
      *
      * @var string $target
@@ -151,7 +147,7 @@ class Joinpoint
     /**
      * Setter for the $structure property
      *
-     * @param string $structure Structure at which the joinpoint resides
+     * @param string $structure Structure at which the join-point resides
      *
      * @return null
      */
@@ -163,7 +159,7 @@ class Joinpoint
     /**
      * Setter for the $target property
      *
-     * @param string $target At which part of the housing structure does the joinpoint sit?
+     * @param string $target At which part of the housing structure does the join-point sit?
      *
      * @return null
      */

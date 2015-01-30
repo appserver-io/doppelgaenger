@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Tests\Functional\BasicTest
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Tests
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Tests\Functional;
@@ -23,17 +23,13 @@ namespace AppserverIo\Doppelgaenger\Tests\Functional;
 use AppserverIo\Doppelgaenger\Tests\Data\BasicTestClass;
 
 /**
- * AppserverIo\Doppelgaenger\Tests\Functional\BasicTest
- *
  * This test is for basic problems like broken type safety or invariant support
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Tests
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class BasicTest extends \PHPUnit_Framework_TestCase
 {
@@ -52,7 +48,6 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $test->iBreakTheInvariant();
 
         } catch (\Exception $e) {
@@ -81,7 +76,6 @@ class BasicTest extends \PHPUnit_Framework_TestCase
         // These should all fail
         $e = null;
         try {
-
             $test->stringToArray(13);
 
         } catch (\Exception $e) {
@@ -92,7 +86,6 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $test->concatSomeStuff("26", array(), new \Exception());
 
         } catch (\Exception $e) {
@@ -103,7 +96,6 @@ class BasicTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $test->stringToWelcome(34);
 
         } catch (\Exception $e) {

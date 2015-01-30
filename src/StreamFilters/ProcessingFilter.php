@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\StreamFilters\ProcessingFilter
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage StreamFilters
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\StreamFilters;
@@ -27,18 +27,14 @@ use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 
 /**
- * AppserverIo\Doppelgaenger\StreamFilters\ProcessingFilter
- *
  * This filter will buffer the input stream and add all postcondition related information at prepared locations
  * (see $dependencies)
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage StreamFilters
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class ProcessingFilter extends AbstractFilter
 {
@@ -72,17 +68,14 @@ class ProcessingFilter extends AbstractFilter
     {
         // Get our buckets from the stream
         while ($bucket = stream_bucket_make_writeable($in)) {
-
             // Get the tokens
             $tokens = token_get_all($bucket->data);
 
             // Go through the tokens and check what we found
             $tokensCount = count($tokens);
             for ($i = 0; $i < $tokensCount; $i++) {
-
                 // Did we find a function? If so check if we know that thing and insert the code of its preconditions.
                 if (is_array($tokens[$i]) && $tokens[$i][0] === T_FUNCTION && is_array($tokens[$i + 2])) {
-
                     // Get the name of the function
                     $functionName = $tokens[$i + 2][1];
 
@@ -90,11 +83,9 @@ class ProcessingFilter extends AbstractFilter
                     $functionDefinition = $this->params->get($functionName);
 
                     if (!$functionDefinition instanceof FunctionDefinition) {
-
                         continue;
 
                     } else {
-
                         // Get the code for the needed call
                         $code = $this->generateCode($functionDefinition);
 

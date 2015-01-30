@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Tests\Functional\PropertyTest
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Tests
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Tests\Functional;
@@ -23,17 +23,13 @@ namespace AppserverIo\Doppelgaenger\Tests\Functional;
 use AppserverIo\Doppelgaenger\Tests\Data\PropertyTestClass;
 
 /**
- * AppserverIo\Doppelgaenger\Tests\Functional\PropertyTest
- *
  * Will test the invariant enforced attribute access
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Tests
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class PropertyTest extends \PHPUnit_Framework_TestCase
 {
@@ -54,82 +50,72 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
      * Check if we get a MissingPropertyException
      *
      * @return null
+     *
+     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\MissingPropertyException
      */
-    public function testMissingProperty()
+    public function testMissingPropertyRead()
     {
-        $e = null;
-        try {
+        $test = $this->propertyTestClass->notExistingProperty;
+    }
 
-            $this->propertyTestClass->notExistingProperty = 'test';
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\MissingPropertyException", $e);
-
-        $e = null;
-        try {
-
-            $test = $this->propertyTestClass->notExistingProperty;
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\MissingPropertyException", $e);
+    /**
+     * Check if we get a MissingPropertyException
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\MissingPropertyException
+     */
+    public function testMissingPropertyWrite()
+    {
+        $this->propertyTestClass->notExistingProperty = 'test';
     }
 
     /**
      * Check if we get an InvalidArgumentException
      *
      * @return null
+     *
+     * @expectedException \InvalidArgumentException
      */
-    public function testPrivateProperty()
+    public function testPrivatePropertyWrite()
     {
-        $e = null;
-        try {
+        $this->propertyTestClass->privateNonCheckedProperty = 'test';
+    }
 
-            $this->propertyTestClass->privateNonCheckedProperty = 'test';
+    /**
+     * Check if we get an InvalidArgumentException
+     *
+     * @return null
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testPrivatePropertyRead()
+    {
+        $test = $this->propertyTestClass->privateNonCheckedProperty;
+    }
 
-        } catch (\Exception $e) {
-        }
+    /**
+     * Check if we get an InvalidArgumentException
+     *
+     * @return null
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testPrivateCheckedPropertyWrite()
+    {
+        $this->propertyTestClass->privateCheckedProperty = 'test';
+    }
 
-        // Did we get the right $e?
-        $this->assertInstanceOf("\\InvalidArgumentException", $e);
-
-        $e = null;
-        try {
-
-            $test = $this->propertyTestClass->privateNonCheckedProperty;
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertInstanceOf("\\InvalidArgumentException", $e);
-
-        $e = null;
-        try {
-
-            $this->propertyTestClass->privateCheckedProperty = 'test';
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertInstanceOf("\\InvalidArgumentException", $e);
-
-        $e = null;
-        try {
-
-            $test = $this->propertyTestClass->privateCheckedProperty;
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertInstanceOf("\\InvalidArgumentException", $e);
+    /**
+     * Check if we get an InvalidArgumentException
+     *
+     * @return null
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testPrivateCheckedPropertyRead()
+    {
+        $test = $this->propertyTestClass->privateCheckedProperty;
     }
 
     /**
@@ -137,51 +123,31 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      */
-    public function testPublicProperty()
+    public function testPublicPropertyWrite()
     {
-        $e = null;
-        try {
+        $this->propertyTestClass->publicNonCheckedProperty = 'test';
+    }
 
-            $this->propertyTestClass->publicNonCheckedProperty = 'test';
+    /**
+     * Check if we get any Exception
+     *
+     * @return null
+     */
+    public function testPublicPropertyRead()
+    {
+        $test = $this->propertyTestClass->publicNonCheckedProperty;
+    }
 
-        } catch (\Exception $e) {
-        }
+    /**
+     * Check if we get any Exception
+     *
+     * @return null
+     */
+    public function testPublicQueckedProperty()
+    {
+        $this->propertyTestClass->publicCheckedProperty = 27.42;
+        $test = $this->propertyTestClass->publicCheckedProperty;
 
-        // Did we get the right $e?
-        $this->assertNull($e);
-
-        $e = null;
-        try {
-
-            $test = $this->propertyTestClass->publicNonCheckedProperty;
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertNull($e);
-
-        $e = null;
-        try {
-
-            $this->propertyTestClass->publicCheckedProperty = 27.42;
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertNull($e);
-
-        $e = null;
-        try {
-
-            $test = $this->propertyTestClass->publicCheckedProperty;
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertNull($e);
         $this->assertEquals($test, 27.42);
     }
 }

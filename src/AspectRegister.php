@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\AspectRegister
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,11 +11,10 @@
  *
  * PHP version 5
  *
- * @category  Library
- * @package   Doppelgaenger
  * @author    Bernhard Wick <bw@appserver.io>
- * @copyright 2014 TechDivision GmbH - <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
 
@@ -39,15 +40,12 @@ use Herrera\Annotations\Tokenizer;
 use Herrera\Annotations\Tokens;
 
 /**
- * AppserverIo\Doppelgaenger\AspectRegister
- *
  * Class which knows about registered aspects to allow for checks of methods against all given pointcuts
  *
- * @category  Library
- * @package   Doppelgaenger
  * @author    Bernhard Wick <bw@appserver.io>
- * @copyright 2014 TechDivision GmbH - <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
 class AspectRegister extends AbstractTypedList
@@ -76,7 +74,6 @@ class AspectRegister extends AbstractTypedList
         // if there is an aspect name within the expression we have to filter our search range and cut the expression
         $container = $this->container;
         if (strpos($adviceExpression, '->')) {
-
             $aspectExpression = strstr($adviceExpression, '->', true);
             $container = $this->lookupAspects($aspectExpression);
             $adviceExpression = str_replace('->', '', strstr($adviceExpression, '->'));
@@ -84,7 +81,6 @@ class AspectRegister extends AbstractTypedList
 
         $matches = array();
         foreach ($container as $aspect) {
-
             $matches = array_merge($matches, $this->lookupEntries($aspect->getAdvices(), $adviceExpression));
         }
 
@@ -116,16 +112,13 @@ class AspectRegister extends AbstractTypedList
     {
         // if we got the complete name of the aspect we can return it alone
         if (!strpos($expression, '*') && $this->entryExists($expression)) {
-
             return array($this->get($expression));
         }
 
         // as it seems we got something else we have to get all regex about
         $matches = array();
         foreach ($container as $entry) {
-
             if (fnmatch(ltrim($expression, '\\'), $entry->getQualifiedName() . '()')) {
-
                 $matches[] = $entry;
             }
         }
@@ -145,7 +138,6 @@ class AspectRegister extends AbstractTypedList
         // if there is an aspect name within the expression we have to filter our search range and cut the expression
         $container = $this->container;
         if (strpos($pointcutExpression, '->')) {
-
             $aspectExpression = strstr($pointcutExpression, '->', true);
             $container = $this->lookupAspects($aspectExpression);
             $pointcutExpression = str_replace('->', '', strstr($pointcutExpression, '->'));
@@ -153,7 +145,6 @@ class AspectRegister extends AbstractTypedList
 
         $matches = array();
         foreach ($container as $aspect) {
-
             $matches = array_merge($matches, $this->lookupEntries($aspect->getPointcuts(), $pointcutExpression));
         }
 
@@ -196,13 +187,10 @@ class AspectRegister extends AbstractTypedList
         // iterate the functions and filter out the ones used as advices
         $scheduledAdviceDefinitions = array();
         foreach ($aspectDefinition->getFunctionDefinitions() as $functionDefinition) {
-
             $foundNeedle = false;
             foreach ($needles as $needle) {
-
                 // create the advice
                 if (strpos($functionDefinition->getDocBlock(), $needle) !== false) {
-
                     $foundNeedle = true;
                     $scheduledAdviceDefinitions[$needle][] = $functionDefinition;
 
@@ -212,7 +200,6 @@ class AspectRegister extends AbstractTypedList
 
             // create the pointcut
             if (!$foundNeedle && strpos($functionDefinition->getDocBlock(), PointcutAnnotation::ANNOTATION) !== false) {
-
                 $pointcut = new PointcutDefinition();
                 $pointcut->setName($functionDefinition->getName());
 
@@ -233,7 +220,6 @@ class AspectRegister extends AbstractTypedList
         $pointcutFactory = new PointcutFactory();
         foreach ($scheduledAdviceDefinitions as $codeHook => $hookedAdviceDefinitions) {
             foreach ($hookedAdviceDefinitions as $scheduledAdviceDefinition) {
-
                 // create our advice
                 $advice = new Advice();
                 $advice->setAspectName($aspectDefinition->getQualifiedName());
@@ -248,10 +234,8 @@ class AspectRegister extends AbstractTypedList
 
                 // create the entities for the joinpoints and advices the pointcut describes
                 foreach ($annotations as $annotation) {
-
                     $pointcut = $pointcutFactory->getInstance(array_pop($annotation->values));
                     if ($pointcut instanceof PointcutPointcut) {
-
                         // get the referenced pointcuts for the split parts of the expression
                         $pointcut->setReferencedPointcuts($this->lookupPointcuts($pointcut->getExpression()));
                     }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * \AppserverIo\Doppelgaenger\Tests\Data\MultiRegex\A\Data\RegexTestClass2
+ * \AppserverIo\Doppelgaenger\Tests\Data\Aspects\MethodInvocationAspect
  *
  * NOTICE OF LICENSE
  *
@@ -18,19 +18,21 @@
  * @link      http://www.appserver.io/
  */
 
-namespace AppserverIo\Doppelgaenger\Tests\Data\MultiRegex\B\Data;
+namespace AppserverIo\Doppelgaenger\Tests\Data\Aspects;
 
 /**
+ * Aspect used to test the usage of the MethodInvocation object
+ *
  * @author    Bernhard Wick <bw@appserver.io>
  * @copyright 2015 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  *
- * @invariant   $this->test === 'test'
+ * @Aspect
  */
-class RegexTestClass2
+class MethodInvocationAspect
 {
 
-    private $test = 'test';
 }
+

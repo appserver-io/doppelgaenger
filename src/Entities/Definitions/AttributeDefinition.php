@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Definitions\AttributeDefinition
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Definitions;
@@ -23,17 +23,13 @@ namespace AppserverIo\Doppelgaenger\Entities\Definitions;
 use AppserverIo\Doppelgaenger\Interfaces\DefinitionInterface;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Definitions\AttributeDefinition
- *
  * Provides a definition of class and trait attributes
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class AttributeDefinition implements DefinitionInterface
 {
@@ -127,7 +123,6 @@ class AttributeDefinition implements DefinitionInterface
 
         // If we are static, we have to tell so
         if ($this->isStatic === true) {
-
             $stringParts[] = 'static';
         }
 
@@ -136,7 +131,6 @@ class AttributeDefinition implements DefinitionInterface
 
         // Add any default value we might get
         if ($this->defaultValue !== null) {
-
             $stringParts[] = '= ' . $this->defaultValue;
         }
 

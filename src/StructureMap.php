@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\StructureMap
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,11 +11,10 @@
  *
  * PHP version 5
  *
- * @category  Library
- * @package   Doppelgaenger
  * @author    Bernhard Wick <bw@appserver.io>
- * @copyright 2014 TechDivision GmbH - <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
 
@@ -43,16 +44,13 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'Entities' . DIRECTORY_SEPARATOR .
     'Definitions' . DIRECTORY_SEPARATOR . 'Structure.php';
 
 /**
- * AppserverIo\Doppelgaenger\StructureMap
- *
  * This class provides the possibility to hold a map of structure entries, which are used to relate a structure
  * definition to it's physical path and other meta information
  *
- * @category  Library
- * @package   Doppelgaenger
  * @author    Bernhard Wick <bw@appserver.io>
- * @copyright 2014 TechDivision GmbH - <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
 class StructureMap implements MapInterface
@@ -111,11 +109,9 @@ class StructureMap implements MapInterface
 
         // As we do accept arrays we have to be sure that we got one. If not we convert it.
         if (!is_array($enforcementPaths)) {
-
             $enforcementPaths = array($enforcementPaths);
         }
         if (!is_array($autoloaderPaths)) {
-
             $autoloaderPaths = array($autoloaderPaths);
         }
 
@@ -154,7 +150,6 @@ class StructureMap implements MapInterface
         // iterator over our enforcement iterators and build up an array for later checks
         $enforcedFiles = array();
         foreach ($regexEnforcementIterator as $file) {
-
             // collect what we got in a way we can search it fast
             $enforcedFiles[$file[0]] = '';
         }
@@ -177,16 +172,13 @@ class StructureMap implements MapInterface
         $structures = array();
 
         foreach ($this->map as $entry) {
-
             // If we only need contracted only
             if (($annotated === true && $entry['hasAnnotations'] === false)) {
-
                 continue;
             }
 
             // If we only need enforced only
             if (($enforced === true && $entry['enforced'] === false)) {
-
                 continue;
             }
 
@@ -259,7 +251,6 @@ class StructureMap implements MapInterface
         // Load the serialized map.
         // If there is none or it isn't current we will generate it anew.
         if (!$this->load()) {
-
             $this->generate();
         }
 
@@ -293,7 +284,6 @@ class StructureMap implements MapInterface
     public function getEntry($identifier)
     {
         if (is_string($identifier) && isset($this->map[$identifier])) {
-
             // We got it, lets build a structure object
             $entry = $this->map[$identifier];
             $structure = new Structure(
@@ -309,7 +299,6 @@ class StructureMap implements MapInterface
             return $structure;
 
         } else {
-
             return false;
         }
     }
@@ -329,20 +318,16 @@ class StructureMap implements MapInterface
 
         // If we got a class name
         if ($identifier !== null && isset($this->map[$identifier])) {
-
             // Is the stored file time the same as directly from the file?
             if ($this->map[$identifier]['cTime'] === filectime($this->map[$identifier]['path'])) {
-
                 return true;
             }
         }
 
         // We got no class name, check the whole thing
         if ($identifier === null) {
-
             // Is the saved version the same as of the current file system?
             if ($this->version === $this->findVersion()) {
-
                 return true;
             }
         }
@@ -362,17 +347,14 @@ class StructureMap implements MapInterface
     public function getIdentifiers($type = null)
     {
         if ($type === null) {
-
             return array_keys($this->map);
 
         } else {
-
             // Collect the data.
             $result = array();
             foreach ($this->map as $identifier => $file) {
-
                 if ($file['type'] === $type) {
-
+                    // filter by type
                     $result[] = $identifier;
                 }
             }
@@ -393,18 +375,15 @@ class StructureMap implements MapInterface
     {
         // What information do we have to get?
         if ($fullPath === true) {
-
             $method = 'realpath';
 
         } else {
-
             $method = 'dirname';
         }
 
         // Collect the data.
         $result = array();
         foreach ($this->map as $file) {
-
             $result[] = $method($file['path']);
         }
 
@@ -421,13 +400,12 @@ class StructureMap implements MapInterface
     public function remove($identifier)
     {
         if (isset($this->map[$identifier])) {
-
+            // only try to remove if found
             unset($this->map[$identifier]);
 
             return true;
 
         } else {
-
             return false;
         }
     }
@@ -445,12 +423,10 @@ class StructureMap implements MapInterface
     {
         // If we have no specific path we will delete the current map
         if ($specificPath === null) {
-
             // Make our map empty
             $this->map = array();
 
         } else {
-
             // We need some formatting utilities and normalize the path as it might contain regex
             $formattingUtil = new Formatting();
             $specificPath = $formattingUtil->normalizePath($specificPath);
@@ -459,9 +435,7 @@ class StructureMap implements MapInterface
             // First thing: is it contained in one of $this root pathes, if not it is no REindexing
             $isContained = false;
             foreach ($this->rootPaths as $rootPath) {
-
                 if (strpos($specificPath, $rootPath) === 0) {
-
                     $isContained = true;
                     break;
                 }
@@ -469,13 +443,11 @@ class StructureMap implements MapInterface
 
             // Did we find it?
             if (!$isContained) {
-
                 return false;
             }
 
             // Second thing: is the path readable?
             if (!is_readable($specificPath)) {
-
                 return false;
             }
 
@@ -500,9 +472,8 @@ class StructureMap implements MapInterface
 
         $tmp = '';
         foreach ($recursiveIteratore as $fileInfo) {
-
             if ($fileInfo->isDir()) {
-
+                // we check directories only
                 $tmp += $fileInfo->getCTime();
             }
         }
@@ -519,7 +490,6 @@ class StructureMap implements MapInterface
     {
         // If we already got it we can return it directly
         if (isset($this->projectIterator)) {
-
             return $this->projectIterator;
         }
 
@@ -542,7 +512,6 @@ class StructureMap implements MapInterface
         // As we might have several rootPaths we have to create several RecursiveDirectoryIterators.
         $directoryIterators = array();
         foreach ($paths as $path) {
-
             $directoryIterators[] = new \RecursiveDirectoryIterator(
                 $path,
                 \RecursiveDirectoryIterator::SKIP_DOTS
@@ -552,7 +521,6 @@ class StructureMap implements MapInterface
         // We got them all, now append them onto a new RecursiveIteratorIterator and return it.
         $recursiveIterator = new \AppendIterator();
         foreach ($directoryIterators as $directoryIterator) {
-
             // Append the directory iterator
             $recursiveIterator->append(
                 new \RecursiveIteratorIterator(
@@ -587,19 +555,16 @@ class StructureMap implements MapInterface
         // if we got namespaces which are omitted from enforcement we have to mark them as such
         $omittedNamespaces = array();
         if ($this->config->hasValue('enforcement/omit')) {
-
             $omittedNamespaces = $this->config->getValue('enforcement/omit');
         }
 
         // iterator over our project files and add array based structure representations
         foreach ($regexIterator as $file) {
-
             // get the identifiers if any.
             $identifier = $this->findIdentifier($file[0]);
 
             // if we got an identifier we can build up a new map entry
             if ($identifier !== false) {
-
                 // We need to get our array of needles
                 $needles = array(
                     Annotations::INVARIANT,
@@ -617,7 +582,6 @@ class StructureMap implements MapInterface
 
                 // If we have to enforce things like @param or @returns, we have to be more sensitive
                 if ($this->config->getValue('enforcement/enforce-default-type-safety') === true) {
-
                     $needles[] = '@var';
                     $needles[] = '@param';
                     $needles[] = '@return';
@@ -666,9 +630,7 @@ class StructureMap implements MapInterface
     {
         // if the file is within an omitted namespace it most certainly is not
         foreach ($omittedNamespaces as $omittedNamespace) {
-
             if (strpos($fileIdentifier, ltrim($omittedNamespace, '\\')) === 0) {
-
                 return false;
             }
         }
@@ -676,11 +638,9 @@ class StructureMap implements MapInterface
         // as we are still here we are not within an omitted namespace.
         // if both of the below is true the file needs to be enforced
         if ($hasAnnotations === true && isset($enforcedFiles[$file])) {
-
             return true;
 
         } else {
-
             return false;
         }
     }
@@ -700,17 +660,14 @@ class StructureMap implements MapInterface
         $rsc = fopen($file, 'r');
         $recent = '';
         while (!feof($rsc)) {
-
             // Get a current chunk
             $current = fread($rsc, 512);
 
             // We also check the last chunk as well, to avoid cutting the only needle we have in two.
             $haystack = $recent . $current;
             foreach ($annotations as $annotation) {
-
                 // If we found something we can return true
                 if (strpos($haystack, '@' . ltrim($annotation, '@')) !== false) {
-
                     return true;
                 }
             }
@@ -741,7 +698,6 @@ class StructureMap implements MapInterface
 
         // if we could not open the file tell them
         if ($rsc === false) {
-
             throw new ParserException(sprintf('Could not open file %s for type inspection.', $file));
         }
 
@@ -752,13 +708,11 @@ class StructureMap implements MapInterface
 
         // get the buffer step by step
         for ($k = 0; $k < 5; $k++) {
-
             // clear collected things on every iteration, so we will not chain them on in case of several needed loops
             $namespace = '';
 
             // break if we reached the end of the file
             if (feof($rsc)) {
-
                 break;
             }
 
@@ -772,15 +726,14 @@ class StructureMap implements MapInterface
             // iterate over the current set of tokens and filter out what we found
             for ($i = 0; $i < $count; $i++) {
                 if ($tokens[$i][0] == T_NAMESPACE) {
-
+                    // we passed the namespace token, lets collect the name
                     for ($j = $i; $j < $count; $j++) {
-
                         if ($tokens[$j][0] === T_STRING) {
-
+                            // collect all strings and connect them
                             $namespace .= '\\' . $tokens[$j][1];
 
                         } elseif ($tokens[$j] === '{' || $tokens[$j] === ';') {
-
+                            // break if we clearly reached the end of the namespace declaration
                             break;
                         }
                     }
@@ -792,13 +745,10 @@ class StructureMap implements MapInterface
                     && $tokens[$i - 1][0] === T_WHITESPACE
                     && $tokens[$i][0] === T_STRING
                 ) {
-
                     if ($this->findAnnotations($file, array(Aspect::ANNOTATION))) {
-
                         $type = 'aspect';
 
                     } else {
-
                         $type = 'class';
                     }
 
@@ -810,7 +760,6 @@ class StructureMap implements MapInterface
                     && $tokens[$i - 1][0] === T_WHITESPACE
                     && $tokens[$i][0] === T_STRING
                 ) {
-
                     $type = 'trait';
                     $stuctureName = $tokens[$i][1];
                     break 2;
@@ -820,7 +769,6 @@ class StructureMap implements MapInterface
                     && $tokens[$i - 1][0] === T_WHITESPACE
                     && $tokens[$i][0] === T_STRING
                 ) {
-
                     $type = 'interface';
                     $stuctureName = $tokens[$i][1];
                     break 2;
@@ -831,17 +779,14 @@ class StructureMap implements MapInterface
         // Check what we got and return it accordingly. We will return an ugly array of the sort
         // array(<STRUCTURE_TYPE>, <STRUCTURE_NAME>).
         if (empty($stuctureName)) {
-
             return false;
 
         } elseif (empty($namespace)) {
             // We got no namespace, so just use the structure name
-
             return array($type, $stuctureName);
 
         } else {
             // We got both, so combine it.
-
             return array($type, ltrim($namespace . '\\' . $stuctureName, '\\'));
         }
     }
@@ -855,7 +800,6 @@ class StructureMap implements MapInterface
     {
         // Can we read the intended path?
         if (is_readable($this->mapPath)) {
-
             // Get the map
             $this->map = unserialize(file_get_contents($this->mapPath));
 
@@ -881,14 +825,12 @@ class StructureMap implements MapInterface
 
         // try to serialize into the known path
         if (file_put_contents($this->mapPath, serialize((array) $this->map)) >= 0) {
-
             // Remove the version entry and return the result
             unset($this->map['version']);
 
             return true;
 
         } else {
-
             // Remove the version entry and return the result
             unset($this->map['version']);
 

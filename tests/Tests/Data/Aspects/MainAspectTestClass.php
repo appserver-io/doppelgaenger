@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Tests\Data\Aspects\MainAspectTestClass
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,31 +11,25 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Tests
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Tests\Data\Aspects;
 
-use AppserverIo\Doppelgaenger\Entities\MethodInvocation;
+use AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface;
 
 /**
- * AppserverIo\Doppelgaenger\Tests\Data\Aspects\MainAspectTestClass
- *
  * Test class which provides some advices which can be weaved into test code
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Tests
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  *
  * @Aspect
  */
@@ -49,13 +45,13 @@ class MainAspectTestClass
     /**
      * Advice used to proceed a method but always replace the result with true
      *
-     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return boolean
      *
      * @Around("pointcut(booleanAdvisedMethods())")
      */
-    public static function trueAdvice1(MethodInvocation $methodInvocation)
+    public static function trueAdvice1(MethodInvocationInterface $methodInvocation)
     {
         $methodInvocation->proceed();
         return true;
@@ -70,13 +66,13 @@ class MainAspectTestClass
     /**
      * Advice used to proceed a method
      *
-     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return mixed
      *
      * @Around("pointcut(regexAdvisedClass())")
      */
-    public static function lazyAroundAdvice(MethodInvocation $methodInvocation)
+    public static function lazyAroundAdvice(MethodInvocationInterface $methodInvocation)
     {
         return $methodInvocation->proceed();
     }
@@ -90,13 +86,13 @@ class MainAspectTestClass
     /**
      * Advice used to proceed a method but always replace the result with false
      *
-     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return mixed
      *
      * @Around("pointcut(regexAdvisedMethod())")
      */
-    public static function falseAdvice(MethodInvocation $methodInvocation)
+    public static function falseAdvice(MethodInvocationInterface $methodInvocation)
     {
         $methodInvocation->proceed();
         return false;
@@ -111,13 +107,13 @@ class MainAspectTestClass
     /**
      * Advice to test around advice method chaining
      *
-     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return mixed
      *
      * @Around("pointcut(aroundChainMethod())")
      */
-    public static function chainingAdvice1(MethodInvocation $methodInvocation)
+    public static function chainingAdvice1(MethodInvocationInterface $methodInvocation)
     {
         $tmp = $methodInvocation->proceed();
         $tmp[] = __FUNCTION__;
@@ -127,13 +123,13 @@ class MainAspectTestClass
     /**
      * Advice to test around advice method chaining
      *
-     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return mixed
      *
      * @Around("pointcut(aroundChainMethod())")
      */
-    public static function chainingAdvice2(MethodInvocation $methodInvocation)
+    public static function chainingAdvice2(MethodInvocationInterface $methodInvocation)
     {
         $tmp = $methodInvocation->proceed();
         $tmp[] = __FUNCTION__;
@@ -155,13 +151,13 @@ class MainAspectTestClass
     /**
      * Advice used to proceed a method but always replace the result with true
      *
-     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return boolean
      *
      * @Around("pointcut(trueAdvisedMethod1())")
      */
-    public static function trueAdvice(MethodInvocation $methodInvocation)
+    public static function trueAdvice(MethodInvocationInterface $methodInvocation)
     {
         $methodInvocation->proceed();
         return true;

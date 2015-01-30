@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\PointcutExpression
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities;
@@ -26,17 +26,13 @@ use AppserverIo\Doppelgaenger\Entities\Pointcuts\PointcutFactory;
 use AppserverIo\Doppelgaenger\Interfaces\CodifyableInterface;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\PointcutExpression
- *
  * Definition of a pointcut as a combination of a joinpoint and advices
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  *
  * @see        https://www.eclipse.org/aspectj/doc/next/progguide/quick.html
  * @see        https://www.eclipse.org/aspectj/doc/next/progguide/semantics-pointcuts.html
@@ -155,18 +151,15 @@ class PointcutExpression implements CodifyableInterface
         // around advices need to have their result saved
         $assignTo = null;
         if (!is_null($this->getJoinpoint()) && $this->getJoinpoint()->getCodeHook() === Around::ANNOTATION) {
-
             $assignTo = ReservedKeywords::RESULT;
         }
 
         // do we even have an useful condition?
         $condition = $this->getPointcut()->getConditionString();
         if ($condition === 'true' || empty($condition)) {
-
             return $this->getPointcut()->getExecutionString($assignTo);
 
         } else {
-
             return 'if (' . $condition .') {
             ' . $this->getPointcut()->getExecutionString($assignTo) . '
             }';

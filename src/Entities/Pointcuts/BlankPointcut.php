@@ -1,7 +1,7 @@
 <?php
 
 /**
- * \AppserverIo\Doppelgaenger\Entities\Pointcut\WeavePointcut
+ * \AppserverIo\Doppelgaenger\Entities\Pointcut\PointcutPointcut
  *
  * NOTICE OF LICENSE
  *
@@ -20,9 +20,10 @@
 
 namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
 
+use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
+
 /**
- * Pointcut for direct weaving of advice logic.
- * Can only be used with a qualified method signature e.g. \AppserverIo\Doppelgaenger\Logger->log(__METHOD__)
+ * Pointcut expression for specifying a collection of other pointcuts and annotations expressing them
  *
  * @author    Bernhard Wick <bw@appserver.io>
  * @copyright 2015 TechDivision GmbH - <info@appserver.io>
@@ -30,10 +31,17 @@ namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  *
- * @Target({"METHOD","PROPERTY"})
+ * @Target({"ADVICE"})
  */
-class WeavePointcut extends AbstractSignaturePointcut
+class BlankPointcut extends AbstractPointcut
 {
+
+    /**
+     * Connector for referencing of several pointcuts at once
+     *
+     * @var string ADD_CONNECTOR
+     */
+    const ADD_CONNECTOR = '&&';
 
     /**
      * Whether or not the pointcut is considered static, meaning is has to be weaved and evaluated during runtime
@@ -41,14 +49,21 @@ class WeavePointcut extends AbstractSignaturePointcut
      *
      * @var boolean IS_STATIC
      */
-    const IS_STATIC = true;
+    const IS_STATIC = false;
 
     /**
      * The type of this pointcut
      *
      * @var string TYPE
      */
-    const TYPE = 'weave';
+    const TYPE = 'blank';
+
+    /**
+     * Pointcuts referenced by this pointcut's expression
+     *
+     * @var array $referencedPointcuts
+     */
+    protected $referencedPointcuts;
 
     /**
      * Returns a string representing a boolean condition which can be used to determine if
@@ -70,29 +85,17 @@ class WeavePointcut extends AbstractSignaturePointcut
      */
     public function getExecutionString($assignTo = null)
     {
-        $assignmentPrefix = '';
-        if (!is_null($assignTo)) {
-            $assignmentPrefix = $assignTo . ' = ';
-        }
+        return '';
+    }
 
-        // we have to test whether or not we need an instance of the used class first.
-        // if the call is not static then we do
-        $string = '';
-        $expression = $this->getExpression();
-        if ($this->callType === self::CALL_TYPE_OBJECT) {
-            // don't forget to create an instance first
-            $variable = '$' . lcfirst(str_replace('\\', '', $this->structure));
-            $string .= $variable . ' = new ' . $this->structure . '();
-            ';
-            $string .= $assignmentPrefix . $variable . $this->callType . $this->function . ';
-            ';
-
-        } else {
-            $string .= $assignmentPrefix . $expression . ';
-            ';
-        }
-
-        return $string;
+    /**
+     * Getter for the $referencedPointcuts property
+     *
+     * @return array
+     */
+    public function getReferencedPointcuts()
+    {
+        return array();
     }
 
     /**
@@ -106,5 +109,17 @@ class WeavePointcut extends AbstractSignaturePointcut
     public function matches($candidate)
     {
         return true;
+    }
+
+    /**
+     * Setter for the $referencedPointcuts property
+     *
+     * @param array $referencedPointcuts Pointcuts referenced by this pointcut's expression
+     *
+     * @return null
+     */
+    public function setReferencedPointcuts(array $referencedPointcuts)
+    {
+        $this->referencedPointcuts = $referencedPointcuts;
     }
 }

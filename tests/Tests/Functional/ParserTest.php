@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Tests\Functional\ParserTest
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Tests
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Tests\Functional;
@@ -35,17 +35,13 @@ use AppserverIo\Doppelgaenger\Tests\Data\MultiRegex\B\Data\RegexTestClass2;
 use AppserverIo\Doppelgaenger\Tests\Data\RegexTest1\RegexTestClass;
 
 /**
- * AppserverIo\Doppelgaenger\Tests\Functional\ParserTest
- *
  * Will test basic parser usage
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Tests
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class ParserTest extends \PHPUnit_Framework_TestCase
 {
@@ -61,7 +57,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $annotationTestClass->typeCollection(array(new \Exception(), new \Exception(), new \Exception()));
 
         } catch (\Exception $e) {
@@ -75,7 +70,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $annotationTestClass->typeCollectionReturn(array(new \Exception(), new \Exception(), new \Exception()));
 
         } catch (\Exception $e) {
@@ -86,7 +80,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $annotationTestClass->orCombinator(new \Exception());
             $annotationTestClass->orCombinator(null);
 
@@ -102,18 +95,9 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      */
-    public function testMethodParsing()
+    public function testMethodParsingWithoutException()
     {
-        $e = null;
-        try {
-
-            $methodTestClass = new MethodTestClass();
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertNull($e);
+        $methodTestClass = new MethodTestClass();
     }
 
     /**
@@ -121,7 +105,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      */
-    public function testRegexMapping()
+    public function testRegexMappingWithoutException()
     {
         // We have to load the config for regular expressions in the project dirs
         $config = new Config();
@@ -132,7 +116,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $regexTestClass1 = new RegexTestClass1();
 
         } catch (Exception $e) {
@@ -143,7 +126,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $regexTestClass2 = new RegexTestClass2();
 
         } catch (\Exception $e) {
@@ -154,7 +136,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $regexTestClass = new RegexTestClass();
 
         } catch (\Exception $e) {

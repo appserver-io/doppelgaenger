@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Assertions\TypeAssertion
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Assertions;
@@ -23,17 +23,13 @@ namespace AppserverIo\Doppelgaenger\Entities\Assertions;
 use AppserverIo\Doppelgaenger\Exceptions\ParserException;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Assertions\TypeAssertion
- *
  * This class will enable us to check for basic types
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class TypeAssertion extends AbstractAssertion
 {
@@ -77,18 +73,14 @@ class TypeAssertion extends AbstractAssertion
     public function getString()
     {
         if (function_exists('is_' . $this->type)) {
-
             if ($this->validatesTo === true) {
-
                 return (string)'is_' . $this->type . '(' . $this->operand . ')';
 
             } else {
-
                 return (string)'!is_' . $this->type . '(' . $this->operand . ')';
             }
 
         } else {
-
             throw new ParserException(sprintf('%s does not seem to be scalar type.', $this->getString()));
         }
     }
@@ -101,21 +93,18 @@ class TypeAssertion extends AbstractAssertion
     public function invert()
     {
         if ($this->validatesTo === true) {
-
             $this->validatesTo = false;
             $this->inverted = true;
 
             return true;
 
         } elseif ($this->validatesTo === false) {
-
             $this->validatesTo = true;
             $this->inverted = false;
 
             return true;
 
         } else {
-
             return false;
         }
     }

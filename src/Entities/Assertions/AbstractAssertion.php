@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Assertions\AbstractAssertion
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Assertions;
@@ -25,17 +25,13 @@ use AppserverIo\Doppelgaenger\Interfaces\AssertionInterface;
 use AppserverIo\Doppelgaenger\Utils\PhpLint;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Assertions\AbstractAssertion
- *
  * This class is used to provide an object base way to pass assertions as e.g. a precondition.
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 abstract class AbstractAssertion implements AssertionInterface
 {
@@ -79,7 +75,6 @@ abstract class AbstractAssertion implements AssertionInterface
         $this->minScope = self::DEFAULT_MIN_SCOPE;
 
         if (!$this->isValid()) {
-
             throw new ParserException(sprintf('Could not parse assertion string %s', $this->getString()));
         }
     }
@@ -124,7 +119,6 @@ abstract class AbstractAssertion implements AssertionInterface
         // If we did not get an allowed value we will throw an exception
         $tmp = array_flip(array("structure", "function", "body"));
         if (!isset($tmp[$minScope])) {
-
             throw new \InvalidArgumentException(
                 sprintf('The minimal scope %s is not allowed. It may only be "structure", "function" or "body"', $minScope)
             );

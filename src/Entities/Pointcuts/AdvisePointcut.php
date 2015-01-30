@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Pointcut\AdvisePointcut
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
@@ -23,18 +23,14 @@ namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Pointcut\AdvisePointcut
- *
  * Pointcut for direct weaving of advice logic.
  * Can only be used with a qualified method signature e.g. \AppserverIo\Doppelgaenger\Logger->log(__METHOD__)
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  *
  * @Target({"METHOD","PROPERTY"})
  */
@@ -90,7 +86,6 @@ class AdvisePointcut extends AbstractSignaturePointcut
     {
         $assignmentPrefix = '';
         if (!is_null($assignTo)) {
-
             $assignmentPrefix = $assignTo . ' = ';
         }
 
@@ -100,7 +95,6 @@ class AdvisePointcut extends AbstractSignaturePointcut
         $expression = $this->getExpression();
         $invocationCode = '(' . ReservedKeywords::METHOD_INVOCATION_OBJECT . ')';
         if ($this->callType === self::CALL_TYPE_OBJECT) {
-
             // don't forget to create an instance first
             $variable = '$' . lcfirst(str_replace('\\', '', $this->structure));
             $string .= $variable . ' = new ' . str_replace('\\\\', '\\', $this->structure) . '();
@@ -109,7 +103,6 @@ class AdvisePointcut extends AbstractSignaturePointcut
             ';
 
         } else {
-
             $string .= $assignmentPrefix . $expression . $invocationCode . ';
             ';
         }

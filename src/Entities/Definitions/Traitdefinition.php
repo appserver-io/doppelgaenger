@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Entities\Definitions\Traitdefinition
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Entities\Definitions;
@@ -25,18 +25,14 @@ use AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList;
 use AppserverIo\Doppelgaenger\Interfaces\PropertiedStructureInterface;
 
 /**
- * AppserverIo\Doppelgaenger\Entities\Definitions\Traitdefinition
- *
  * This class acts as a DTO-like (we are not immutable due to protected visibility)
  * entity for describing class definitions
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  *
  * @property \AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList $attributeDefinitions List of defined attributes
  * @property array                                                             $constants            Trait constants
@@ -147,15 +143,11 @@ class TraitDefinition extends AbstractStructureDefinition implements PropertiedS
 
         // If we need to we will filter all the non private conditions from the lists
         if ($nonPrivateOnly === true) {
-
             $invariantListIterator = $invariants->getIterator();
             foreach ($invariantListIterator as $invariantList) {
-
                 $invariantIterator = $invariantList->getIterator();
                 foreach ($invariantIterator as $key => $invariant) {
-
                     if ($invariant->isPrivateContext()) {
-
                         $invariantList->delete($key);
                     }
                 }

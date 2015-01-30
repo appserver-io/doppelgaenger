@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Tests\Functional\TypeSafetyTest
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Tests
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Tests\Functional;
@@ -23,17 +23,13 @@ namespace AppserverIo\Doppelgaenger\Tests\Functional;
 use AppserverIo\Doppelgaenger\Tests\Data\TypeSafetyTestClass;
 
 /**
- * AppserverIo\Doppelgaenger\Tests\Functional\TypeSafetyTest
- *
  * Will test basic type safety
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Tests
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class TypeSafetyTest extends \PHPUnit_Framework_TestCase
 {
@@ -54,45 +50,48 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
      * Check if we got enforced type safety for params
      *
      * @return null
+     *
+     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPreconditionException
      */
-    public function testBasicPrecondition()
+    public function testBasicPreconditionFail1()
     {
+        $this->typeSafetyTestClass->iNeedStrings('stringer', 12);
+    }
+
+    /**
+     * Check if we got enforced type safety for params
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPreconditionException
+     */
+    public function testBasicPreconditionFail2()
+    {
+        $this->typeSafetyTestClass->iNeedArrays('test', array());
+    }
+
+    /**
+     * Check if we got enforced type safety for params
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPreconditionException
+     */
+    public function testBasicPreconditionFail3()
+    {
+        $this->typeSafetyTestClass->iNeedNumeric('four');
+    }
+
+    /**
+     * Check if we got enforced type safety for params
+     *
+     * @return null
+     */
+    public function testBasicPreconditions()
+    {
+
         $e = null;
         try {
-
-            $this->typeSafetyTestClass->iNeedStrings('stringer', 12);
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPreconditionException", $e);
-
-        $e = null;
-        try {
-
-            $this->typeSafetyTestClass->iNeedArrays('test', array());
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPreconditionException", $e);
-
-        $e = null;
-        try {
-
-            $this->typeSafetyTestClass->iNeedNumeric('four');
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPreconditionException", $e);
-
-        $e = null;
-        try {
-
             $this->typeSafetyTestClass->iNeedStrings('stringer', 'testinger');
 
         } catch (\Exception $e) {
@@ -103,7 +102,6 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $this->typeSafetyTestClass->iNeedArrays(array('test', 'test2'), array());
 
         } catch (\Exception $e) {
@@ -114,7 +112,6 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $this->typeSafetyTestClass->iNeedNumeric(12, 5);
             $this->typeSafetyTestClass->iNeedNumeric(42);
 
@@ -134,7 +131,6 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
     {
         $e = null;
         try {
-
             $this->typeSafetyTestClass->iReturnAString(12);
 
         } catch (\Exception $e) {
@@ -145,7 +141,6 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $this->typeSafetyTestClass->iReturnAnArray('testinger');
 
         } catch (\Exception $e) {
@@ -156,7 +151,6 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $this->typeSafetyTestClass->iReturnAnInt(array());
 
         } catch (\Exception $e) {
@@ -167,7 +161,6 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $this->typeSafetyTestClass->iReturnAnArray();
 
         } catch (\Exception $e) {
@@ -178,7 +171,6 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $this->typeSafetyTestClass->iReturnAnInt();
 
         } catch (\Exception $e) {
@@ -189,7 +181,6 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
 
         $e = null;
         try {
-
             $this->typeSafetyTestClass->iReturnAString();
 
         } catch (\Exception $e) {

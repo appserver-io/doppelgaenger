@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,29 +11,23 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Entities
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\Dictionaries;
 
 /**
- * AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords
- *
  * Contains reserved variable, property and function names on which basic design by contract functionality relies
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage Dictionaries
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class ReservedKeywords
 {
@@ -119,4 +115,11 @@ class ReservedKeywords
      * @var string RESULT
      */
     const RESULT = '$dgResult';
+
+    /**
+     * Name of the local variable representing the exception thrown during method execution
+     *
+     * @var string THROWN_EXCEPTION_OBJECT
+     */
+    const THROWN_EXCEPTION_OBJECT = '$doppelgaengerThrownExceptionObject';
 }

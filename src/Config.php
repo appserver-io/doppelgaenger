@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\Config
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,11 +11,10 @@
  *
  * PHP version 5
  *
- * @category  Library
- * @package   Doppelgaenger
  * @author    Bernhard Wick <bw@appserver.io>
- * @copyright 2014 TechDivision GmbH - <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
 
@@ -26,15 +27,12 @@ use AppserverIo\Doppelgaenger\Utils\InstanceContainer;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 
 /**
- * AppserverIo\Doppelgaenger\Config
- *
  * This class implements the access point for our global (oh no!) configuration
  *
- * @category  Library
- * @package   Doppelgaenger
  * @author    Bernhard Wick <bw@appserver.io>
- * @copyright 2014 TechDivision GmbH - <info@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
 class Config implements ConfigInterface
@@ -82,10 +80,8 @@ class Config implements ConfigInterface
     {
         $result = array();
         foreach ($array as $key => $value) {
-
             // If it is an array not containing integer keys (so no nested config element) we have to get recursive
             if (is_array($value) && @!is_int(array_keys($value)[0])) {
-
                 $value = $this->flattenArray($value, $key, false);
             }
 
@@ -95,12 +91,9 @@ class Config implements ConfigInterface
 
         // If we are within the initial call we would like to do a final flattening and sorting process
         if ($initialCall === true) {
-
             // No iterate all the entries and array shift them if they are arrays
             foreach ($result as $key => $value) {
-
                 if (is_array($value)) {
-
                     unset($result[$key]);
                     $result = array_merge($result, $value);
                 }
@@ -138,11 +131,9 @@ class Config implements ConfigInterface
 
         // One thing we need is the logger instance (if any)
         if ($this->hasValue('enforcement/logger')) {
-
             $logger = $this->extractLoggerInstance($this->config);
 
             if ($logger !== false) {
-
                 $instanceContainer[ReservedKeywords::LOGGER_CONTAINER_ENTRY] = $logger;
             }
         }
@@ -164,18 +155,14 @@ class Config implements ConfigInterface
 
         // If we got an array
         if (is_array($value)) {
-
             if (is_array($originalValue)) {
-
                 $newValue = array_merge($originalValue, $value);
 
             } else {
-
                 $newValue = array_merge(array($originalValue), $value);
             }
 
         } else {
-
             $newValue = $originalValue . $value;
         }
 
@@ -194,11 +181,9 @@ class Config implements ConfigInterface
     protected function extractLoggerInstance(array $configArray)
     {
         if (isset($configArray['enforcement/logger'])) {
-
             // Get the logger
             $logger = $configArray['enforcement/logger'];
             if (is_string($logger)) {
-
                 $logger = new $logger;
             }
 
@@ -206,7 +191,6 @@ class Config implements ConfigInterface
             return $logger;
 
         } else {
-
             return false;
         }
     }
@@ -221,7 +205,7 @@ class Config implements ConfigInterface
     public function unsetValue($value)
     {
         if (isset($this->config[$value])) {
-
+            // unset the value
             unset($this->config[$value]);
         }
     }
@@ -277,7 +261,6 @@ class Config implements ConfigInterface
         // Do we load a valid config?
         $configCandidate = $this->validate($file);
         if ($configCandidate === false) {
-
             throw new ConfigException(sprintf('Attempt to load invalid configuration file %s', $file));
         }
 
@@ -313,34 +296,29 @@ class Config implements ConfigInterface
     {
         // Are there dirs within this config aspect?
         if (isset($configArray[$configAspect . self::VALUE_NAME_DELIMITER . 'dirs'])) {
-
             // Get ourselves a format utility
             $formattingUtil = new Formatting();
 
             // Iterate over all dir entries and normalize the paths
             foreach ($configArray[$configAspect . self::VALUE_NAME_DELIMITER . 'dirs'] as $key => $projectDir) {
-
                 // Do the normalization
                 $tmp = $formattingUtil->normalizePath($projectDir);
 
                 if (is_readable($tmp)) {
-
                     $configArray[$configAspect . self::VALUE_NAME_DELIMITER . 'dirs'][$key] = $tmp;
 
                 } elseif (preg_match('/\[|\]|\*|\+|\.|\(|\)|\?|\^/', $tmp)) {
-
                     // Kill the original path entry so the iterators wont give us a bad time
                     unset($configArray[$configAspect . self::VALUE_NAME_DELIMITER . 'dirs'][$key]);
 
                     // We will open up the paths with glob
                     foreach (glob($tmp, GLOB_ERR) as $regexlessPath) {
-
+                        // collect the cleaned path
                         $configArray[$configAspect . self::VALUE_NAME_DELIMITER . 'dirs'][] = $regexlessPath;
                     }
 
                 } else {
                     // Somethings wrong with the path, that should not be
-
                     return false;
                 }
             }
@@ -361,14 +339,11 @@ class Config implements ConfigInterface
     public function getConfig($aspect = null)
     {
         if (!is_null($aspect)) {
-
             // Filter the aspect our of the config
             $tmp = array();
             foreach ($this->config as $key => $value) {
-
                 // Do we have an entry belonging to the certain aspect? If so filter it and cut the aspect key part
                 if (strpos($key, $aspect . self::VALUE_NAME_DELIMITER) === 0) {
-
                     $tmp[str_replace($aspect . self::VALUE_NAME_DELIMITER, '', $key)] = $value;
                 }
             }
@@ -397,11 +372,9 @@ class Config implements ConfigInterface
 
         // Did we even get an array?
         if (!is_array($configCandidate)) {
-
             throw new ConfigException(sprintf('Could not parse configuration file %s.', $file));
 
         } else {
-
             $configCandidate = $this->flattenArray($configCandidate);
         }
 
@@ -413,11 +386,9 @@ class Config implements ConfigInterface
             $tmp = $formattingUtil->normalizePath($configCandidate['cache' . self::VALUE_NAME_DELIMITER . 'dir']);
 
             if (is_writable($tmp)) {
-
                 $configCandidate['cache' . self::VALUE_NAME_DELIMITER . 'dir'] = $tmp;
 
             } else {
-
                 throw new ConfigException(sprintf('The configured cache directory %s is not writable.', $tmp));
             }
         }
@@ -427,7 +398,6 @@ class Config implements ConfigInterface
 
         // Do we still have an array here?
         if (!is_array($configCandidate)) {
-
             return false;
         }
 
@@ -436,7 +406,6 @@ class Config implements ConfigInterface
 
         // Lets check if there is a valid processing in place
         if ($configCandidate === false || !$this->validateProcessing($configCandidate)) {
-
             return false;
         }
 
@@ -462,20 +431,17 @@ class Config implements ConfigInterface
 
         // Do we have an entry at all?
         if (!isset($configCandidate['enforcement/processing'])) {
-
             return false;
         }
 
         // Did we even get something useful?
         if (!isset($validEntries[$configCandidate['enforcement/processing']])) {
-
             return false;
         }
 
         // If we got the option "logger" we have to check if there is a logger. If not, we fail, if yes
         // we have to check if we got something PSR-3 compatible
         if ($configCandidate['enforcement/processing'] === 'logging') {
-
             return $this->extractLoggerInstance($configCandidate) instanceof \Psr\Log\LoggerInterface;
         }
 

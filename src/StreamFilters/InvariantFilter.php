@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * \AppserverIo\Doppelgaenger\StreamFilters\InvariantFilter
+ *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
@@ -9,13 +11,11 @@
  *
  * PHP version 5
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage StreamFilters
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 
 namespace AppserverIo\Doppelgaenger\StreamFilters;
@@ -27,18 +27,14 @@ use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 
 /**
- * AppserverIo\Doppelgaenger\StreamFilters\InvariantFilter
- *
  * This filter will buffer the input stream and add all invariant related information at prepared locations
  * (see $dependencies)
  *
- * @category   Library
- * @package    Doppelgaenger
- * @subpackage StreamFilters
- * @author     Bernhard Wick <bw@appserver.io>
- * @copyright  2014 TechDivision GmbH - <info@appserver.io>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io/
+ * @author    Bernhard Wick <bw@appserver.io>
+ * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      http://www.appserver.io/
  */
 class InvariantFilter extends AbstractFilter
 {
@@ -79,13 +75,11 @@ class InvariantFilter extends AbstractFilter
         $propertyReplacements = array();
         $iterator = $structureDefinition->getAttributeDefinitions()->getIterator();
         for ($i = 0; $i < $iterator->count(); $i++) {
-
             // Get the current attribute for more easy access
             $attribute = $iterator->current();
 
             // Only enter the attribute if it is used in an invariant and it is not private
             if ($attribute->inInvariant() && $attribute->getVisibility() !== 'private') {
-
                 // Build up our regex expression to filter them out
                 $obsoleteProperties[] = '/' . $attribute->getVisibility() . '.*?\\' . $attribute->getName() . '/';
                 $propertyReplacements[] = 'private ' . $attribute->getName();
@@ -98,10 +92,8 @@ class InvariantFilter extends AbstractFilter
         // Get our buckets from the stream
         $functionHook = '';
         while ($bucket = stream_bucket_make_writeable($in)) {
-
             // We only have to do that once!
             if (empty($functionHook)) {
-
                 $functionHook = Placeholders::FUNCTION_HOOK . Placeholders::PLACEHOLDER_CLOSE;
 
                 // Get the code for our attribute storage
@@ -125,7 +117,6 @@ class InvariantFilter extends AbstractFilter
 
                 // Determine if we need the __set method to be injected
                 if ($structureDefinition->getFunctionDefinitions()->entryExists('__set')) {
-
                     // Get the code for our __set() method
                     $setCode = $this->generateSetCode($structureDefinition->hasParents(), true);
                     $bucket->data = str_replace(
@@ -135,7 +126,6 @@ class InvariantFilter extends AbstractFilter
                     );
 
                 } else {
-
                     $setCode = $this->generateSetCode($structureDefinition->hasParents());
                     $bucket->data = str_replace(
                         $functionHook,
@@ -146,7 +136,6 @@ class InvariantFilter extends AbstractFilter
 
                 // Determine if we need the __get method to be injected
                 if ($structureDefinition->getFunctionDefinitions()->entryExists('__get')) {
-
                     // Get the code for our __set() method
                     $getCode = $this->generateGetCode($structureDefinition->hasParents(), true);
                     $bucket->data = str_replace(
@@ -156,7 +145,6 @@ class InvariantFilter extends AbstractFilter
                     );
 
                 } else {
-
                     $getCode = $this->generateGetCode($structureDefinition->hasParents());
                     $bucket->data = str_replace(
                         $functionHook,
@@ -198,22 +186,17 @@ class InvariantFilter extends AbstractFilter
         // After iterate over the attributes and build up our array
         $iterator = $attributeDefinitions->getIterator();
         for ($i = 0; $i < $iterator->count(); $i++) {
-
             // Get the current attribute for more easy access
             $attribute = $iterator->current();
 
             // Only enter the attribute if it is used in an invariant and it is not private
             if ($attribute->inInvariant() && $attribute->getVisibility() !== 'private') {
-
                 $code .= '"' . substr($attribute->getName(), 1) . '"';
                 $code .= ' => array("visibility" => "' . $attribute->getVisibility() . '", ';
-
                 // Now check if we need any keywords for the variable identity
                 if ($attribute->isStatic()) {
-
                     $code .= '"static" => true';
                 } else {
-
                     $code .= '"static" => false';
                 }
                 $code .= '),';
@@ -241,7 +224,6 @@ class InvariantFilter extends AbstractFilter
 
         // We only need the method header if we don't inject
         if ($injected === false) {
-
             $code = '/**
              * Magic function to forward writing property access calls if within visibility boundaries.
              *
@@ -250,7 +232,6 @@ class InvariantFilter extends AbstractFilter
             public function __set($name, $value)
             {';
         } else {
-
             $code = '';
         }
 
@@ -259,10 +240,8 @@ class InvariantFilter extends AbstractFilter
             if (!isset($this->' . ReservedKeywords::ATTRIBUTE_STORAGE . '[$name])) {';
 
         if ($hasParents) {
-
             $code .= 'return parent::__set($name, $value);';
         } else {
-
             $code .= 'if (property_exists($this, $name)) {' .
 
                 ReservedKeywords::FAILURE_VARIABLE . ' = "accessing $name in an invalid way";' .
@@ -320,7 +299,6 @@ class InvariantFilter extends AbstractFilter
 
         // We do not need the method encasing brackets if we inject
         if ($injected === false) {
-
             $code .= '}';
         }
 
@@ -341,7 +319,6 @@ class InvariantFilter extends AbstractFilter
 
         // We only need the method header if we don't inject
         if ($injected === false) {
-
             $code = '/**
          * Magic function to forward reading property access calls if within visibility boundaries.
          *
@@ -350,7 +327,6 @@ class InvariantFilter extends AbstractFilter
         public function __get($name)
         {';
         } else {
-
             $code = '';
         }
         $code .=
@@ -358,10 +334,8 @@ class InvariantFilter extends AbstractFilter
             if (!isset($this->' . ReservedKeywords::ATTRIBUTE_STORAGE . '[$name])) {';
 
         if ($hasParents) {
-
             $code .= 'return parent::__get($name);';
         } else {
-
             $code .= 'if (property_exists($this, $name)) {' .
 
                 ReservedKeywords::FAILURE_VARIABLE . ' = "accessing $name in an invalid way";' .
@@ -413,7 +387,6 @@ class InvariantFilter extends AbstractFilter
 
         // We do not need the method encasing brackets if we inject
         if ($injected === false) {
-
             $code .= '}';
         }
 
@@ -458,15 +431,12 @@ class InvariantFilter extends AbstractFilter
 
         $invariantIterator = $assertionLists->getIterator();
         for ($i = 0; $i < $invariantIterator->count(); $i++) {
-
             // Create the inner loop for the different assertions
             if ($invariantIterator->current()->count() !== 0) {
-
                 $assertionIterator = $invariantIterator->current()->getIterator();
                 $codeFragment = array();
 
                 for ($j = 0; $j < $assertionIterator->count(); $j++) {
-
                     $codeFragment[] = $assertionIterator->current()->getString();
 
                     $assertionIterator->next();
