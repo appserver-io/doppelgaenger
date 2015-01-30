@@ -68,8 +68,17 @@ class TypedCollectionAssertion extends AbstractAssertion
      */
     public function getString()
     {
+        // we want to know if we are looking for a class or a scalar type
+        if (function_exists('is_' . $this->type)) {
+            $validationString = 'is_' . $this->type . '($value)';
+
+        } else {
+            $validationString = '$value instanceof ' . $this->type;
+        }
+
+        // build up the check itself
         $code = 'count(array_filter(' . $this->operand . ', function(&$value) {
-        if (!$value instanceof ' . $this->type . ') {
+        if (!' . $validationString . ') {
 
             return true;
         }

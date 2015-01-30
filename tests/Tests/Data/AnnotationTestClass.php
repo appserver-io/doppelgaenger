@@ -33,7 +33,15 @@ namespace AppserverIo\Doppelgaenger\Tests\Data;
 class AnnotationTestClass
 {
     /**
-     * @param array<\Exception>   $value
+     * @param string[] $value
+     */
+    public function simpleTypeCollection($value)
+    {
+
+    }
+
+    /**
+     * @param \Exception[] $value
      */
     public function typeCollection($value)
     {
@@ -41,11 +49,59 @@ class AnnotationTestClass
     }
 
     /**
+     * @param array<\Exception>   $value
+     */
+    public function typeCollectionAlternative($value)
+    {
+
+    }
+
+    /**
+     * @return \Exception[]
+     */
+    public function typeCollectionReturn()
+    {
+        return array(new \Exception(), new \Exception(), new \Exception());
+    }
+
+    /**
+     * @return \Exception[]
+     */
+    public function typeCollectionReturnFail()
+    {
+        return array(new \Exception(), new \stdClass(), new \Exception());
+    }
+
+    /**
      * @return array<\Exception>
      */
-    public function typeCollectionReturn($value)
+    public function typeCollectionAlternativeReturn()
     {
-        return $value;
+        return array(new \Exception(), new \Exception(), new \Exception());
+    }
+
+    /**
+     * @return array<\Exception>
+     */
+    public function typeCollectionAlternativeReturnFail()
+    {
+        return array(new \Exception(), new \Exception(), new \stdClass());
+    }
+
+    /**
+     * @return integer[]
+     */
+    public function simpleTypeCollectionReturn()
+    {
+        return array(1, 2, 3);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function simpleTypeCollectionReturnFail()
+    {
+        return array(1, 'wad', 'awd');
     }
 
     /**

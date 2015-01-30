@@ -1,3 +1,13 @@
+# Version 0.5.1
+
+## Bugfixes
+
+* Always assumed complex type elements in typed array collections 
+
+## Features
+
+* Introduced <TYPE>[] syntax for typed array collection
+
 # Version 0.5.0
 
 ## Bugfixes
