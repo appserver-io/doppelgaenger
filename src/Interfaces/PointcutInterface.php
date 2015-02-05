@@ -34,6 +34,16 @@ use AppserverIo\Doppelgaenger\Entities\Definitions\AttributeDefinition;
  */
 interface PointcutInterface
 {
+
+    /**
+     * Will return a chain of callbacks which can be used to call woven code in an onion like manner
+     *
+     * @param \AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition $functionDefinition Definition of the function to inject invocation code into
+     *
+     * @return array
+     */
+    public function getCallbackChain(FunctionDefinition $functionDefinition);
+
     /**
      * Returns a string representing a boolean condition which can be used to determine if
      * the pointcut has to be executed

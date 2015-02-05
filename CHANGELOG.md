@@ -5,7 +5,9 @@
 * Pointcuts mentioning advice keywords in their doc block did get treated as advices themselves
 * Bash wildcard using pointcuts only matched the first of several possible matches
 * AfterReturning and AfterThrowing advices referencing pointcuts will now be woven into the right places
-* Closes #455 - Pointcut based weaving mismatch for After/AfterThrowing
+* Around advice callback chains will now take the current context into account
+* Closed #455 - Pointcut based weaving mismatch for After/AfterThrowing
+* Closed #456 - Problems with Around-Advice callback chain buildup
 
 ## Features
 
@@ -32,7 +34,7 @@
 
 * Introduced MethodInvocationInterface
 * Extended the functionality of AfterThrowing and AfterReturning advice by enhancing the MethodInvocation object
-* New coding coneventions
+* New coding conventions
 * Extended testing
 
 # Version 0.4.2

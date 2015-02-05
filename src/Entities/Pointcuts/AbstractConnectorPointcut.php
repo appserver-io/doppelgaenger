@@ -89,11 +89,16 @@ abstract class AbstractConnectorPointcut extends AbstractPointcut
     /**
      * Will return a chain of callbacks which can be used to call woven code in an onion like manner
      *
+     * @param \AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition $functionDefinition Definition of the function to inject invocation code into
+     *
      * @return array
      */
-    public function getCallbackChain()
+    public function getCallbackChain(FunctionDefinition $functionDefinition)
     {
-        $tmp = array_merge($this->leftPointcut->getCallbackChain(), $this->rightPointcut->getCallbackChain());
+        $tmp = array_merge(
+            $this->leftPointcut->getCallbackChain($functionDefinition),
+            $this->rightPointcut->getCallbackChain($functionDefinition)
+        );
 
         return $tmp;
     }

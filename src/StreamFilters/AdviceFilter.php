@@ -325,7 +325,7 @@ class AdviceFilter extends AbstractFilter
         $code = ReservedKeywords::METHOD_INVOCATION_OBJECT . ' = new \AppserverIo\Doppelgaenger\Entities\MethodInvocation(
             ';
 
-        // add the original method call to the callback chain so it can be integrated, add it and get add the context
+        // add the original method call to the callback chain so it can be integrated, add it and add the context
         if ($functionDefinition->isStatic()) {
             $contextCode = '__CLASS__';
 
@@ -395,7 +395,7 @@ class AdviceFilter extends AbstractFilter
     /**
      * Will generate and advice chain of callbacks to the given around pointcut expressions
      *
-     * @param array              $sortedPointcutExpressions Pointcut expressions sorted by their joinpoint's code hooks
+     * @param array              $sortedPointcutExpressions Pointcut expressions sorted by their join-point's code hooks
      * @param FunctionDefinition $functionDefinition        Definition of the function to inject invocation code into
      *
      * @return array
@@ -407,7 +407,7 @@ class AdviceFilter extends AbstractFilter
         $callbackChain = array();
         if (isset($sortedPointcutExpressions[Around::ANNOTATION])) {
             foreach ($sortedPointcutExpressions[Around::ANNOTATION] as $aroundExpression) {
-                $callbackChain = array_merge($callbackChain, $aroundExpression->getPointcut()->getCallbackChain());
+                $callbackChain = array_merge($callbackChain, $aroundExpression->getPointcut()->getCallbackChain($functionDefinition));
             }
         }
 

@@ -71,9 +71,11 @@ abstract class AbstractPointcut implements PointcutInterface
     /**
      * Will return a chain of callbacks which can be used to call woven code in an onion like manner
      *
+     * @param \AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition $functionDefinition Definition of the function to inject invocation code into
+     *
      * @return array
      */
-    public function getCallbackChain()
+    public function getCallbackChain(FunctionDefinition $functionDefinition)
     {
         return array();
     }

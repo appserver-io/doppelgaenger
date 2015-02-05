@@ -112,14 +112,26 @@ abstract class AbstractSignaturePointcut extends AbstractPointcut
     /**
      * Will return a chain of callbacks which can be used to call woven code in an onion like manner
      *
+     * @param \AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition $functionDefinition Definition of the function to inject invocation code into
+     *
      * @return array
      */
-    public function getCallbackChain()
+    public function getCallbackChain(FunctionDefinition $functionDefinition)
     {
+
         if ($this->callType === self::CALL_TYPE_STATIC) {
-            return array(array('__CLASS__', $this->function));
+            // we can work with the structure name alone if we have a static call
+
+            return array(array($this->structure, $this->function));
+
+        } elseif (ltrim($this->structure, '\\') === $functionDefinition->getStructureName()) {
+            // if the callback chain is used within the actual class we can use the current context
+
+            return array(array('$this', $this->function));
 
         } else {
+            // for everything else (mostly advice chain callbacks) we will create a new instance
+
             return array(array('new ' . $this->structure . '()', $this->function));
         }
     }
