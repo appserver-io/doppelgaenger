@@ -162,4 +162,24 @@ class MainAspectTestClass
         $methodInvocation->proceed();
         return true;
     }
+
+    /**
+     * @Pointcut("call(\AppserverIo\Doppelgaenger\Tests\Data\Advised\AbstractTestClass->iHaveAPointcutBasedAdvice())")
+     */
+    public function abstractAdvisedMethod()
+    {}
+
+    /**
+     * Basic Around advice doing nothing besides returning TRUE
+     *
+     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     *
+     * @return boolean
+     *
+     * @Around("pointcut(abstractAdvisedMethod)")
+     */
+    public static function basicAroundAdvice(MethodInvocationInterface $methodInvocation)
+    {
+        return true;
+    }
 }

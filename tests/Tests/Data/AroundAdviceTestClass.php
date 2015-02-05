@@ -30,8 +30,6 @@ use AppserverIo\Doppelgaenger\Entities\MethodInvocation;
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
- *
- * @Aspect
  */
 class AroundAdviceTestClass
 {

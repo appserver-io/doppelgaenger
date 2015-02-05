@@ -118,7 +118,7 @@ class AspectRegister extends AbstractTypedList
         // as it seems we got something else we have to get all regex about
         $matches = array();
         foreach ($container as $entry) {
-            if (fnmatch(ltrim($expression, '\\'), $entry->getQualifiedName() . '()')) {
+            if (fnmatch(ltrim(rtrim($expression, '()'), '\\'), $entry->getQualifiedName())) {
                 $matches[] = $entry;
             }
         }
@@ -169,9 +169,9 @@ class AspectRegister extends AbstractTypedList
 
         // prepare the tokenizer we will need for further processing
         $needles = array(
-            After::ANNOTATION,
             AfterReturning::ANNOTATION,
             AfterThrowing::ANNOTATION,
+            After::ANNOTATION,
             Around::ANNOTATION,
             Before::ANNOTATION
         );
@@ -190,7 +190,7 @@ class AspectRegister extends AbstractTypedList
             $foundNeedle = false;
             foreach ($needles as $needle) {
                 // create the advice
-                if (strpos($functionDefinition->getDocBlock(), $needle) !== false) {
+                if (strpos($functionDefinition->getDocBlock(), '@' . $needle) !== false) {
                     $foundNeedle = true;
                     $scheduledAdviceDefinitions[$needle][] = $functionDefinition;
 

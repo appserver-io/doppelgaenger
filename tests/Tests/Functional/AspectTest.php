@@ -23,6 +23,7 @@ namespace AppserverIo\Doppelgaenger\Tests\Functional;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 use AppserverIo\Doppelgaenger\Tests\Data\Advised\AdvisedRegexClass;
 use AppserverIo\Doppelgaenger\Tests\Data\Advised\AdvisedTestClass;
+use AppserverIo\Doppelgaenger\Tests\Data\Advised\ChildOfAbstractTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\Aspects\MainAspectTestClass;
 
 /**
@@ -113,5 +114,27 @@ class AspectTest extends \PHPUnit_Framework_TestCase
         $tmp = $testClass->aroundChainMethod();
         $this->assertEquals('chainingAdvice1' . ReservedKeywords::ORIGINAL_FUNCTION_SUFFIX, array_pop($tmp));
         $this->assertEquals('chainingAdvice2' . ReservedKeywords::ORIGINAL_FUNCTION_SUFFIX, array_pop($tmp));
+    }
+
+    /**
+     * Tests if a method of an abstract class can be targeted by direct advice referencing
+     *
+     * @return null
+     */
+    public function testDirectAbstractMethodWeaving()
+    {
+        $testClass = new ChildOfAbstractTestClass();
+        $this->assertTrue($testClass->iHaveADirectAdvice());
+    }
+
+    /**
+     * Tests if a method of an abstract class can be targeted by pointcuts
+     *
+     * @return null
+     */
+    public function testPointcutBasedAbstractMethodWeaving()
+    {
+        $testClass = new ChildOfAbstractTestClass();
+        $this->assertTrue($testClass->iHaveAPointcutBasedAdvice());
     }
 }

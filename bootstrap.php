@@ -31,3 +31,14 @@ $config->load(
 // We have to register our autoLoader to put our proxies in place
 $autoLoader = new AppserverIo\Doppelgaenger\AutoLoader($config);
 $autoLoader->register();
+
+// we should clear the cache directory from the result of former runs
+$cacheDir = $config->getValue('cache/dir');
+foreach (scandir($cacheDir) as $cachedFile) {
+    // clean the files but do not delete the .gitignore file
+    if ($cachedFile === '.gitignore' || $cachedFile === '.' || $cachedFile === '..') {
+        continue;
+    }
+
+    unlink($cacheDir . DIRECTORY_SEPARATOR . $cachedFile);
+}
