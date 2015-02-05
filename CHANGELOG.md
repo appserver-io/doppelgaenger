@@ -1,3 +1,13 @@
+# Version 0.5.2
+
+## Bugfixes
+
+* Pointcuts mentioning advice keywords in their doc block did get treated as advices themselves
+
+## Features
+
+* Cache will get cleaned for every run of the PHPUnit tests
+
 # Version 0.5.1
 
 ## Bugfixes
