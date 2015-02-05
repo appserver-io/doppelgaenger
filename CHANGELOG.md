@@ -3,6 +3,7 @@
 ## Bugfixes
 
 * Pointcuts mentioning advice keywords in their doc block did get treated as advices themselves
+* Bash wildcard using pointcuts only matched the first of several possible matches
 
 ## Features
 

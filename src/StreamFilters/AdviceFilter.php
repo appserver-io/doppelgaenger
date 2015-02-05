@@ -281,15 +281,17 @@ class AdviceFilter extends AbstractFilter
 
                             $pointcutExpression->setJoinpoint($joinpoint);
 
-                            // "straighten out" structure and function referenced by the pointcut to avoid regex within generated code
-                            $pointcutExpression->getPointcut()->straightenExpression($functionDefinition);
+                            // "straighten out" structure and function referenced by the pointcut to avoid regex within generated code.
+                            // Same here with the cloning: we do not want to influence the matching process with working on references
+                            $expressionPointcut = clone $pointcutExpression->getPointcut();
+                            $expressionPointcut->straightenExpression($functionDefinition);
 
                             // add the weaving pointcut into the expression
                             $pointcutExpression->setPointcut(new AndPointcut(
                                 AdvisePointcut::TYPE . str_replace('\\\\', '\\', '(\\' . $advice->getQualifiedName() . ')'),
-                                $pointcutExpression->getPointcut()->getType() . '(' . $pointcutExpression->getPointcut()->getExpression() . ')'
+                                $expressionPointcut->getType() . '(' . $expressionPointcut->getExpression() . ')'
                             ));
-                            $pointcutExpression->setString($pointcutExpression->getPointcut()->getExpression());
+                            $pointcutExpression->setString($expressionPointcut->getExpression());
 
                             // add it to our result list
                             $pointcutExpressions->add($pointcutExpression);
@@ -429,7 +431,7 @@ class AdviceFilter extends AbstractFilter
      */
     protected function sortPointcutExpressions($pointcutExpressions)
     {
-        // sort by joinpoint code hooks
+        // sort by join-point code hooks
         $sortedPointcutExpressions = array();
         foreach ($pointcutExpressions as $pointcutExpression) {
             $sortedPointcutExpressions[$pointcutExpression->getJoinpoint()->getCodeHook()][] = $pointcutExpression;

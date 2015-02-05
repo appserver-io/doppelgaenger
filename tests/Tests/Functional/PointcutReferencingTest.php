@@ -82,6 +82,8 @@ class PointcutReferencingTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      *
+     * @throws \Exception
+     *
      * @expectedException \Exception
      */
     public function testPointcutAfterSelection()
@@ -93,32 +95,16 @@ class PointcutReferencingTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('iHaveAnAfterAdviceAndReturnSomething', $methodInvocation->getResult());
         $this->assertNull($methodInvocation->getThrownException());
 
-        $this->testClass->iHaveAnAfterAdviceAndThrowSomething();
-        $methodInvocation = PointcutReferencingTestClass::$staticStorage;
+        try {
+            $this->testClass->iHaveAnAfterAdviceAndThrowSomething();
 
-        $this->assertNull($methodInvocation->getResult());
-        $this->assertInstanceOf('\Exception', $methodInvocation->getThrownException());
-    }
+        } catch (\Exception $e) {
+            $methodInvocation = PointcutReferencingTestClass::$staticStorage;
 
-    /**
-     * Tests if a After advice gets woven at its correct position
-     *
-     * @return null
-     *
-     * @expectedException \Exception
-     */
-    public function testPointcutAfterReturningSelection()
-    {
-        $this->testClass->iHaveAnAfterReturningAdviceAndReturnSomething();
-        $methodInvocation = PointcutReferencingTestClass::$staticStorage;
+            $this->assertNull($methodInvocation->getResult());
+            $this->assertInstanceOf('\Exception', $methodInvocation->getThrownException());
 
-        $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface', $methodInvocation);
-        $this->assertEquals('iHaveAnAfterReturningAdviceAndReturnSomething', $methodInvocation->getResult());
-        $this->assertNull($methodInvocation->getThrownException());
-
-        $this->testClass->iHaveAnAfterReturningAdviceAndThrowSomething();
-        $methodInvocation = PointcutReferencingTestClass::$staticStorage;
-
-        $this->assertNull($methodInvocation);
+            throw $e;
+        }
     }
 }
