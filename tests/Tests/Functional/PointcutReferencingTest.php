@@ -107,4 +107,62 @@ class PointcutReferencingTest extends \PHPUnit_Framework_TestCase
             throw $e;
         }
     }
+
+    /**
+     * Tests if a AfterReturning advice gets woven at its correct position
+     *
+     * @return null
+     *
+     * @throws \Exception
+     *
+     * @expectedException \Exception
+     */
+    public function testPointcutAfterReturningSelection()
+    {
+        $this->testClass->iHaveAnAfterReturningAdviceAndReturnSomething();
+        $methodInvocation = PointcutReferencingTestClass::$staticStorage;
+
+        $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface', $methodInvocation);
+        $this->assertEquals('iHaveAnAfterReturningAdviceAndReturnSomething', $methodInvocation->getResult());
+        $this->assertNull($methodInvocation->getThrownException());
+
+        // reset the static storage and test if we will get something again
+        try {
+            PointcutReferencingTestClass::$staticStorage = null;
+            $this->testClass->iHaveAnAfterReturningAdviceAndThrowSomething();
+
+        } catch (\Exception $e) {
+            $this->assertNull(PointcutReferencingTestClass::$staticStorage);
+            throw $e;
+        }
+    }
+
+    /**
+     * Tests if a AfterThrowing advice gets woven at its correct position
+     *
+     * @return null
+     *
+     * @throws \Exception
+     *
+     * @expectedException \Exception
+     */
+    public function testPointcutAfterThrowingSelection()
+    {
+        $this->testClass->iHaveAnAfterThrowingAdviceAndReturnSomething();
+        $this->assertNull(PointcutReferencingTestClass::$staticStorage);
+
+        // reset the static storage and test if we will get something again
+        try {
+            PointcutReferencingTestClass::$staticStorage = null;
+            $this->testClass->iHaveAnAfterThrowingAdviceAndThrowSomething();
+
+        } catch (\Exception $e) {
+            $methodInvocation = PointcutReferencingTestClass::$staticStorage;
+
+            $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface', $methodInvocation);
+            $this->assertNull($methodInvocation->getResult());
+            $this->assertInstanceOf('\Exception', $methodInvocation->getThrownException());
+            throw $e;
+        }
+    }
 }

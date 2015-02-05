@@ -169,9 +169,9 @@ class AspectRegister extends AbstractTypedList
 
         // prepare the tokenizer we will need for further processing
         $needles = array(
-            After::ANNOTATION,
             AfterReturning::ANNOTATION,
             AfterThrowing::ANNOTATION,
+            After::ANNOTATION,
             Around::ANNOTATION,
             Before::ANNOTATION
         );

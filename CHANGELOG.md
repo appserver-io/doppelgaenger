@@ -4,6 +4,8 @@
 
 * Pointcuts mentioning advice keywords in their doc block did get treated as advices themselves
 * Bash wildcard using pointcuts only matched the first of several possible matches
+* AfterReturning and AfterThrowing advices referencing pointcuts will now be woven into the right places
+* Closes #455 - Pointcut based weaving mismatch for After/AfterThrowing
 
 ## Features
 

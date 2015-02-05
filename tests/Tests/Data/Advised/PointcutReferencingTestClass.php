@@ -87,13 +87,25 @@ class PointcutReferencingTestClass
     }
 
     /**
-     * Used to test pointcut based weaving of "AfterThrowing" advices
+     * Used to test pointcut based weaving of "AfterReturning" advices
      *
      * @return string
      */
-    public function iHaveAnAfterThrowingAdvice()
+    public function iHaveAnAfterThrowingAdviceAndReturnSomething()
     {
-        return 'iHaveAnAfterThrowingAdvice';
+        return 'iHaveAnAfterThrowingAdviceAndReturnSomething';
+    }
+
+    /**
+     * Used to test pointcut based weaving of "AfterReturning" advices
+     *
+     * @return string
+     *
+     * @throws \Exception
+     */
+    public function iHaveAnAfterThrowingAdviceAndThrowSomething()
+    {
+        throw new \Exception();
     }
 
     /**
