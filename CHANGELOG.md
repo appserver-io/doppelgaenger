@@ -1,3 +1,14 @@
+# Version 0.6.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Integrated usage of new [appserver-io-psr/mop](https://github.com/appserver-io-psr/mop) PSR repository
+* Changed Design by Contract annotation syntax to fit basic doctrine syntax
+
 # Version 0.5.2
 
 ## Bugfixes

@@ -36,7 +36,7 @@ class ObjectStack extends AbstractStack
      *
      * @return mixed
      *
-     * @Ensures $dgResult instanceof \Object
+     * @Ensures("$dgResult instanceof \Object")
      */
     public function peek()
     {
@@ -48,7 +48,7 @@ class ObjectStack extends AbstractStack
      *
      * @return mixed
      *
-     * @Ensures $dgResult instanceof \Object
+     * @Ensures("$dgResult instanceof \Object")
      */
     public function pop()
     {
@@ -62,7 +62,7 @@ class ObjectStack extends AbstractStack
      *
      * @return null
      *
-     * @Requires is_object($obj)
+     * @Requires("is_object($obj)")
      */
     public function push($obj)
     {

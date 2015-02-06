@@ -156,7 +156,7 @@ class AnnotationParser extends AbstractParser
 
     /**
      * Will return an array containing all annotations of a certain type which where found within a given string
-     * DocBlock syntax is prefered
+     * DocBlock syntax is preferred
      *
      * @param string $string         String to search in
      * @param string $annotationType Name of the annotation (without the leading "@") to search for
@@ -349,7 +349,7 @@ class AnnotationParser extends AbstractParser
             }
         }
 
-        // Do we have an or combinator aka |?
+        // Do we have an or connective aka |?
         if ($this->filterOrCombinator($docString)) {
             // If we got invalid arguments then we will fail
             try {
@@ -418,34 +418,24 @@ class AnnotationParser extends AbstractParser
             case Ensures::ANNOTATION:
             case Invariant::ANNOTATION:
 
-                // Now we have to check what we got
-                // First of all handle if we got a simple type
-                if ($type !== false) {
-                    $assertionType = 'AppserverIo\Doppelgaenger\Entities\Assertions\TypeAssertion';
+                // have a look at the doc string and check if we can use anything
+                $matches = array();
+                preg_match('/' . $usedAnnotation . '\("(.+)"\)/', $docString, $matches);
 
-                } elseif ($class !== false && !empty($class)) {
-                    // We might also have a typed collection
-                    $type = $this->filterTypedCollection($docString);
-                    if ($type !== false && $variable !== false) {
-                        $assertion = new TypedCollectionAssertion($variable, $type);
-                        break;
-                    }
-
-                    $type = $class;
-                    $assertionType = 'AppserverIo\Doppelgaenger\Entities\Assertions\InstanceAssertion';
-
-                } else {
-                    $assertion = new RawAssertion(trim(str_replace($usedAnnotation, '', $docString)));
-                    break;
+                // if we do not get good matches we can throw an exception
+                if (count($matches) <= 1) {
+                    throw new ParserException(
+                        sprintf(
+                            'Cannot parse assertion %s within structure %s.',
+                            '@' . $docString,
+                            $this->currentDefinition->getQualifiedName()
+                        )
+                    );
                 }
 
-                // We handled what kind of assertion we need, now check what we will assert
-                if ($variable !== false && !empty($assertionType)) {
-                    $assertion = new $assertionType($variable, $type);
-
-                } else {
-                    $assertion = new RawAssertion(trim(str_replace($usedAnnotation, '', $docString)));
-                }
+                // remove the tangled matches and create a new assertion for our found
+                unset($matches[0]);
+                $assertion = new RawAssertion(trim(str_replace($usedAnnotation, '', array_pop($matches))));
 
                 break;
         }

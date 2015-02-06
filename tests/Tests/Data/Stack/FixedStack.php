@@ -29,7 +29,7 @@ namespace AppserverIo\Doppelgaenger\Tests\Data\Stack;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  *
- * @Invariant $this->size() <= $this->limit
+ * @Invariant("$this->size() <= $this->limit")
  */
 class FixedStack extends AbstractStack
 {
@@ -43,7 +43,7 @@ class FixedStack extends AbstractStack
     /**
      * Default constructor
      *
-     * @Requires    is_int($_limit)
+     * @Requires("is_int($_limit)")
      */
     public function __construct($_limit)
     {
@@ -57,7 +57,7 @@ class FixedStack extends AbstractStack
      *
      * @return null
      *
-     * @Requires $this->size() < $this->limit
+     * @Requires("$this->size() < $this->limit")
      */
     public function push($obj)
     {

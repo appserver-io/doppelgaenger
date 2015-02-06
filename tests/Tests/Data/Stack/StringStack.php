@@ -36,7 +36,7 @@ class StringStack extends AbstractStack
      *
      * @return mixed
      *
-     * @Ensures is_string($dgResult)
+     * @Ensures("is_string($dgResult)")
      */
     public function peek()
     {
@@ -48,7 +48,7 @@ class StringStack extends AbstractStack
      *
      * @return mixed
      *
-     * @Ensures is_string($dgResult)
+     * @Ensures("is_string($dgResult)")
      */
     public function pop()
     {

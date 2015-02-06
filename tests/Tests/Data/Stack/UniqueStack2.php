@@ -38,7 +38,7 @@ class UniqueStack2 extends AbstractStack
      *
      * @return null
      *
-     * @Requires !in_array($obj, $this->container)
+     * @Requires("!in_array($obj, $this->container)")
      */
     public function push($obj)
     {

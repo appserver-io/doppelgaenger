@@ -22,7 +22,7 @@ namespace AppserverIo\Doppelgaenger\Tests\Data;
 
 /**
  * Class used to test if this tag -------------->>> <?php makes any problems during parsing.
- * Why? That's why! <?php <? ?>
+ * Regression testing for a former bug. <?php <? ?>
  *
  * @author    Bernhard Wick <bw@appserver.io>
  * @copyright 2015 TechDivision GmbH - <info@appserver.io>
@@ -30,7 +30,7 @@ namespace AppserverIo\Doppelgaenger\Tests\Data;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  *
- * @Invariant   $this->property === 1
+ * @Invariant("$this->property === 1")
  */
 class TagPlacementTestClass
 {
