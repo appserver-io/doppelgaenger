@@ -20,7 +20,7 @@
 
 namespace AppserverIo\Doppelgaenger\Tests\Data\Aspects;
 
-use AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface;
 use AppserverIo\Doppelgaenger\Tests\Data\Annotations\MethodInvocationTestClass;
 
 /**
@@ -39,7 +39,7 @@ class MethodInvocationTestAspect
     /**
      * Empty dummy "Before" advice
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      *
@@ -53,7 +53,7 @@ class MethodInvocationTestAspect
     /**
      * "Before" advice which tries to alter the passed parameters
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      *
@@ -67,7 +67,7 @@ class MethodInvocationTestAspect
     /**
      * Empty dummy "After" advice
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      *
@@ -81,7 +81,7 @@ class MethodInvocationTestAspect
     /**
      * Empty dummy "AfterThrowing" advice
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      *
@@ -95,7 +95,7 @@ class MethodInvocationTestAspect
     /**
      * "AfterThrowing" advice which tries to alter the thrown exception
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      *
@@ -112,7 +112,7 @@ class MethodInvocationTestAspect
     /**
      * Empty dummy "AfterReturning" advice
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      *
@@ -126,7 +126,7 @@ class MethodInvocationTestAspect
     /**
      * "AfterReturning" advice which should never be reached
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      *
@@ -140,7 +140,7 @@ class MethodInvocationTestAspect
     /**
      * "AfterReturning" advice which tries to alter the result
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      *
@@ -157,7 +157,7 @@ class MethodInvocationTestAspect
     /**
      * Empty dummy "Around" advice
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      *

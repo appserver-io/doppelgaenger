@@ -75,7 +75,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      *
-     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPreconditionException
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPreconditionException
      */
     public function testAnnotationParsingTypeCollectionParameterFail()
     {
@@ -101,7 +101,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      *
-     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPostconditionException
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException
      */
     public function testAnnotationParsingTypeCollectionReturnFail()
     {
@@ -127,7 +127,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      *
-     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPreconditionException
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPreconditionException
      */
     public function testAnnotationParsingTypeCollectionAlternativeParameterFail()
     {
@@ -153,7 +153,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      *
-     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPostconditionException
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException
      */
     public function testAnnotationParsingTypeCollectionAlternativeReturnFail()
     {
@@ -179,7 +179,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      *
-     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPreconditionException
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPreconditionException
      */
     public function testAnnotationParsingSimpleTypeCollectionParameterFail()
     {
@@ -205,7 +205,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      *
-     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPostconditionException
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException
      */
     public function testAnnotationParsingSimpleTypeCollectionReturnFail()
     {

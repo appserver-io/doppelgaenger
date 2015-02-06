@@ -26,8 +26,9 @@ use AppserverIo\Doppelgaenger\Entities\Joinpoint;
 use AppserverIo\Doppelgaenger\Entities\Lists\FunctionDefinitionList;
 use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
 use AppserverIo\Doppelgaenger\Entities\Lists\ParameterDefinitionList;
-use AppserverIo\Doppelgaenger\Dictionaries\Annotations;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
+use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Ensures;
+use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Requires;
 
 /**
  * This class implements a parser to find all useful information in function definitions
@@ -161,7 +162,7 @@ class FunctionParser extends AbstractParser
         $annotationParser = new AnnotationParser($this->file, $this->config, $this->tokens, $this->currentDefinition);
         $functionDefinition->setPreconditions($annotationParser->getConditions(
             $functionDefinition->getDocBlock(),
-            Annotations::PRECONDITION,
+            Requires::ANNOTATION,
             $privateContext
         ));
 
@@ -181,7 +182,7 @@ class FunctionParser extends AbstractParser
         // So we got our docBlock, now we can parse the postcondition annotations from it
         $functionDefinition->setPostconditions($annotationParser->getConditions(
             $functionDefinition->getDocBlock(),
-            Annotations::POSTCONDITION,
+            Ensures::ANNOTATION,
             $privateContext
         ));
 

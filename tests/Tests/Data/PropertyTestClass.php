@@ -30,9 +30,9 @@ namespace AppserverIo\Doppelgaenger\Tests\Data;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  *
- * @invariant   $this->privateCheckedProperty === 'test'
- * @invariant   $this->protectedCheckedProperty === 1
- * @invariant   $this->publicCheckedProperty === 27.42
+ * @Invariant   $this->privateCheckedProperty === 'test'
+ * @Invariant   $this->protectedCheckedProperty === 1
+ * @Invariant   $this->publicCheckedProperty === 27.42
  */
 class PropertyTestClass
 {

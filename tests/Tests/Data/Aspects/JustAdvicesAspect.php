@@ -20,7 +20,7 @@
 
 namespace AppserverIo\Doppelgaenger\Tests\Data\Aspects;
 
-use AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface;
 
 /**
  * This aspect only contains advice and no pointcuts. It can be used to test cross references in between aspects and
@@ -40,7 +40,7 @@ class JustAdvicesAspect
     /**
      * Empty dummy "Before" advice
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      *
@@ -54,7 +54,7 @@ class JustAdvicesAspect
     /**
      * Empty dummy "After" advice
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      *
@@ -68,7 +68,7 @@ class JustAdvicesAspect
     /**
      * Empty dummy "AfterThrowing" advice
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      *
@@ -82,7 +82,7 @@ class JustAdvicesAspect
     /**
      * Empty dummy "AfterReturning" advice
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      *
@@ -96,7 +96,7 @@ class JustAdvicesAspect
     /**
      * Empty dummy "Around" advice
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      *

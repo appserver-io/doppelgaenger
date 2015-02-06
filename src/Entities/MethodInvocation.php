@@ -20,7 +20,7 @@
 
 namespace AppserverIo\Doppelgaenger\Entities;
 
-use AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface;
 
 /**
  * DTO which will be used to represent an invoked method and will therefor hold information about it as well as the

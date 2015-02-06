@@ -29,9 +29,9 @@ namespace AppserverIo\Doppelgaenger\Tests\Data;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  *
- * @invariant $this->size() >= 0
- * @invariant $this->size() < 100
- * @invariant $this->elements !== null
+ * @Invariant $this->size() >= 0
+ * @Invariant $this->size() < 100
+ * @Invariant $this->elements !== null
  */
 class ParentTestClass
 {
@@ -41,7 +41,7 @@ class ParentTestClass
     }
 
     /**
-     * @requires $this->size() >= 1
+     * @Requires $this->size() >= 1
      */
     public function peek()
     {
@@ -49,9 +49,9 @@ class ParentTestClass
     }
 
     /**
-     * @requires $this->size() >= 1
-     * @ensures $this->size() == $dgOld->size() - 1
-     * @ensures $dgResult == $dgOld->peek()
+     * @Requires $this->size() >= 1
+     * @Ensures $this->size() == $dgOld->size() - 1
+     * @Ensures $dgResult == $dgOld->peek()
      */
     public function pop()
     {
@@ -59,8 +59,8 @@ class ParentTestClass
     }
 
     /**
-     * @ensures $this->size() == $dgOld->size() + 1
-     * @ensures $this->peek() == $obj
+     * @Ensures $this->size() == $dgOld->size() + 1
+     * @Ensures $this->peek() == $obj
      */
     public function push(\Object $obj)
     {

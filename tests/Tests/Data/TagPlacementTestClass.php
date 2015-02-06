@@ -30,7 +30,7 @@ namespace AppserverIo\Doppelgaenger\Tests\Data;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  *
- * @invariant   $this->property === 1
+ * @Invariant   $this->property === 1
  */
 class TagPlacementTestClass
 {

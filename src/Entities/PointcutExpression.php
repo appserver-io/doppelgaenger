@@ -21,9 +21,9 @@
 namespace AppserverIo\Doppelgaenger\Entities;
 
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
-use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Around;
 use AppserverIo\Doppelgaenger\Entities\Pointcuts\PointcutFactory;
 use AppserverIo\Doppelgaenger\Interfaces\CodifyableInterface;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Advices\Around;
 
 /**
  * Definition of a pointcut as a combination of a joinpoint and advices

@@ -20,7 +20,7 @@
 
 namespace AppserverIo\Doppelgaenger\Tests\Data\Aspects;
 
-use AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface;
 
 /**
  * Test class which provides some advices which can be weaved into test code
@@ -45,7 +45,7 @@ class MainAspectTestClass
     /**
      * Advice used to proceed a method but always replace the result with true
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return boolean
      *
@@ -66,7 +66,7 @@ class MainAspectTestClass
     /**
      * Advice used to proceed a method
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return mixed
      *
@@ -86,7 +86,7 @@ class MainAspectTestClass
     /**
      * Advice used to proceed a method but always replace the result with false
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return mixed
      *
@@ -107,7 +107,7 @@ class MainAspectTestClass
     /**
      * Advice to test around advice method chaining
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return mixed
      *
@@ -123,7 +123,7 @@ class MainAspectTestClass
     /**
      * Advice to test around advice method chaining
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return mixed
      *
@@ -151,7 +151,7 @@ class MainAspectTestClass
     /**
      * Advice used to proceed a method but always replace the result with true
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return boolean
      *
@@ -172,7 +172,7 @@ class MainAspectTestClass
     /**
      * Basic Around advice doing nothing besides returning TRUE
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return boolean
      *

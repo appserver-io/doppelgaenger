@@ -21,7 +21,8 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "herrera-io/annotations": "~1.0"
+        "herrera-io/annotations": "~1.0",
+        "appserver-io-psr/mop": "dev-master"
     },
     "require-dev": {
         "appserver-io/build": "0.2.*",
@@ -34,5 +35,11 @@
     },
     "autoload-dev": {
         "psr-4": { "AppserverIo\\Doppelgaenger\\": "tests/" }
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "/home/wickb/Workspace/mop"
+        }
+    ]
 }

@@ -20,28 +20,21 @@
 
 namespace AppserverIo\Doppelgaenger;
 
-use AppserverIo\Doppelgaenger\Entities\Annotations\Aspect;
-use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\After;
-use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\AfterReturning;
-use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\AfterThrowing;
-use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Around;
-use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Before;
-use AppserverIo\Doppelgaenger\Entities\Annotations\Introduce;
-use AppserverIo\Doppelgaenger\Entities\Annotations\Pointcut;
-use AppserverIo\Doppelgaenger\Entities\Annotations\Process;
 use AppserverIo\Doppelgaenger\Entities\Definitions\Structure;
 use AppserverIo\Doppelgaenger\Exceptions\ParserException;
 use AppserverIo\Doppelgaenger\Interfaces\MapInterface;
 use AppserverIo\Doppelgaenger\Utils\Formatting;
-use AppserverIo\Doppelgaenger\Dictionaries\Annotations;
-
-// Load the constants if not already done
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Constants.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Dictionaries' . DIRECTORY_SEPARATOR . 'Annotations.php';
-
-// We might run into a situation where we do not have proper autoloading in place here. So require our DTO.
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Entities' . DIRECTORY_SEPARATOR .
-    'Definitions' . DIRECTORY_SEPARATOR . 'Structure.php';
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Advices\After;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Advices\AfterReturning;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Advices\AfterThrowing;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Advices\Around;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Advices\Before;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Aspect;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Introduce;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Pointcut;
+use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Ensures;
+use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Invariant;
+use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Requires;
 
 /**
  * This class provides the possibility to hold a map of structure entries, which are used to relate a structure
@@ -567,15 +560,14 @@ class StructureMap implements MapInterface
             if ($identifier !== false) {
                 // We need to get our array of needles
                 $needles = array(
-                    Annotations::INVARIANT,
-                    Annotations::POSTCONDITION,
-                    Annotations::PRECONDITION,
+                    Invariant::ANNOTATION,
+                    Ensures::ANNOTATION,
+                    Requires::ANNOTATION,
                     After::ANNOTATION,
                     AfterReturning::ANNOTATION,
                     AfterThrowing::ANNOTATION,
                     Around::ANNOTATION,
                     Before::ANNOTATION,
-                    Process::ANNOTATION,
                     Introduce::ANNOTATION,
                     Pointcut::ANNOTATION
                 );

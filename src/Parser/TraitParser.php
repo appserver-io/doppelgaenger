@@ -21,8 +21,8 @@
 namespace AppserverIo\Doppelgaenger\Parser;
 
 use AppserverIo\Doppelgaenger\Entities\Definitions\TraitDefinition;
-use AppserverIo\Doppelgaenger\Dictionaries\Annotations;
 use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
+use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Invariant;
 
 /**
  * Parser which is used to parse trait definitions.
@@ -106,7 +106,7 @@ class TraitParser extends AbstractStructureParser
         $annotationParser = new AnnotationParser($this->file, $this->config, $this->tokens, $this->currentDefinition);
         $this->currentDefinition->invariantConditions = $annotationParser->getConditions(
             $this->currentDefinition->getDocBlock(),
-            Annotations::INVARIANT
+            Invariant::ANNOTATION
         );
 
         // Only thing still missing are the methods, so ramp up our FunctionParser

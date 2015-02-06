@@ -21,8 +21,6 @@
 namespace AppserverIo\Doppelgaenger\StreamFilters;
 
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
-use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Around;
-use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Before;
 use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
 use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
 use AppserverIo\Doppelgaenger\Entities\Joinpoint;
@@ -30,6 +28,8 @@ use AppserverIo\Doppelgaenger\Entities\Lists\PointcutExpressionList;
 use AppserverIo\Doppelgaenger\Entities\Pointcuts\AdvisePointcut;
 use AppserverIo\Doppelgaenger\Entities\Pointcuts\AndPointcut;
 use AppserverIo\Doppelgaenger\Entities\Pointcuts\PointcutPointcut;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Advices\Around;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Advices\Before;
 
 /**
  * This filter will buffer the input stream and add all advice calls into their respective join-point locations

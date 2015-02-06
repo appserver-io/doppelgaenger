@@ -23,8 +23,8 @@ namespace AppserverIo\Doppelgaenger\Parser;
 use AppserverIo\Doppelgaenger\Entities\Definitions\InterfaceDefinition;
 use AppserverIo\Doppelgaenger\Entities\Definitions\FileDefinition;
 use AppserverIo\Doppelgaenger\Entities\Lists\StructureDefinitionList;
-use AppserverIo\Doppelgaenger\Dictionaries\Annotations;
 use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
+use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Invariant;
 
 /**
  * The InterfaceParser class which is used to get an \AppserverIo\Doppelgaenger\Entities\Definitions\InterfaceDefinition
@@ -137,7 +137,7 @@ class InterfaceParser extends AbstractStructureParser
         $annotationParser = new AnnotationParser($this->file, $this->config, $this->tokens);
         $this->currentDefinition->setInvariantConditions($annotationParser->getConditions(
             $this->currentDefinition->getDocBlock(),
-            Annotations::INVARIANT
+            Invariant::ANNOTATION
         ));
 
         // Lets check if there is any inheritance, or if we implement any interfaces

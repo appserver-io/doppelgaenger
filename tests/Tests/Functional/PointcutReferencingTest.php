@@ -72,7 +72,7 @@ class PointcutReferencingTest extends \PHPUnit_Framework_TestCase
         $this->testClass->iHaveABeforeAdvice();
         $methodInvocation = PointcutReferencingTestClass::$staticStorage;
 
-        $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface', $methodInvocation);
+        $this->assertInstanceOf('\AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface', $methodInvocation);
         $this->assertNull($methodInvocation->getResult());
         $this->assertNull($methodInvocation->getThrownException());
     }
@@ -91,7 +91,7 @@ class PointcutReferencingTest extends \PHPUnit_Framework_TestCase
         $this->testClass->iHaveAnAfterAdviceAndReturnSomething();
         $methodInvocation = PointcutReferencingTestClass::$staticStorage;
 
-        $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface', $methodInvocation);
+        $this->assertInstanceOf('\AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface', $methodInvocation);
         $this->assertEquals('iHaveAnAfterAdviceAndReturnSomething', $methodInvocation->getResult());
         $this->assertNull($methodInvocation->getThrownException());
 
@@ -122,7 +122,7 @@ class PointcutReferencingTest extends \PHPUnit_Framework_TestCase
         $this->testClass->iHaveAnAfterReturningAdviceAndReturnSomething();
         $methodInvocation = PointcutReferencingTestClass::$staticStorage;
 
-        $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface', $methodInvocation);
+        $this->assertInstanceOf('\AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface', $methodInvocation);
         $this->assertEquals('iHaveAnAfterReturningAdviceAndReturnSomething', $methodInvocation->getResult());
         $this->assertNull($methodInvocation->getThrownException());
 
@@ -159,7 +159,7 @@ class PointcutReferencingTest extends \PHPUnit_Framework_TestCase
         } catch (\Exception $e) {
             $methodInvocation = PointcutReferencingTestClass::$staticStorage;
 
-            $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface', $methodInvocation);
+            $this->assertInstanceOf('\AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface', $methodInvocation);
             $this->assertNull($methodInvocation->getResult());
             $this->assertInstanceOf('\Exception', $methodInvocation->getThrownException());
             throw $e;

@@ -29,7 +29,7 @@ namespace AppserverIo\Doppelgaenger\Tests\Data\Stack;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  *
- * @invariant $this->isValid()
+ * @Invariant $this->isValid()
  */
 class UniqueStack1 extends AbstractStack
 {

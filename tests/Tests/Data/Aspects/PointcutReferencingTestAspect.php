@@ -20,7 +20,7 @@
 
 namespace AppserverIo\Doppelgaenger\Tests\Data\Aspects;
 
-use AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface;
 use AppserverIo\Doppelgaenger\Tests\Data\Advised\PointcutReferencingTestClass;
 
 /**
@@ -46,7 +46,7 @@ class PointcutReferencingTestAspect
     /**
      * Empty dummy "Before" advice
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      *
@@ -66,7 +66,7 @@ class PointcutReferencingTestAspect
     /**
      * Empty dummy "After" advice
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      *
@@ -86,7 +86,7 @@ class PointcutReferencingTestAspect
     /**
      * Empty dummy "AfterReturning" advice
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      *
@@ -106,7 +106,7 @@ class PointcutReferencingTestAspect
     /**
      * Empty dummy "AfterThrowing" advice
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      *
@@ -126,7 +126,7 @@ class PointcutReferencingTestAspect
     /**
      * Empty dummy "Around" advice
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\MethodInvocationInterface $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      *

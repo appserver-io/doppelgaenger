@@ -20,7 +20,6 @@
 
 namespace AppserverIo\Doppelgaenger\Parser;
 
-use AppserverIo\Doppelgaenger\Entities\Annotations\Process;
 use AppserverIo\Doppelgaenger\Entities\Assertions\RawAssertion;
 use AppserverIo\Doppelgaenger\Entities\Assertions\TypedCollectionAssertion;
 use AppserverIo\Doppelgaenger\Entities\Definitions\AttributeDefinition;
@@ -35,8 +34,10 @@ use AppserverIo\Doppelgaenger\Exceptions\ParserException;
 use AppserverIo\Doppelgaenger\Interfaces\AssertionInterface;
 use AppserverIo\Doppelgaenger\Interfaces\PropertiedStructureInterface;
 use AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface;
-use AppserverIo\Doppelgaenger\Dictionaries\Annotations;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
+use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Ensures;
+use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Invariant;
+use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Requires;
 use Herrera\Annotations\Tokenizer;
 use Herrera\Annotations\Tokens;
 use Herrera\Annotations\Convert\ToArray;
@@ -205,8 +206,7 @@ class AnnotationParser extends AbstractParser
             array(
                 'param',
                 'return',
-                'throws',
-                Process::ANNOTATION,
+                'throws'
             )
         );
         $tokens = new Tokens($tokenizer->parse($docBlock));
@@ -215,14 +215,14 @@ class AnnotationParser extends AbstractParser
         $toArray = new ToArray();
         $annotations = $toArray->convert($tokens);
 
-        // create the entities for the joinpoints and advices the pointcut describes
+        // create the entities for the join-points and advices the pointcut describes
         foreach ($annotations as $annotation) {
-            // filter out the annotations which are no proper joinpoints
-            if (!class_exists('\AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\\' . $annotation->name)) {
+            // filter out the annotations which are no proper join-points
+            if (!class_exists('\AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Advices\\' . $annotation->name)) {
                 continue;
             }
 
-            // build the joinpoint
+            // build the join-point
             $joinpoint = new Joinpoint();
             $joinpoint->setTarget($targetType);
             $joinpoint->setCodeHook($annotation->name);
@@ -261,15 +261,15 @@ class AnnotationParser extends AbstractParser
     public function getConditions($docBlock, $conditionKeyword, $privateContext = null)
     {
         // There are only 3 valid condition types
-        if ($conditionKeyword !== Annotations::PRECONDITION && $conditionKeyword !== Annotations::POSTCONDITION
-            && $conditionKeyword !== Annotations::INVARIANT
+        if ($conditionKeyword !== Requires::ANNOTATION && $conditionKeyword !== Ensures::ANNOTATION
+            && $conditionKeyword !== Invariant::ANNOTATION
         ) {
             return false;
         }
 
         // Get our conditions
         $rawConditions = array();
-        if ($conditionKeyword === Annotations::POSTCONDITION) {
+        if ($conditionKeyword === Ensures::ANNOTATION) {
             // Check if we need @return as well
             if ($this->config->getValue('enforcement/enforce-default-type-safety') === true) {
                 $regex = '/' . str_replace('\\', '\\\\', $conditionKeyword) . '.+?\n|' . '@return' . '.+?\n/s';
@@ -280,7 +280,7 @@ class AnnotationParser extends AbstractParser
 
             preg_match_all($regex, $docBlock, $rawConditions);
 
-        } elseif ($conditionKeyword === Annotations::PRECONDITION) {
+        } elseif ($conditionKeyword === Requires::ANNOTATION) {
             // Check if we need @return as well
             if ($this->config->getValue('enforcement/enforce-default-type-safety') === true) {
                 $regex = '/' . str_replace('\\', '\\\\', $conditionKeyword) . '.+?\n|' . '@param' . '.+?\n/s';
@@ -338,7 +338,7 @@ class AnnotationParser extends AbstractParser
     {
         if ($usedAnnotation === null) {
             // We have to differ between several types of assertions, so lets check which one we got
-            $annotations = array('@param', '@return', Annotations::POSTCONDITION, Annotations::PRECONDITION, Annotations::INVARIANT);
+            $annotations = array('@param', '@return', Ensures::ANNOTATION, Requires::ANNOTATION, Invariant::ANNOTATION);
 
             $usedAnnotation = '';
             foreach ($annotations as $annotation) {
@@ -414,9 +414,9 @@ class AnnotationParser extends AbstractParser
                 break;
 
             // We got our own definitions. Could be a bit more complex here
-            case Annotations::PRECONDITION:
-            case Annotations::POSTCONDITION:
-            case Annotations::INVARIANT:
+            case Requires::ANNOTATION:
+            case Ensures::ANNOTATION:
+            case Invariant::ANNOTATION:
 
                 // Now we have to check what we got
                 // First of all handle if we got a simple type

@@ -30,7 +30,7 @@ namespace AppserverIo\Doppelgaenger\Tests\Data;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  *
- * @invariant   $this->attributes['test1'] === 'test1'
+ * @Invariant   $this->attributes['test1'] === 'test1'
  */
 class MagicMethodTestClass
 {
