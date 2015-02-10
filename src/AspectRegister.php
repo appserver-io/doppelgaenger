@@ -111,7 +111,7 @@ class AspectRegister extends AbstractTypedList
     protected function lookupEntries($container, $expression)
     {
         // if we got the complete name of the aspect we can return it alone
-        if (!strpos($expression, '*') && $this->entryExists($expression)) {
+        if ($this->entryExists($expression)) {
             return array($this->get($expression));
         }
 
@@ -199,7 +199,7 @@ class AspectRegister extends AbstractTypedList
             }
 
             // create the pointcut
-            if (!$foundNeedle && strpos($functionDefinition->getDocBlock(), Pointcut::ANNOTATION) !== false) {
+            if (!$foundNeedle && strpos($functionDefinition->getDocBlock(), '@' . Pointcut::ANNOTATION) !== false) {
                 $pointcut = new PointcutDefinition();
                 $pointcut->setName($functionDefinition->getName());
 

@@ -2,7 +2,7 @@
 
 ## Bugfixes
 
-* None
+* Bugfix with resolving signature pointcuts using bash wildcard expressions
 
 ## Features
 

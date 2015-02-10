@@ -191,9 +191,10 @@ class AutoLoader
             }
         }
 
-        // If we are loading something of our own library we can skip to composer
+        // If we are loading something that the autoloader needs to function, then we have to skip to composer
         if ((strpos($className, 'AppserverIo\Doppelgaenger') === 0 && strpos($className, 'AppserverIo\Doppelgaenger\Tests') === false) ||
-            strpos($className, 'PHP') === 0 || strpos($className, 'AppserverIo\Psr\MetaobjectProtocol') === 0
+            strpos($className, 'PHP') === 0 || strpos($className, 'AppserverIo\Psr\MetaobjectProtocol') === 0 ||
+            strpos($className, 'AppserverIo\Lang\\') === 0
         ) {
             return false;
         }
