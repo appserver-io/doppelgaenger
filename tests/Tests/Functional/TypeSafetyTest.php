@@ -51,7 +51,7 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      *
-     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPreconditionException
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPreconditionException
      */
     public function testBasicPreconditionFail1()
     {
@@ -63,7 +63,7 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      *
-     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPreconditionException
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPreconditionException
      */
     public function testBasicPreconditionFail2()
     {
@@ -75,7 +75,7 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      *
-     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenPreconditionException
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPreconditionException
      */
     public function testBasicPreconditionFail3()
     {
@@ -137,7 +137,7 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPostconditionException", $e);
+        $this->assertInstanceOf('\AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException', $e);
 
         $e = null;
         try {
@@ -147,7 +147,7 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPostconditionException", $e);
+        $this->assertInstanceOf('\AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException', $e);
 
         $e = null;
         try {
@@ -157,7 +157,7 @@ class TypeSafetyTest extends \PHPUnit_Framework_TestCase
         }
 
         // Did we get the right $e?
-        $this->assertInstanceOf("AppserverIo\\Doppelgaenger\\Exceptions\\BrokenPostconditionException", $e);
+        $this->assertInstanceOf('\AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException', $e);
 
         $e = null;
         try {

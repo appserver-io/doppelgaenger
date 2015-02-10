@@ -20,7 +20,7 @@
 
 namespace AppserverIo\Doppelgaenger\Tests\Data;
 
-use AppserverIo\Doppelgaenger\Entities\MethodInvocation;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface;
 
 /**
  * Class used to test the correct workflow of a proceeding or blocking around advice
@@ -77,11 +77,11 @@ class AroundAdviceTestClass
     /**
      * Advice used to proceed a method and set a property before
      *
-     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      */
-    public static function proceedingAdvice(MethodInvocation $methodInvocation)
+    public static function proceedingAdvice(MethodInvocationInterface $methodInvocation)
     {
         self::$testableState1 = true;
 
@@ -103,11 +103,11 @@ class AroundAdviceTestClass
     /**
      * Advice used to block a method and set a property before
      *
-     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      */
-    public static function blockingAdvice(MethodInvocation $methodInvocation)
+    public static function blockingAdvice(MethodInvocationInterface $methodInvocation)
     {
         self::$testableState1 = true;
     }
@@ -129,11 +129,11 @@ class AroundAdviceTestClass
      * Advice used to proceed a method and increase an invocation counter.
      * This is done to test if the advice code gets executed BEFORE proceeding
      *
-     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      */
-    public static function countedAfterAdvice(MethodInvocation $methodInvocation)
+    public static function countedAfterAdvice(MethodInvocationInterface $methodInvocation)
     {
         self::$counter ++;
         self::$testableState1 = self::$counter;
@@ -158,11 +158,11 @@ class AroundAdviceTestClass
      * Advice used to proceed a method and increase an invocation counter.
      * This is done to test if the advice code gets executed BEFORE proceeding
      *
-     * @param \AppserverIo\Doppelgaenger\Entities\MethodInvocation $methodInvocation Initially invoked method
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
      * @return null
      */
-    public static function countedBeforeAdvice(MethodInvocation $methodInvocation)
+    public static function countedBeforeAdvice(MethodInvocationInterface $methodInvocation)
     {
         $result = $methodInvocation->proceed();
 

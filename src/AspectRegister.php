@@ -20,12 +20,6 @@
 
 namespace AppserverIo\Doppelgaenger;
 
-use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\After;
-use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\AfterReturning;
-use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\AfterThrowing;
-use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Around;
-use AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\Before;
-use AppserverIo\Doppelgaenger\Entities\Annotations\Pointcut as PointcutAnnotation;
 use AppserverIo\Doppelgaenger\Entities\Definitions\Advice;
 use AppserverIo\Doppelgaenger\Entities\Definitions\Aspect;
 use AppserverIo\Doppelgaenger\Entities\Definitions\AspectDefinition;
@@ -35,6 +29,12 @@ use AppserverIo\Doppelgaenger\Entities\PointcutExpression;
 use AppserverIo\Doppelgaenger\Entities\Pointcuts\PointcutFactory;
 use AppserverIo\Doppelgaenger\Entities\Definitions\Pointcut as PointcutDefinition;
 use AppserverIo\Doppelgaenger\Entities\Pointcuts\PointcutPointcut;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Advices\After;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Advices\AfterReturning;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Advices\AfterThrowing;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Advices\Around;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Advices\Before;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Pointcut;
 use Herrera\Annotations\Convert\ToArray;
 use Herrera\Annotations\Tokenizer;
 use Herrera\Annotations\Tokens;
@@ -111,7 +111,7 @@ class AspectRegister extends AbstractTypedList
     protected function lookupEntries($container, $expression)
     {
         // if we got the complete name of the aspect we can return it alone
-        if (!strpos($expression, '*') && $this->entryExists($expression)) {
+        if ($this->entryExists($expression)) {
             return array($this->get($expression));
         }
 
@@ -199,7 +199,7 @@ class AspectRegister extends AbstractTypedList
             }
 
             // create the pointcut
-            if (!$foundNeedle && strpos($functionDefinition->getDocBlock(), PointcutAnnotation::ANNOTATION) !== false) {
+            if (!$foundNeedle && strpos($functionDefinition->getDocBlock(), '@' . Pointcut::ANNOTATION) !== false) {
                 $pointcut = new PointcutDefinition();
                 $pointcut->setName($functionDefinition->getName());
 
@@ -209,7 +209,7 @@ class AspectRegister extends AbstractTypedList
                 $toArray = new ToArray();
                 $annotations = $toArray->convert($tokens);
 
-                // create the entities for the joinpoints and advices the pointcut describes
+                // create the entities for the join-points and advices the pointcut describes
                 $pointcut->setPointcutExpression(new PointcutExpression(array_pop(array_pop($annotations)->values)));
                 $aspect->getPointcuts()->add($pointcut);
             }
@@ -232,7 +232,7 @@ class AspectRegister extends AbstractTypedList
                 $toArray = new ToArray();
                 $annotations = $toArray->convert($tokens);
 
-                // create the entities for the joinpoints and advices the pointcut describes
+                // create the entities for the join-points and advices the pointcut describes
                 foreach ($annotations as $annotation) {
                     $pointcut = $pointcutFactory->getInstance(array_pop($annotation->values));
                     if ($pointcut instanceof PointcutPointcut) {

@@ -29,7 +29,7 @@ namespace AppserverIo\Doppelgaenger\Tests\Data\Stack;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  *
- * @invariant is_array($this->container)
+ * @Invariant("is_array($this->container)")
  */
 class AbstractStack
 {
@@ -45,7 +45,7 @@ class AbstractStack
      *
      * @return integer
      *
-     * @ensures is_int($dgResult)
+     * @Ensures("is_int($dgResult)")
      */
     public function size()
     {
@@ -57,8 +57,8 @@ class AbstractStack
      *
      * @return mixed
      *
-     * @requires $this->size() >= 1
-     * @ensures $this->size() === $dgOld->size()
+     * @Requires("$this->size() >= 1")
+     * @Ensures("$this->size() === $dgOld->size()")
      */
     public function peek()
     {
@@ -73,9 +73,9 @@ class AbstractStack
      *
      * @return mixed
      *
-     * @requires $this->size() >= 1
-     * @ensures $this->size() == $dgOld->size() - 1
-     * @ensures $dgResult == $dgOld->peek()
+     * @Requires("$this->size() >= 1")
+     * @Ensures("$this->size() == $dgOld->size() - 1")
+     * @Ensures("$dgResult == $dgOld->peek()")
      */
     public function pop()
     {
@@ -89,8 +89,8 @@ class AbstractStack
      *
      * @return null
      *
-     * @ensures $this->size() == $dgOld->size() + 1
-     * @ensures $this->peek() == $obj
+     * @Ensures("$this->size() == $dgOld->size() + 1")
+     * @Ensures("$this->peek() == $obj")
      */
     public function push($obj)
     {

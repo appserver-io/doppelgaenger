@@ -20,7 +20,6 @@
 
 namespace AppserverIo\Doppelgaenger\Parser;
 
-use AppserverIo\Doppelgaenger\Entities\Annotations\Process;
 use AppserverIo\Doppelgaenger\Entities\Assertions\RawAssertion;
 use AppserverIo\Doppelgaenger\Entities\Assertions\TypedCollectionAssertion;
 use AppserverIo\Doppelgaenger\Entities\Definitions\AttributeDefinition;
@@ -35,8 +34,10 @@ use AppserverIo\Doppelgaenger\Exceptions\ParserException;
 use AppserverIo\Doppelgaenger\Interfaces\AssertionInterface;
 use AppserverIo\Doppelgaenger\Interfaces\PropertiedStructureInterface;
 use AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface;
-use AppserverIo\Doppelgaenger\Dictionaries\Annotations;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
+use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Ensures;
+use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Invariant;
+use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Requires;
 use Herrera\Annotations\Tokenizer;
 use Herrera\Annotations\Tokens;
 use Herrera\Annotations\Convert\ToArray;
@@ -155,7 +156,7 @@ class AnnotationParser extends AbstractParser
 
     /**
      * Will return an array containing all annotations of a certain type which where found within a given string
-     * DocBlock syntax is prefered
+     * DocBlock syntax is preferred
      *
      * @param string $string         String to search in
      * @param string $annotationType Name of the annotation (without the leading "@") to search for
@@ -205,8 +206,7 @@ class AnnotationParser extends AbstractParser
             array(
                 'param',
                 'return',
-                'throws',
-                Process::ANNOTATION,
+                'throws'
             )
         );
         $tokens = new Tokens($tokenizer->parse($docBlock));
@@ -215,14 +215,14 @@ class AnnotationParser extends AbstractParser
         $toArray = new ToArray();
         $annotations = $toArray->convert($tokens);
 
-        // create the entities for the joinpoints and advices the pointcut describes
+        // create the entities for the join-points and advices the pointcut describes
         foreach ($annotations as $annotation) {
-            // filter out the annotations which are no proper joinpoints
-            if (!class_exists('\AppserverIo\Doppelgaenger\Entities\Annotations\Joinpoints\\' . $annotation->name)) {
+            // filter out the annotations which are no proper join-points
+            if (!class_exists('\AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Advices\\' . $annotation->name)) {
                 continue;
             }
 
-            // build the joinpoint
+            // build the join-point
             $joinpoint = new Joinpoint();
             $joinpoint->setTarget($targetType);
             $joinpoint->setCodeHook($annotation->name);
@@ -261,15 +261,15 @@ class AnnotationParser extends AbstractParser
     public function getConditions($docBlock, $conditionKeyword, $privateContext = null)
     {
         // There are only 3 valid condition types
-        if ($conditionKeyword !== Annotations::PRECONDITION && $conditionKeyword !== Annotations::POSTCONDITION
-            && $conditionKeyword !== Annotations::INVARIANT
+        if ($conditionKeyword !== Requires::ANNOTATION && $conditionKeyword !== Ensures::ANNOTATION
+            && $conditionKeyword !== Invariant::ANNOTATION
         ) {
             return false;
         }
 
         // Get our conditions
         $rawConditions = array();
-        if ($conditionKeyword === Annotations::POSTCONDITION) {
+        if ($conditionKeyword === Ensures::ANNOTATION) {
             // Check if we need @return as well
             if ($this->config->getValue('enforcement/enforce-default-type-safety') === true) {
                 $regex = '/' . str_replace('\\', '\\\\', $conditionKeyword) . '.+?\n|' . '@return' . '.+?\n/s';
@@ -280,7 +280,7 @@ class AnnotationParser extends AbstractParser
 
             preg_match_all($regex, $docBlock, $rawConditions);
 
-        } elseif ($conditionKeyword === Annotations::PRECONDITION) {
+        } elseif ($conditionKeyword === Requires::ANNOTATION) {
             // Check if we need @return as well
             if ($this->config->getValue('enforcement/enforce-default-type-safety') === true) {
                 $regex = '/' . str_replace('\\', '\\\\', $conditionKeyword) . '.+?\n|' . '@param' . '.+?\n/s';
@@ -338,7 +338,7 @@ class AnnotationParser extends AbstractParser
     {
         if ($usedAnnotation === null) {
             // We have to differ between several types of assertions, so lets check which one we got
-            $annotations = array('@param', '@return', Annotations::POSTCONDITION, Annotations::PRECONDITION, Annotations::INVARIANT);
+            $annotations = array('@param', '@return', Ensures::ANNOTATION, Requires::ANNOTATION, Invariant::ANNOTATION);
 
             $usedAnnotation = '';
             foreach ($annotations as $annotation) {
@@ -349,7 +349,7 @@ class AnnotationParser extends AbstractParser
             }
         }
 
-        // Do we have an or combinator aka |?
+        // Do we have an or connective aka |?
         if ($this->filterOrCombinator($docString)) {
             // If we got invalid arguments then we will fail
             try {
@@ -414,38 +414,28 @@ class AnnotationParser extends AbstractParser
                 break;
 
             // We got our own definitions. Could be a bit more complex here
-            case Annotations::PRECONDITION:
-            case Annotations::POSTCONDITION:
-            case Annotations::INVARIANT:
+            case Requires::ANNOTATION:
+            case Ensures::ANNOTATION:
+            case Invariant::ANNOTATION:
 
-                // Now we have to check what we got
-                // First of all handle if we got a simple type
-                if ($type !== false) {
-                    $assertionType = 'AppserverIo\Doppelgaenger\Entities\Assertions\TypeAssertion';
+                // have a look at the doc string and check if we can use anything
+                $matches = array();
+                preg_match('/' . $usedAnnotation . '\("(.+)"\)/', $docString, $matches);
 
-                } elseif ($class !== false && !empty($class)) {
-                    // We might also have a typed collection
-                    $type = $this->filterTypedCollection($docString);
-                    if ($type !== false && $variable !== false) {
-                        $assertion = new TypedCollectionAssertion($variable, $type);
-                        break;
-                    }
-
-                    $type = $class;
-                    $assertionType = 'AppserverIo\Doppelgaenger\Entities\Assertions\InstanceAssertion';
-
-                } else {
-                    $assertion = new RawAssertion(trim(str_replace($usedAnnotation, '', $docString)));
-                    break;
+                // if we do not get good matches we can throw an exception
+                if (count($matches) <= 1) {
+                    throw new ParserException(
+                        sprintf(
+                            'Cannot parse assertion %s within structure %s.',
+                            '@' . $docString,
+                            $this->currentDefinition->getQualifiedName()
+                        )
+                    );
                 }
 
-                // We handled what kind of assertion we need, now check what we will assert
-                if ($variable !== false && !empty($assertionType)) {
-                    $assertion = new $assertionType($variable, $type);
-
-                } else {
-                    $assertion = new RawAssertion(trim(str_replace($usedAnnotation, '', $docString)));
-                }
+                // remove the tangled matches and create a new assertion for our found
+                unset($matches[0]);
+                $assertion = new RawAssertion(trim(str_replace($usedAnnotation, '', array_pop($matches))));
 
                 break;
         }

@@ -20,13 +20,13 @@
 
 namespace AppserverIo\Doppelgaenger\Parser;
 
-use AppserverIo\Doppelgaenger\Entities\Annotations\Introduce;
 use AppserverIo\Doppelgaenger\Entities\Definitions\ClassDefinition;
 use AppserverIo\Doppelgaenger\Entities\Definitions\Structure;
 use AppserverIo\Doppelgaenger\Entities\Introduction;
 use AppserverIo\Doppelgaenger\Entities\Lists\IntroductionList;
-use AppserverIo\Doppelgaenger\Dictionaries\Annotations;
 use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Introduce;
+use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Invariant;
 
 /**
  * This class implements the StructureParserInterface for class structures
@@ -98,7 +98,7 @@ class ClassParser extends AbstractStructureParser
         $annotationParser = new AnnotationParser($this->file, $this->config, $this->tokens, $this->currentDefinition);
         $invariantConditions = $annotationParser->getConditions(
             $this->currentDefinition->getDocBlock(),
-            Annotations::INVARIANT
+            Invariant::ANNOTATION
         );
         if (!is_bool($invariantConditions)) {
             $this->currentDefinition->setInvariantConditions($invariantConditions);

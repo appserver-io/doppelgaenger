@@ -36,7 +36,7 @@ use AppserverIo\Doppelgaenger\Entities\ScriptDefinition;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  *
- * @invariant $this->motd === 'Welcome stranger!'
+ * @Invariant("$this->motd === 'Welcome stranger!'")
  */
 class BasicTestClass
 {
@@ -46,7 +46,7 @@ class BasicTestClass
     private $motd = 'Welcome stranger!';
 
     /**
-     * @requires $param1 < 27 && $param1 > 18 or $param1 === 17
+     * @Requires("$param1 < 27 && $param1 > 18 or $param1 === 17")
      *
      * @param integer   $param1
      * @param string    $param2
@@ -60,7 +60,7 @@ class BasicTestClass
     }
 
     /**
-     * @requires $param1 == 'null'
+     * @Requires("$param1 == 'null'")
      *
      * @param string $param1
      *
@@ -72,11 +72,11 @@ class BasicTestClass
     }
 
     /**
-     * @requires $ourString === 'stranger'
+     * @Requires("$ourString === 'stranger'")
      *
      * @param string $ourString
      *
-     * @ensures $dgResult === 'Welcome stranger'
+     * @Ensures("$dgResult === 'Welcome stranger'")
      *
      * @return string
      */

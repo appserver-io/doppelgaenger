@@ -103,7 +103,7 @@ class MethodInvocationTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      *
-     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenInvariantException
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenInvariantException
      */
     public function testAfterThrowingCorrectExceptionInstance()
     {
@@ -117,7 +117,7 @@ class MethodInvocationTest extends \PHPUnit_Framework_TestCase
      *
      * @throws \Exception
      *
-     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\BrokenInvariantException
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenInvariantException
      */
     public function testAfterThrowingExceptionIsImmutable()
     {

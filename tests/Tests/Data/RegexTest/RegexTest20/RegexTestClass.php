@@ -27,7 +27,7 @@ namespace AppserverIo\Doppelgaenger\Tests\Data\RegexTest20;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  *
- * @invariant   $this->test === 'tesdfgdfgdfgt'
+ * @Invariant("$this->test === 'tesdfgdfgdfgt'")
  */
 class RegexTestClass
 {

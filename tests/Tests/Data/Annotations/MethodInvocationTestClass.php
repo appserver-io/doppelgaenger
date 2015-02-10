@@ -20,8 +20,8 @@
 
 namespace AppserverIo\Doppelgaenger\Tests\Data\Annotations;
 
-use AppserverIo\Doppelgaenger\Exceptions\BrokenInvariantException;
 use AppserverIo\Doppelgaenger\Tests\Data\Aspects\MethodInvocationTestAspect;
+use AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenInvariantException;
 
 /**
  * Class which implements several methods which are used to test the functionality of the method invocation object

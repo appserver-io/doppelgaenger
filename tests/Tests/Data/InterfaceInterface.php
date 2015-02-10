@@ -36,20 +36,20 @@ interface InterfaceInterface
     public function size();
 
     /**
-     * @requires $this->size() >= 1
+     * @Requires("$this->size() >= 1")
      */
     public function peek();
 
     /**
-     * @requires $this->size() >= 1
-     * @ensures $this->size() == $dgOld->size() - 1
-     * @ensures $dgResult == $dgOld->peek()
+     * @Requires("$this->size() >= 1")
+     * @Ensures("$this->size() == $dgOld->size() - 1")
+     * @Ensures("$dgResult == $dgOld->peek()")
      */
     public function pop();
 
     /**
-     * @ensures $this->size() == $dgOld->size() + 1
-     * @ensures $this->peek() == $obj
+     * @Ensures("$this->size() == $dgOld->size() + 1")
+     * @Ensures("$this->peek() == $obj")
      */
     public function push($obj);
 }

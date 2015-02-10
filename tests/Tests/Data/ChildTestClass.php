@@ -64,7 +64,7 @@ class ChildTestClass extends ParentTestClass
     }
 
     /**
-     * @ensures in_array($obj, $this->elements)
+     * @Ensures("in_array($obj, $this->elements)")
      */
     public function push(\Object $obj)
     {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * \AppserverIo\Doppelgaenger\Entities\Pointcuts\SignaturePointcut
+ * \AppserverIo\Doppelgaenger\Entities\Pointcuts\AbstractSignaturePointcut
  *
  * NOTICE OF LICENSE
  *
@@ -152,8 +152,8 @@ abstract class AbstractSignaturePointcut extends AbstractPointcut
 
         // fix the expression
         $this->expression = str_replace(
-            array($this->function, $this->structure),
-            array($definition->getName(), $structureName),
+            array($this->callType . $this->function, $this->structure),
+            array($this->callType . $definition->getName(), $structureName),
             $this->getExpression()
         );
 

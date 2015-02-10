@@ -20,6 +20,8 @@
 
 namespace AppserverIo\Doppelgaenger\Tests\Unit\Entities\Pointcuts;
 
+use AppserverIo\Doppelgaenger\Tests\Mocks\Entities\Pointcuts\MockAbstractSignaturePointcut;
+
 /**
  * Unit testing AbstractSignaturePointcutTest
  *
@@ -31,13 +33,64 @@ namespace AppserverIo\Doppelgaenger\Tests\Unit\Entities\Pointcuts;
  */
 class AbstractSignaturePointcutTest extends \PHPUnit_Framework_TestCase
 {
+
     /**
-     * Tests the expression parsing in the constructor
+     * Our pointcut instance to test
+     *
+     * @var \AppserverIo\Doppelgaenger\Tests\Mocks\Entities\Pointcuts\MockAbstractSignaturePointcut $pointcut
+     */
+    protected $pointcut;
+
+    /**
+     * Test setup
      *
      * @return null
      */
-    public function testConstruct()
+    public function setUp()
     {
+        $this->pointcut = new MockAbstractSignaturePointcut('', false);
+    }
 
+    /**
+     * Tests if expressions get straighten correctly
+     *
+     * @return null
+     *
+     * @dataProvider testStraightenExpressionProvider
+     */
+    public function testStraightenExpression($callType, $function, $structure)
+    {
+        $this->pointcut->callType = $callType;
+        $this->pointcut->function = $function;
+        $this->pointcut->structure = $structure;
+        $this->pointcut->expression = $structure . $callType . $function;
+
+        $definition = $this->getMock('\AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition');
+        $definition->expects($this->once())
+            ->method('getStructureName')
+            ->will($this->returnValue('\AppserverIo\Doppelgaenger\Entities\Definitions\Structure'));
+        $definition->expects($this->exactly(2))
+            ->method('getName')
+            ->will($this->returnValue('testFunction'));
+
+        $this->pointcut->straightenExpression($definition);
+        $this->assertEquals('\AppserverIo\Doppelgaenger\Entities\Definitions\Structure' . $callType . 'testFunction', $this->pointcut->getExpression());
+        $this->assertEquals('\AppserverIo\Doppelgaenger\Entities\Definitions\Structure', $this->pointcut->structure);
+        $this->assertEquals('testFunction', $this->pointcut->function);
+    }
+
+    /**
+     * Data provider for testStraightenExpression
+     *
+     * @return array
+     */
+    public static function testStraightenExpressionProvider()
+    {
+        return array(
+            array('->', '\AppserverIo\Doppelgaenger\Entities\Definitions\*', '*'),
+            array('->', '\AppserverIo\Doppelgaenger\Entities\{Definitions,Tests}\Structure', '*'),
+            array('->', '\AppserverIo\Doppelgaenger\Entities\{Definitions,Tests}\Structure', '[a-Z]'),
+            array('::', '\AppserverIo\Doppelgaenger\Entities\{Definitions,Tests}\Structure', '[a-Z]')
+        );
     }
 }
