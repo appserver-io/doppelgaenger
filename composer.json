@@ -22,10 +22,10 @@
     "require": {
         "php": ">=5.4.0",
         "herrera-io/annotations": "~1.0",
-        "appserver-io-psr/mop": "0.1.*"
+        "appserver-io-psr/mop": "~1.0"
     },
     "require-dev": {
-        "appserver-io/build": "0.2.*",
+        "appserver-io/build": "~1.0",
         "squizlabs/php_codesniffer" : "dev-master as 2.1.0"
     },
     "autoload": {
