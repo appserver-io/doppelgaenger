@@ -176,24 +176,20 @@ class PostconditionFilter extends AbstractFilter
                 continue;
             }
 
-            $codeFragment = array();
+            // collect all assertion code for assertions of this instance
             for ($j = 0; $j < $assertionIterator->count(); $j++) {
-                $codeFragment[] = $assertionIterator->current()->getString();
-
-                // Forward the iterator and tell them we got a condition
+                // Code to catch failed assertions
+                $code .=  $assertionIterator->current()->toCode();
                 $assertionIterator->next();
                 $conditionCounter++;
             }
 
-            // Lets insert the condition check (if there have been any)
-            if (!empty($codeFragment)) {
-                $code .= 'if (!((' . implode(') && (', $codeFragment) . '))){' .
-                    ReservedKeywords::FAILURE_VARIABLE . ' = \'(' . str_replace(
-                        '\'',
-                        '"',
-                        implode(') && (', $codeFragment)
-                    ) . ')\';' .
-                    Placeholders::PROCESSING . 'postcondition' . Placeholders::PLACEHOLDER_CLOSE . '}';
+            // generate the check for assertions results
+            if ($conditionCounter > 0) {
+                $code .= 'if (!empty(' . ReservedKeywords::FAILURE_VARIABLE . ')) {' .
+                    ReservedKeywords::FAILURE_VARIABLE . ' = implode(" and ", ' . ReservedKeywords::FAILURE_VARIABLE . ');' .
+                    Placeholders::PROCESSING . 'postcondition' . Placeholders::PLACEHOLDER_CLOSE . '
+                }';
             }
 
             // increment the outer loop

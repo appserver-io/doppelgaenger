@@ -20,8 +20,10 @@
 
 namespace AppserverIo\Doppelgaenger\Entities\Assertions;
 
+use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 use AppserverIo\Doppelgaenger\Exceptions\ParserException;
 use AppserverIo\Doppelgaenger\Interfaces\AssertionInterface;
+use AppserverIo\Doppelgaenger\Interfaces\CodifyableInterface;
 use AppserverIo\Doppelgaenger\Utils\PhpLint;
 
 /**
@@ -33,7 +35,7 @@ use AppserverIo\Doppelgaenger\Utils\PhpLint;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
-abstract class AbstractAssertion implements AssertionInterface
+abstract class AbstractAssertion implements AssertionInterface, CodifyableInterface
 {
     /**
      * Minimal scope is "function" per default as we don't have DbC checks right know (would be body)
@@ -86,8 +88,8 @@ abstract class AbstractAssertion implements AssertionInterface
      */
     public function getInvertString()
     {
-        // Invert this instance
-        $self = $this;
+        // Invert a copy of this instance
+        $self = clone $this;
 
         $self->invert();
 
@@ -172,5 +174,20 @@ abstract class AbstractAssertion implements AssertionInterface
     public function setPrivateContext($privateContext)
     {
         $this->privateContext = $privateContext;
+    }
+
+    /**
+     * Return a string representation of the classes logic as a piece of PHP code.
+     * Used to transfer important logic into generated code
+     *
+     * @return string
+     */
+    public function toCode()
+    {
+        $code = 'if ('. $this->getInvertString() .') {
+                ' . ReservedKeywords::FAILURE_VARIABLE . '[] = \'The assertion (' . str_replace('\'', '"', $this->getString()) . ') must hold\';
+            }';
+
+        return $code;
     }
 }

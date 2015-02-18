@@ -20,6 +20,7 @@
 
 namespace AppserverIo\Doppelgaenger\Parser;
 
+use AppserverIo\Doppelgaenger\Entities\Assertions\AssertionFactory;
 use AppserverIo\Doppelgaenger\Entities\Assertions\RawAssertion;
 use AppserverIo\Doppelgaenger\Entities\Assertions\TypedCollectionAssertion;
 use AppserverIo\Doppelgaenger\Entities\Definitions\AttributeDefinition;
@@ -35,6 +36,7 @@ use AppserverIo\Doppelgaenger\Interfaces\AssertionInterface;
 use AppserverIo\Doppelgaenger\Interfaces\PropertiedStructureInterface;
 use AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
+use AppserverIo\Psr\MetaobjectProtocol\Aop\Annotations\Introduce;
 use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Ensures;
 use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Invariant;
 use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Requires;
@@ -63,42 +65,20 @@ class AnnotationParser extends AbstractParser
     /**
      * The annotations which the parser will look for
      *
-     * @var array $searchedAnnotations
+     * @var string[] $searchedAnnotations
      */
     protected $searchedAnnotations;
 
     /**
-     * All simple data types which are known but are aliased without an is_... function.
+     * All valid annotation types we consider complex
      *
-     * @var array $simpleTypeMappings
+     * @var string[] $validComplexAnnotations
      */
-    protected $simpleTypeMappings = array(
-        'boolean' => 'bool',
-        'void' => 'null'
-    );
-
-    /**
-     * All simple data types which are supported by PHP
-     * and have a is_... function.
-     *
-     * @var array $validSimpleTypes
-     */
-    protected $validSimpleTypes = array(
-        'array',
-        'bool',
-        'callable',
-        'double',
-        'float',
-        'int',
-        'integer',
-        'long',
-        'null',
-        'numeric',
-        'object',
-        'real',
-        'resource',
-        'scalar',
-        'string'
+    protected $validComplexAnnotations = array(
+        Ensures::ANNOTATION,
+        Invariant::ANNOTATION,
+        Requires::ANNOTATION,
+        Introduce::ANNOTATION
     );
 
     /**
@@ -143,7 +123,7 @@ class AnnotationParser extends AbstractParser
     /**
      * Will add an array of annotations which the parser will then look for on its next run
      *
-     * @param array<string> $annotationStrings The basic annotation to search for
+     * @param string[] $annotationStrings The basic annotation to search for
      *
      * @return null
      */
@@ -161,24 +141,70 @@ class AnnotationParser extends AbstractParser
      * @param string $string         String to search in
      * @param string $annotationType Name of the annotation (without the leading "@") to search for
      *
-     * @return array<\stdClass>
+     * @return \stdClass[]
+     * @throws \AppserverIo\Doppelgaenger\Exceptions\ParserException
      */
     public function getAnnotationsByType($string, $annotationType)
     {
         $collectedAnnotations = array();
 
-        // get our tokenizer and parse the doc Block
-        $tokenizer = new Tokenizer();
-        $tokens = new Tokens($tokenizer->parse($string));
+        // we have to determine what type of annotations we are searching for, complex (doctrine style) or simple
+        if (isset(array_flip($this->validComplexAnnotations)[$annotationType])) {
+            // complex annotations are parsed using herrera-io/php-annotations
 
-        // convert to array and run it through our advice factory
-        $toArray = new ToArray();
-        $annotations = $toArray->convert($tokens);
+            // get our tokenizer and parse the doc Block
+            $tokenizer = new Tokenizer();
+            $tokens = new Tokens($tokenizer->parse($string));
 
-        // only collect annotations we want
-        foreach ($annotations as $annotation) {
-            if ($annotation->name === $annotationType) {
-                $collectedAnnotations[] = $annotation;
+            // convert to array and run it through our advice factory
+            $toArray = new ToArray();
+            $annotations = $toArray->convert($tokens);
+
+            // only collect annotations we want
+            foreach ($annotations as $annotation) {
+                if ($annotation->name === $annotationType) {
+                    $collectedAnnotations[] = $annotation;
+                }
+            }
+
+        } else {
+            // all other annotations we would like to parse ourselves
+
+            $rawAnnotations = array();
+            preg_match_all('/@' . $annotationType . '.+?\n/s', $string, $rawAnnotations);
+
+            // build up stdClass instances from the result
+            foreach ($rawAnnotations[0] as $rawAnnotation) {
+                $annotationPieces = explode('##', preg_replace('/\s+/', '##', $rawAnnotation));
+
+                // short sanity check
+                if ($annotationPieces[0] === '@' . $annotationType &&
+                    is_string($annotationPieces[1]) &&
+                    (is_string($annotationPieces[2]) || $annotationType === 'return')
+                ) {
+                    // we got at least the pieces we are searching for, but we do not care about meaning here
+
+                    // create the class and fill it
+                    $annotation = new \stdClass();
+                    $annotation->name = $annotationType;
+                    $annotation->values = array(
+                        'operand' => empty($annotationPieces[2]) ? '' : $annotationPieces[2],
+                        'typeHint' => $annotationPieces[1]
+                    );
+
+                    $collectedAnnotations[] = $annotation;
+
+                } else {
+                    // tell them we got a problem
+
+                    throw new ParserException(
+                        sprintf(
+                            'Could not parse annotation %s within structure %s',
+                            $rawAnnotation,
+                            $this->currentDefinition->getQualifiedName()
+                        )
+                    );
+                }
             }
         }
 
@@ -267,264 +293,69 @@ class AnnotationParser extends AbstractParser
             return false;
         }
 
-        // Get our conditions
-        $rawConditions = array();
-        if ($conditionKeyword === Ensures::ANNOTATION) {
-            // Check if we need @return as well
-            if ($this->config->getValue('enforcement/enforce-default-type-safety') === true) {
-                $regex = '/' . str_replace('\\', '\\\\', $conditionKeyword) . '.+?\n|' . '@return' . '.+?\n/s';
+        // get the annotations for the passed condition keyword
+        $annotations = $this->getAnnotationsByType($docBlock, $conditionKeyword);
 
-            } else {
-                $regex = '/' . str_replace('\\', '\\\\', $conditionKeyword) . '.+?\n/s';
+        // if we have to enforce basic type safety we need some more annotations
+        if ($this->config->getValue('enforcement/enforce-default-type-safety') === true) {
+            // lets switch the
+
+            switch ($conditionKeyword)
+            {
+                case Ensures::ANNOTATION:
+                    // we have to consider @return annotations as well
+
+                    $annotations = array_merge(
+                        $annotations,
+                        $this->getAnnotationsByType($docBlock, 'return')
+                    );
+                    break;
+
+                case Requires::ANNOTATION:
+                    // we have to consider @param annotations as well
+
+                    $annotations = array_merge(
+                        $annotations,
+                        $this->getAnnotationsByType($docBlock, 'param')
+                    );
+                    break;
+
+                default:
+                    break;
             }
-
-            preg_match_all($regex, $docBlock, $rawConditions);
-
-        } elseif ($conditionKeyword === Requires::ANNOTATION) {
-            // Check if we need @return as well
-            if ($this->config->getValue('enforcement/enforce-default-type-safety') === true) {
-                $regex = '/' . str_replace('\\', '\\\\', $conditionKeyword) . '.+?\n|' . '@param' . '.+?\n/s';
-
-            } else {
-                $regex = '/' . str_replace('\\', '\\\\', $conditionKeyword) . '.+?\n/s';
-            }
-
-            preg_match_all($regex, $docBlock, $rawConditions);
-
-        } else {
-            preg_match_all('/' . str_replace('\\', '\\\\', $conditionKeyword) . '.+?\n/s', $docBlock, $rawConditions);
         }
 
-        // Lets build up the result array
+        // lets build up the result array
+        $assertionFactory = new AssertionFactory();
         $result = new AssertionList();
-        if (empty($rawConditions) === false) {
-            foreach ($rawConditions[0] as $condition) {
-                $assertion = $this->parseAssertion($condition);
-                if ($assertion !== false) {
-                    // Do we already got a private context we can set? If not we have to find out four ourselves
-                    if ($privateContext !== null) {
-                        // Add the context (wether private or not)
-                        $assertion->setPrivateContext($privateContext);
+        foreach ($annotations as $annotation) {
+            // try to create assertion instances for all annotations
+            try {
+                $assertion = $assertionFactory->getInstance($annotation);
 
-                    } else {
-                        // Add the context (private or not)
-                        $this->determinePrivateContext($assertion);
-                    }
+            } catch (\Exception $e) {
+                error_log($e->getMessage());
+                continue;
+            }
 
-                    // Determine the minimal scope of this assertion
-                    $this->determineMinimalScope($assertion);
+            if ($assertion !== false) {
+                // Do we already got a private context we can set? If not we have to find out four ourselves
+                if ($privateContext !== null) {
+                    // Add the context (wether private or not)
+                    $assertion->setPrivateContext($privateContext);
 
-                    $result->add($assertion);
+                } else {
+                    // Add the context (private or not)
+                    $this->determinePrivateContext($assertion);
                 }
+
+                // finally determine the minimal scope of this assertion and add it to our result
+                $this->determineMinimalScope($assertion);
+                $result->add($assertion);
             }
         }
 
         return $result;
-    }
-
-    /**
-     * Will parse assertions from a DocBlock comment piece. If $usedAnnotation is given we will concentrate on that
-     * type of assertion only.
-     * We might return false on error
-     *
-     * @param string      $docString      The DocBlock piece to search in
-     * @param null|string $usedAnnotation The annotation we want to specifically search for
-     *
-     * @return boolean|\AppserverIo\Doppelgaenger\Interfaces\AssertionInterface
-     *
-     * TODO we need an assertion factory badly! This is way to long
-     */
-    protected function parseAssertion($docString, $usedAnnotation = null)
-    {
-        if ($usedAnnotation === null) {
-            // We have to differ between several types of assertions, so lets check which one we got
-            $annotations = array('@param', '@return', Ensures::ANNOTATION, Requires::ANNOTATION, Invariant::ANNOTATION);
-
-            $usedAnnotation = '';
-            foreach ($annotations as $annotation) {
-                if (strpos($docString, $annotation) !== false) {
-                    $usedAnnotation = $annotation;
-                    break;
-                }
-            }
-        }
-
-        // Do we have an or connective aka |?
-        if ($this->filterOrCombinator($docString)) {
-            // If we got invalid arguments then we will fail
-            try {
-                return $this->parseChainedAssertion('|', $docString);
-
-            } catch (\InvalidArgumentException $e) {
-                return false;
-            }
-        }
-
-        // If we got invalid arguments then we will fail
-        try {
-            $variable = $this->filterVariable($docString);
-            $type = $this->filterType($docString);
-            $class = $this->filterClass($docString);
-
-        } catch (\InvalidArgumentException $e) {
-            return false;
-        }
-
-        $assertion = false;
-        switch ($usedAnnotation) {
-            // We got something which can only contain type information
-            case '@param':
-            case '@return':
-
-                if ($usedAnnotation === '@return') {
-                    $variable = ReservedKeywords::RESULT;
-                }
-
-                // Now we have to check what we got
-                // First of all handle if we got a simple type
-                if ($type !== false && !empty($type)) {
-                    $assertionType = 'AppserverIo\Doppelgaenger\Entities\Assertions\TypeAssertion';
-
-                } elseif ($class !== false && !empty($class)) {
-                    // We might also have a typed collection
-                    $type = $this->filterTypedCollection($class);
-                    if ($type !== false && $variable !== false) {
-                        $assertion = new TypedCollectionAssertion($variable, $type);
-                        break;
-                    }
-
-                    $type = $class;
-                    $assertionType = 'AppserverIo\Doppelgaenger\Entities\Assertions\InstanceAssertion';
-
-                } else {
-                    return false;
-                }
-
-                // We handled what kind of assertion we need, now check what we will assert
-                if ($variable !== false) {
-                    $assertion = new $assertionType($variable, $type);
-
-                } elseif ($usedAnnotation === '@return') {
-                    $assertion = new $assertionType(ReservedKeywords::RESULT, $type);
-
-                } else {
-                    return false;
-                }
-
-                break;
-
-            // We got our own definitions. Could be a bit more complex here
-            case Requires::ANNOTATION:
-            case Ensures::ANNOTATION:
-            case Invariant::ANNOTATION:
-
-                // have a look at the doc string and check if we can use anything
-                $matches = array();
-                preg_match('/' . $usedAnnotation . '\("(.+)"\)/', $docString, $matches);
-
-                // if we do not get good matches we can throw an exception
-                if (count($matches) <= 1) {
-                    throw new ParserException(
-                        sprintf(
-                            'Cannot parse assertion %s within structure %s.',
-                            '@' . $docString,
-                            $this->currentDefinition->getQualifiedName()
-                        )
-                    );
-                }
-
-                // remove the tangled matches and create a new assertion for our found
-                unset($matches[0]);
-                $assertion = new RawAssertion(trim(str_replace($usedAnnotation, '', array_pop($matches))));
-
-                break;
-        }
-
-        return $assertion;
-    }
-
-    /**
-     * Parse assertions which are a collection of others
-     *
-     * @param string $combinator How are they combinded? E.g. "||"
-     * @param string $docString  The DocBlock piece to search in
-     *
-     * @throws \AppserverIo\Doppelgaenger\Exceptions\ParserException
-     *
-     * @return \AppserverIo\Doppelgaenger\Entities\Assertions\ChainedAssertion
-     */
-    protected function parseChainedAssertion($combinator, $docString)
-    {
-        // Get all the parts of the string
-        $assertionArray = explode(' ', $docString);
-
-        // Check all string parts for the | character
-        $combinedPart = '';
-        $combinedIndex = 0;
-        foreach ($assertionArray as $key => $assertionPart) {
-            // Check which part contains the | but does not only consist of it
-            if ($this->filterOrCombinator($assertionPart) && trim($assertionPart) !== '|') {
-                $combinedPart = trim($assertionPart);
-                $combinedIndex = $key;
-                break;
-            }
-        }
-
-        // Check if we got anything of value
-        if (empty($combinedPart)) {
-            throw new ParserException(sprintf('Error parsing what seems to be a |-combined assertion %s', $docString));
-        }
-
-        // Now we have to create all the separate assertions for each part of the $combinedPart string
-        $assertionList = new AssertionList();
-        foreach (explode('|', $combinedPart) as $partString) {
-            // Rebuild the assertion string with one partial string of the combined part
-            $tmp = $assertionArray;
-            $tmp[$combinedIndex] = $partString;
-            $assertion = $this->parseAssertion(implode(' ', $tmp));
-
-            if (is_bool($assertion)) {
-                continue;
-
-            } else {
-                $assertionList->add($assertion);
-            }
-            $assertion = false;
-        }
-
-        // We got everything. Create a ChainedAssertion instance
-        return new ChainedAssertion($assertionList, '||');
-    }
-
-    /**
-     * Will filter the variable used within a DocBlock piece
-     *
-     * @param string $docString The DocBlock piece to search in
-     *
-     * @return boolean|string
-     */
-    protected function filterVariable($docString)
-    {
-        // Explode the string to get the different pieces
-        $explodedString = explode(' ', $docString);
-
-        // Filter for the first variable. The first as there might be a variable name in any following description
-        foreach ($explodedString as $stringPiece) {
-            // Check if we got a variable
-            $stringPiece = trim($stringPiece);
-            $dollarPosition = strpos(
-                $stringPiece,
-                '$'
-            );
-
-            if ($dollarPosition === 0 || $stringPiece === ReservedKeywords::RESULT || $stringPiece === ReservedKeywords::OLD
-            ) {
-                return $stringPiece;
-            }
-        }
-
-        // We found nothing; tell them.
-        return false;
     }
 
     /**
@@ -562,125 +393,6 @@ class AnnotationParser extends AbstractParser
 
         // Return the clean output
         return $results;
-    }
-
-    /**
-     * Will filter any combinator defining a logical or-relation
-     *
-     * @param string $docString The DocBlock piece to search in
-     *
-     * @return boolean
-     */
-    protected function filterOrCombinator($docString)
-    {
-        if (strpos($docString, '|')) {
-            return true;
-        }
-
-        // We found nothing; tell them.
-        return false;
-    }
-
-    /**
-     * Will filter for Java Generics like type safe collections of the form array<Type>
-     *
-     * @param string $docString The DocBlock piece to search in
-     *
-     * @return boolean|string
-     */
-    protected function filterTypedCollection($docString)
-    {
-        $tmp = strpos($docString, 'array<');
-        if ($tmp !== false) {
-            // we have a Java Generics like syntax
-
-            if (strpos($docString, '>') > $tmp) {
-                $stringPiece = explode('array<', $docString);
-                $stringPiece = $stringPiece[1];
-
-                return strstr($stringPiece, '>', true);
-            }
-
-        } elseif (strpos($docString, '[]')) {
-            // we have a common <TYPE>[] syntax
-
-            return strstr($docString, '[]', true);
-        }
-
-        // We found nothing; tell them.
-        return false;
-    }
-
-    /**
-     * Will filter for any simple type that may be used to indicate type hinting
-     *
-     * @param string $docString The DocBlock piece to search in
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return boolean|string
-     */
-    protected function filterType($docString)
-    {
-        // Explode the string to get the different pieces
-        $explodedString = explode(' ', $docString);
-
-        // Filter for the first variable. The first as there might be a variable name in any following description
-        $validTypes = array_flip($this->validSimpleTypes);
-        foreach ($explodedString as $stringPiece) {
-            // If we got a variable before any type we do not have proper doc syntax
-            if (strpos($stringPiece, '$') !== false) {
-                return false;
-            }
-
-            // Check if we got a type we recognize
-            $stringPiece = strtolower(trim($stringPiece));
-            if (isset($validTypes[$stringPiece])) {
-                return $stringPiece;
-
-            } elseif (isset($this->simpleTypeMappings[$stringPiece])) {
-                return $this->simpleTypeMappings[$stringPiece];
-
-            } elseif ($stringPiece === 'mixed') {
-                throw new \InvalidArgumentException;
-            }
-        }
-
-        // We found nothing; tell them.
-        return false;
-    }
-
-    /**
-     * Will filter for any referenced structure as a indicated type hinting of complex types
-     *
-     * @param string $docString The DocBlock piece to search in
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return boolean
-     */
-    protected function filterClass($docString)
-    {
-        // Explode the string to get the different pieces
-        $explodedString = explode(' ', $docString);
-
-        // Check if we got a valid docsting, if so the first part must begin with @
-        if (strpos($explodedString[0], '@') !== 0) {
-            return false;
-        }
-
-        // We assume we got a class if the second part is no scalar type and no variable
-        $validTypes = array_flip($this->validSimpleTypes);
-        $stringPiece = trim($explodedString[1]);
-        if (strpos($stringPiece, '$') === false && !isset($validTypes[strtolower($stringPiece)])) {
-            // If we got "void" we do not need to bother
-            if ($stringPiece !== 'void') {
-                return $stringPiece;
-            }
-        }
-
-        // We found nothing; tell them.
-        return false;
     }
 
     /**

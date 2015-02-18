@@ -20,6 +20,8 @@
 
 namespace AppserverIo\Doppelgaenger\Entities\Assertions;
 
+use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
+
 /**
  * Provides the option to check "collections" of the form array<Type>
  *
@@ -109,5 +111,24 @@ class TypedCollectionAssertion extends AbstractAssertion
         } else {
             return false;
         }
+    }
+
+    /**
+     * Return a string representation of the classes logic as a piece of PHP code.
+     * Used to transfer important logic into generated code
+     *
+     * @return string
+     */
+    public function toCode()
+    {
+        $code = 'if ('. $this->getInvertString() .') {
+                ' . ReservedKeywords::FAILURE_VARIABLE . '[] = sprintf(
+                    \'%s must only contain entries of the type %s\',
+                    \'' . $this->operand . '\',
+                    \'' . $this->type . '\'
+                );
+            }';
+
+        return $code;
     }
 }

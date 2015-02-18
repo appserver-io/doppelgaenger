@@ -1,3 +1,14 @@
+# Version 1.1.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Allows for the usage of custom assertions by specifying a type property within the annotation (see class \AppserverIo\Doppelgaenger\Tests\Data\AssertionTest\RespectValidationTestClass for example)
+* Added a semantic versioning declaration of the public API
+
 # Version 1.0.0
 
 ## Bugfixes

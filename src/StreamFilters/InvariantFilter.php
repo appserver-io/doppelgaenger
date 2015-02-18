@@ -429,26 +429,30 @@ class InvariantFilter extends AbstractFilter
         $code = 'protected function ' . ReservedKeywords::CLASS_INVARIANT . '($callingMethod) {' .
             ReservedKeywords::CONTRACT_CONTEXT . ' = \AppserverIo\Doppelgaenger\ContractContext::open();if (' . ReservedKeywords::CONTRACT_CONTEXT . ') {';
 
+        $conditionCounter = 0;
         $invariantIterator = $assertionLists->getIterator();
         for ($i = 0; $i < $invariantIterator->count(); $i++) {
             // Create the inner loop for the different assertions
             if ($invariantIterator->current()->count() !== 0) {
                 $assertionIterator = $invariantIterator->current()->getIterator();
-                $codeFragment = array();
 
+                // collect all assertion code for assertions of this instance
                 for ($j = 0; $j < $assertionIterator->count(); $j++) {
-                    $codeFragment[] = $assertionIterator->current()->getString();
-
+                    // Code to catch failed assertions
+                    $code .= $assertionIterator->current()->toCode();
                     $assertionIterator->next();
+                    $conditionCounter++;
                 }
-                $code .= 'if (!((' . implode(') && (', $codeFragment) . '))){' .
-                    ReservedKeywords::FAILURE_VARIABLE . ' = \'(' . str_replace(
-                        '\'',
-                        '"',
-                        implode(') && (', $codeFragment)
-                    ) . ')\';' .
-                    Placeholders::PROCESSING . 'invariant' . Placeholders::PLACEHOLDER_CLOSE . '}';
+
+                // generate the check for assertions results
+                if ($conditionCounter > 0) {
+                    $code .= 'if (!empty(' . ReservedKeywords::FAILURE_VARIABLE . ')) {' .
+                        ReservedKeywords::FAILURE_VARIABLE . ' = implode(" and ", ' . ReservedKeywords::FAILURE_VARIABLE . ');' .
+                        Placeholders::PROCESSING . 'invariant' . Placeholders::PLACEHOLDER_CLOSE . '
+                }';
+                }
             }
+
             // increment the outer loop
             $invariantIterator->next();
         }

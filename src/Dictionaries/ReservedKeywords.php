@@ -110,6 +110,13 @@ class ReservedKeywords
     const ORIGINAL_FUNCTION_SUFFIX = 'DOPPELGAENGEROriginal';
 
     /**
+     * Variable locally used as a flag for handling assertion flow
+     *
+     * @var string PASSED_ASSERTION_FLAG
+     */
+    const PASSED_ASSERTION_FLAG = '$doppelgaengerPassedBlock';
+
+    /**
      * Reserved local variable containing the result of the actual function execution
      *
      * @var string RESULT

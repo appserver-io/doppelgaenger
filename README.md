@@ -2,7 +2,12 @@
 
 Make PHP structure definition clones which look the same but behave differently
 
-[![Latest Stable Version](https://poser.pugx.org/appserver-io/doppelgaenger/v/stable.png)](https://packagist.org/packages/appserver-io/doppelgaenger) [![Total Downloads](https://poser.pugx.org/appserver-io/doppelgaenger/downloads.png)](https://packagist.org/packages/appserver-io/doppelgaenger) [![License](https://poser.pugx.org/appserver-io/doppelgaenger/license.png)](https://packagist.org/packages/appserver-io/doppelgaenger) [![Build Status](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/badges/build.png?b=master)](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/build-status/master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/?branch=master)
+[![Latest Stable Version](https://img.shields.io/packagist/v/appserver-io/doppelgaenger.svg?style=flat-square)](https://packagist.org/packages/appserver-io/doppelgaenger) 
+ [![Total Downloads](https://img.shields.io/packagist/dt/appserver-io/doppelgaenger.svg?style=flat-square)](https://packagist.org/packages/appserver-io/doppelgaenger)
+ [![License](https://img.shields.io/packagist/l/appserver-io/doppelgaenger.svg?style=flat-square)](https://packagist.org/packages/appserver-io/doppelgaenger)
+ [![Build Status](https://img.shields.io/travis/appserver-io/doppelgaenger/master.svg?style=flat-square)](http://travis-ci.org/appserver-io/doppelgaenger)
+ [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/appserver-io/doppelgaenger/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/?branch=master)
+ [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/appserver-io/doppelgaenger/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/?branch=master)
 
 # Introduction
 
@@ -28,6 +33,16 @@ Just include the following code into your composer.json` and you are good to go.
 }
 ```
 
+# Semantic versioning
+
+This library follows semantic versioning and its public API defines as follows:
+
+* The public API of [its related appserver.io PSR](https://github.com/appserver-io-psr/mop)
+* The public interface of the `\AppserverIo\Doppelgaenger\AutoLoader` class
+* The public interface of the `\AppserverIo\Doppelgaenger\Config` class
+* The syntax and amount of usable annotations (NOT including common annotations such as `@param` and `@return`)
+* The format of its configuration files
+
 # External Links
 
-* Documentation at [appserver.io](http://docs.appserver.io) (have a look at `AOP` and `Design by Contract` section)
+* Documentation at [appserver.io](http://docs.appserver.io) (have a look at [`AOP`](http://appserver.io/get-started/documentation/aop.html) and [`Design by Contract`](http://appserver.io/get-started/documentation/design-by-contract.html) section)

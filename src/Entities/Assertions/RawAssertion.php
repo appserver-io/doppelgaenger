@@ -31,19 +31,20 @@ namespace AppserverIo\Doppelgaenger\Entities\Assertions;
  */
 class RawAssertion extends AbstractAssertion
 {
+
     /**
-     * @var string $content Php code string we want to execute as an assertion
+     * @var string $constraint Php code string we want to execute as an assertion
      */
-    public $content;
+    public $constraint;
 
     /**
      * Default constructor
      *
-     * @param string $content Php code string we want to execute as an assertion
+     * @param string $constraint Php code string we want to execute as an assertion
      */
-    public function __construct($content)
+    public function __construct($constraint)
     {
-        $this->content = $content;
+        $this->constraint = $constraint;
 
         parent::__construct();
     }
@@ -55,7 +56,7 @@ class RawAssertion extends AbstractAssertion
      */
     public function getString()
     {
-        return (string)$this->content;
+        return (string)$this->constraint;
     }
 
     /**
@@ -66,16 +67,14 @@ class RawAssertion extends AbstractAssertion
     public function invert()
     {
         if ($this->inverted === false) {
-            $this->content = '!(' . $this->content . ')';
+            $this->constraint = '!(' . $this->constraint . ')';
             $this->inverted = true;
 
             return true;
 
         } elseif ($this->inverted === true) {
-            // Just unset the parts of $this->content we do not need
-            unset($this->content[0]);
-            unset($this->content[1]);
-            unset($this->content[strlen($this->content) - 1]);
+            // Just unset the parts of $this->constraint we do not need
+            $this->constraint = substr($this->constraint, 2, strlen($this->constraint) - 3);
 
             $this->inverted = false;
 
