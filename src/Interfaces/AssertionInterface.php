@@ -29,8 +29,9 @@ namespace AppserverIo\Doppelgaenger\Interfaces;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
-interface AssertionInterface
+interface AssertionInterface extends CodifyableInterface
 {
+
     /**
      * Will return an inverted string representation.
      * Implemented here, as we want to check if there is an entry in our inversion map we can use

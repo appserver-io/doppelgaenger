@@ -126,7 +126,8 @@ class PreconditionFilter extends AbstractFilter
         $code = '/* BEGIN OF PRECONDITION ENFORCEMENT */
         if (' . ReservedKeywords::CONTRACT_CONTEXT . ') {
             ' . ReservedKeywords::PASSED_ASSERTION_FLAG . ' = false;' .
-            ReservedKeywords::FAILURE_VARIABLE . ' = array();';
+            ReservedKeywords::FAILURE_VARIABLE . ' = array();' .
+            ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ' = array();';
 
         // We need a counter to check how much conditions we got
         $conditionCounter = 0;
@@ -155,7 +156,7 @@ class PreconditionFilter extends AbstractFilter
             }
 
             // close the or-combined wrap
-            $code .= 'if (empty(' . ReservedKeywords::FAILURE_VARIABLE . ')) {' .
+            $code .= 'if (empty(' . ReservedKeywords::FAILURE_VARIABLE . ') && empty(' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ')) {' .
                 ReservedKeywords::PASSED_ASSERTION_FLAG . ' = true;
                 }}';
 
@@ -165,8 +166,7 @@ class PreconditionFilter extends AbstractFilter
 
         // Preconditions need or-ed conditions so we make sure only one condition list gets checked
         $code .= 'if (' . ReservedKeywords::PASSED_ASSERTION_FLAG . ' === false){' .
-            ReservedKeywords::FAILURE_VARIABLE . ' = implode(" and ", ' . ReservedKeywords::FAILURE_VARIABLE . ');' .
-            Placeholders::PROCESSING . 'precondition' . Placeholders::PLACEHOLDER_CLOSE . '
+            Placeholders::ENFORCEMENT . 'precondition' . Placeholders::PLACEHOLDER_CLOSE . '
             }}
             /* END OF PRECONDITION ENFORCEMENT */';
 

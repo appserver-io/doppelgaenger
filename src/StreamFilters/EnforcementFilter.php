@@ -50,7 +50,7 @@ class EnforcementFilter extends AbstractFilter
      *
      * @var array $dependencies
      */
-    protected $dependencies = array('PreconditionFilter', 'PostconditionFilter', 'InvariantFilter');
+    protected $dependencies = array(array('PreconditionFilter', 'PostconditionFilter', 'InvariantFilter'));
 
     /**
      * The main filter method.
@@ -89,11 +89,11 @@ class EnforcementFilter extends AbstractFilter
             // Insert the code for the static processing placeholders
             $bucket->data = str_replace(
                 array(
-                    Placeholders::PROCESSING . 'precondition' . Placeholders::PLACEHOLDER_CLOSE,
-                    Placeholders::PROCESSING . 'postcondition' . Placeholders::PLACEHOLDER_CLOSE,
-                    Placeholders::PROCESSING . 'invariant' . Placeholders::PLACEHOLDER_CLOSE,
-                    Placeholders::PROCESSING . 'InvalidArgumentException' . Placeholders::PLACEHOLDER_CLOSE,
-                    Placeholders::PROCESSING . 'MissingPropertyException' . Placeholders::PLACEHOLDER_CLOSE
+                    Placeholders::ENFORCEMENT . 'precondition' . Placeholders::PLACEHOLDER_CLOSE,
+                    Placeholders::ENFORCEMENT . 'postcondition' . Placeholders::PLACEHOLDER_CLOSE,
+                    Placeholders::ENFORCEMENT . 'invariant' . Placeholders::PLACEHOLDER_CLOSE,
+                    Placeholders::ENFORCEMENT . 'InvalidArgumentException' . Placeholders::PLACEHOLDER_CLOSE,
+                    Placeholders::ENFORCEMENT . 'MissingPropertyException' . Placeholders::PLACEHOLDER_CLOSE
                 ),
                 array($preconditionCode, $postconditionCode, $invariantCode, $invalidCode, $missingCode),
                 $bucket->data
@@ -115,6 +115,8 @@ class EnforcementFilter extends AbstractFilter
      * @param string                            $for    For which kind of assertion do wee need the processing
      *
      * @return string
+     *
+     * @throws \AppserverIo\Doppelgaenger\Exceptions\GeneratorException
      */
     private function generateCode($config, $for)
     {
@@ -128,6 +130,13 @@ class EnforcementFilter extends AbstractFilter
             $place = '$callingMethod';
         }
 
+        $errorCollectionCode = 'if (empty(' . ReservedKeywords::FAILURE_VARIABLE . ')) {
+            ' . ReservedKeywords::FAILURE_VARIABLE . ' = "";
+            } else {
+                ' . ReservedKeywords::FAILURE_VARIABLE . ' = \'Failed ' . $for . '\' . implode(" and ", ' . ReservedKeywords::FAILURE_VARIABLE . ') . \' in \' . ' . $place . ';
+            }' .
+            ReservedKeywords::FAILURE_VARIABLE . ' .= implode(" and ", ' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ');';
+
         // What kind of reaction should we create?
         switch ($config->getValue('enforcement/processing')) {
             case 'exception':
@@ -136,22 +145,29 @@ class EnforcementFilter extends AbstractFilter
                 $exception = $exceptionFactory->getClassName($for);
 
                 // Create the code
-                $code .= '\AppserverIo\Doppelgaenger\ContractContext::close();
-                throw new \\' . $exception . '("Failed ' . ReservedKeywords::FAILURE_VARIABLE . ' in " . ' . $place . ');';
+                $code .= '\AppserverIo\Doppelgaenger\ContractContext::close();' .
+                    $errorCollectionCode . '
+                    throw new \\' . $exception . '(' . ReservedKeywords::FAILURE_VARIABLE . ');';
 
                 break;
 
             case 'logging':
 
                 // Create the code
-                $code .= '$container = new \AppserverIo\Doppelgaenger\Utils\InstanceContainer();
-                $logger = $container[' . ReservedKeywords::LOGGER_CONTAINER_ENTRY . '];
-                $logger->error("Failed ' . $for .
-                    ReservedKeywords::FAILURE_VARIABLE . ' in " . ' . $place . ');';
+                $code .= $errorCollectionCode .
+                    '$container = new \AppserverIo\Doppelgaenger\Utils\InstanceContainer();
+                    $logger = $container[' . ReservedKeywords::LOGGER_CONTAINER_ENTRY . '];
+                    $logger->error(' . ReservedKeywords::FAILURE_VARIABLE . ');';
                 break;
 
             default:
 
+                throw new GeneratorException(
+                    sprintf(
+                        'Unknown entry "%s" for configuration value "enforcement/processing"',
+                        $config->getValue('enforcement/processing')
+                    )
+                );
                 break;
         }
 

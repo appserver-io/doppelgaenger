@@ -1,3 +1,13 @@
+# Version 1.2.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Introduced assertions which allow for unwrapped error messages to not expose system internals
+
 # Version 1.1.0
 
 ## Bugfixes

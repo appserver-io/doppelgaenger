@@ -71,6 +71,7 @@ class AssertionTest extends \PHPUnit_Framework_TestCase
         } catch (ContractExceptionInterface $e) {
 
             $this->assertNotFalse(strpos($e->getMessage(), '"not an integer"'));
+            $this->assertFalse(strpos($e->getMessage(), 'Failed'));
             return;
         }
 
@@ -93,6 +94,7 @@ class AssertionTest extends \PHPUnit_Framework_TestCase
         } catch (ContractExceptionInterface $e) {
 
             $this->assertNotFalse(strpos($e->getMessage(), '"1" must be a string'));
+            $this->assertFalse(strpos($e->getMessage(), 'Failed'));
             return;
         }
 
@@ -161,6 +163,7 @@ class AssertionTest extends \PHPUnit_Framework_TestCase
         } catch (ContractExceptionInterface $e) {
 
             $this->assertNotFalse(strpos($e->getMessage(), 'The age must be 50 years or more'));
+            $this->assertFalse(strpos($e->getMessage(), 'Failed'));
             return;
         }
 
@@ -183,6 +186,7 @@ class AssertionTest extends \PHPUnit_Framework_TestCase
         } catch (ContractExceptionInterface $e) {
 
             $this->assertNotFalse(strpos($e->getMessage(), '"" must be an object'));
+            $this->assertFalse(strpos($e->getMessage(), 'Failed'));
             return;
         }
 
