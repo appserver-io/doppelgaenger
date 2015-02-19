@@ -42,15 +42,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testPhpTag()
     {
-        $e = null;
-        try {
-            $tagPlacementTestClass = new TagPlacementTestClass();
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertNull($e);
+        new TagPlacementTestClass();
     }
 
     /**

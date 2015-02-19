@@ -33,10 +33,6 @@ use AppserverIo\Doppelgaenger\Interfaces\PropertiedStructureInterface;
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
- *
- * @property \AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList $attributeDefinitions List of defined attributes
- * @property array                                                             $constants            Trait constants
- * @property \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList           $invariantConditions  List of directly defined invariant conditions
  */
 class TraitDefinition extends AbstractStructureDefinition implements PropertiedStructureInterface
 {

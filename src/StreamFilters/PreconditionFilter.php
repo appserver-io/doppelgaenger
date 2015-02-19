@@ -87,8 +87,7 @@ class PreconditionFilter extends AbstractFilter
 
                     } else {
                         // Get the code for the assertions
-                        $code = $this->generateCode($functionDefinition->getAllPreconditions());
-
+                        $code = $this->generateCode($functionDefinition->getAllPreconditions(), $functionName);
 
                         // Insert the code
                         $bucket->data = str_replace(
@@ -117,10 +116,11 @@ class PreconditionFilter extends AbstractFilter
      * Will generate the code needed to enforce made precondition assertions
      *
      * @param \AppserverIo\Doppelgaenger\Entities\Lists\TypedListList $assertionLists List of assertion lists
+     * @param string                                                  $functionName   The name of the function for which we create the enforcement code
      *
      * @return string
      */
-    private function generateCode(TypedListList $assertionLists)
+    protected function generateCode(TypedListList $assertionLists, $functionName)
     {
         // We only use contracting if we're not inside another contract already
         $code = '/* BEGIN OF PRECONDITION ENFORCEMENT */
@@ -166,7 +166,7 @@ class PreconditionFilter extends AbstractFilter
 
         // Preconditions need or-ed conditions so we make sure only one condition list gets checked
         $code .= 'if (' . ReservedKeywords::PASSED_ASSERTION_FLAG . ' === false){' .
-            Placeholders::ENFORCEMENT . 'precondition' . Placeholders::PLACEHOLDER_CLOSE . '
+            Placeholders::ENFORCEMENT . $functionName . 'precondition' . Placeholders::PLACEHOLDER_CLOSE . '
             }}
             /* END OF PRECONDITION ENFORCEMENT */';
 

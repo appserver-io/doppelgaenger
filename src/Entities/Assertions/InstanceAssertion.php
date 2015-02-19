@@ -104,7 +104,7 @@ class InstanceAssertion extends AbstractAssertion
      */
     public function toCode()
     {
-        $code = 'if ('. $this->getInvertString() .') {
+        return 'if ('. $this->getInvertString() .') {
                 ' . ReservedKeywords::FAILURE_VARIABLE . '[] = sprintf(
                     \'%s must be an instance of %s, %s found instead.\',
                     \'' . $this->operand . '\',
@@ -112,7 +112,5 @@ class InstanceAssertion extends AbstractAssertion
                     get_class(' . $this->operand . ')
                 );
             }';
-
-        return $code;
     }
 }

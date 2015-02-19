@@ -121,14 +121,12 @@ class TypedCollectionAssertion extends AbstractAssertion
      */
     public function toCode()
     {
-        $code = 'if ('. $this->getInvertString() .') {
+        return 'if ('. $this->getInvertString() .') {
                 ' . ReservedKeywords::FAILURE_VARIABLE . '[] = sprintf(
                     \'%s must only contain entries of the type %s\',
                     \'' . $this->operand . '\',
                     \'' . $this->type . '\'
                 );
             }';
-
-        return $code;
     }
 }

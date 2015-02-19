@@ -262,23 +262,14 @@ class Generator
         $targetFileName,
         ClassDefinition $structureDefinition
     ) {
-        // TODO, do we really use the filters only once?
+
         $res = fopen(
             $this->createFilePath($structureDefinition->getQualifiedName()),
             'w+'
         );
 
-        // Append all configured filters but collect them for easier handling
-        $appendedFilters = $this->appendDefaultFilters($res, $structureDefinition);
-
-        // TODO remove this after testing
-        $appendedFilters['IntroductionFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\IntroductionFilter', $structureDefinition->getIntroductions());
-        $appendedFilters['AdviceFilter'] = $this->appendFilter(
-            $res,
-            'AppserverIo\Doppelgaenger\StreamFilters\AdviceFilter',
-            array('functionDefinitions' => $structureDefinition->getFunctionDefinitions(), 'aspectRegister' => $this->aspectRegister)
-        );
-        $appendedFilters['ProcessingFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\ProcessingFilter', $structureDefinition->getFunctionDefinitions());
+        // Append all configured filters
+        $this->appendDefaultFilters($res, $structureDefinition);
 
         $tmp = fwrite(
             $res,
@@ -328,11 +319,9 @@ class Generator
         }
 
         // Whatever the enforcement level is, we will always need the skeleton filter.
-        stream_filter_register('SkeletonFilter', 'AppserverIo\Doppelgaenger\StreamFilters\SkeletonFilter');
-        $filters['SkeletonFilter'] = stream_filter_append(
+        $filters['SkeletonFilter'] = $this->appendFilter(
             $res,
-            'SkeletonFilter',
-            STREAM_FILTER_WRITE,
+            'AppserverIo\Doppelgaenger\StreamFilters\SkeletonFilter',
             $structureDefinition
         );
 
@@ -350,19 +339,17 @@ class Generator
             }
 
             if ($filterNeeded) {
-                stream_filter_register('PreconditionFilter', 'AppserverIo\Doppelgaenger\StreamFilters\PreconditionFilter');
-                $filters['PreconditionFilter'] = stream_filter_append(
+                $filters['PreconditionFilter'] = $this->appendFilter(
                     $res,
-                    'PreconditionFilter',
-                    STREAM_FILTER_WRITE,
+                    'AppserverIo\Doppelgaenger\StreamFilters\PreconditionFilter',
                     $structureDefinition->getFunctionDefinitions()
                 );
             }
         }
 
-        // What about the postcondition filter?
+        // What about the post-condition filter?
         if (isset($levelArray[1]) && $levelArray[1] == 1) {
-            // Do we even got any postconditions?
+            // Do we even got any post-conditions?
             $filterNeeded = false;
             $iterator = $structureDefinition->getFunctionDefinitions()->getIterator();
             foreach ($iterator as $functionDefinition) {
@@ -373,11 +360,9 @@ class Generator
             }
 
             if ($filterNeeded) {
-                stream_filter_register('PostconditionFilter', 'AppserverIo\Doppelgaenger\StreamFilters\PostconditionFilter');
-                $filters['PostconditionFilter'] = stream_filter_append(
+                $filters['PostconditionFilter'] = $this->appendFilter(
                     $res,
-                    'PostconditionFilter',
-                    STREAM_FILTER_WRITE,
+                    'AppserverIo\Doppelgaenger\StreamFilters\PostconditionFilter',
                     $structureDefinition->getFunctionDefinitions()
                 );
             }
@@ -387,14 +372,41 @@ class Generator
         if (isset($levelArray[2]) && $levelArray[2] == 1) {
             // Do we even got any invariants?
             if ($structureDefinition->getInvariants()->count(true) !== 0) {
-                stream_filter_register('InvariantFilter', 'AppserverIo\Doppelgaenger\StreamFilters\InvariantFilter');
-                $filters['InvariantFilter'] = stream_filter_append($res, 'InvariantFilter', STREAM_FILTER_WRITE, $structureDefinition);
+                $filters['InvariantFilter'] = $this->appendFilter(
+                    $res,
+                    'AppserverIo\Doppelgaenger\StreamFilters\InvariantFilter',
+                    $structureDefinition
+                );
             }
         }
 
-        // We ALWAYS need the processing filter. Everything else would not make any sense
-        stream_filter_register('EnforcementFilter', 'AppserverIo\Doppelgaenger\StreamFilters\EnforcementFilter');
-        $filters['EnforcementFilter'] = stream_filter_append($res, 'EnforcementFilter', STREAM_FILTER_WRITE, $this->config);
+        // add the filter used for introductions
+        $filters['IntroductionFilter'] = $this->appendFilter(
+            $res,
+            'AppserverIo\Doppelgaenger\StreamFilters\IntroductionFilter',
+            $structureDefinition->getIntroductions()
+        );
+
+        // add the filter we need for our AOP advices
+        $filters['AdviceFilter'] = $this->appendFilter(
+            $res,
+            'AppserverIo\Doppelgaenger\StreamFilters\AdviceFilter',
+            array('functionDefinitions' => $structureDefinition->getFunctionDefinitions(), 'aspectRegister' => $this->aspectRegister)
+        );
+
+        // add the filter used to proxy to the actual implementation
+        $filters['ProcessingFilter'] = $this->appendFilter(
+            $res,
+            'AppserverIo\Doppelgaenger\StreamFilters\ProcessingFilter',
+            $structureDefinition->getFunctionDefinitions()
+        );
+
+        // We ALWAYS need the enforcement filter. Everything else would not make any sense
+        $filters['EnforcementFilter'] = $this->appendFilter(
+            $res,
+            'AppserverIo\Doppelgaenger\StreamFilters\EnforcementFilter',
+            array('structureDefinition' => $structureDefinition, 'config' => $this->config)
+        );
 
         return $filters;
     }
