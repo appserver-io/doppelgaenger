@@ -20,6 +20,7 @@
 
 namespace AppserverIo\Doppelgaenger\Entities\Assertions;
 
+use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 use AppserverIo\Doppelgaenger\Exceptions\ParserException;
 
 /**
@@ -107,5 +108,25 @@ class TypeAssertion extends AbstractAssertion
         } else {
             return false;
         }
+    }
+
+    /**
+     * Return a string representation of the classes logic as a piece of PHP code.
+     * Used to transfer important logic into generated code
+     *
+     * @return string
+     */
+    public function toCode()
+    {
+        $code = 'if ('. $this->getInvertString() .') {
+                ' . ReservedKeywords::FAILURE_VARIABLE . '[] = sprintf(
+                    \'%s must be of the type %s, %s found instead.\',
+                    \'' . $this->operand . '\',
+                    \'' . $this->type . '\',
+                    gettype(' . $this->operand . ')
+                );
+            }';
+
+        return $code;
     }
 }

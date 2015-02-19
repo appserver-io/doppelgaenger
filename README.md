@@ -9,7 +9,6 @@ Make PHP structure definition clones which look the same but behave differently
  [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/appserver-io/doppelgaenger/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/?branch=master)
  [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/appserver-io/doppelgaenger/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/?branch=master)
 
-
 # Introduction
 
 Doppelgaenger is created for tampering with PHP structure definitions such as classes before they get loaded and known to the code which uses them.
@@ -34,6 +33,16 @@ Just include the following code into your composer.json` and you are good to go.
 }
 ```
 
+# Semantic versioning
+
+This library follows semantic versioning and its public API defines as follows:
+
+* The public API of [its related appserver.io PSR](https://github.com/appserver-io-psr/mop)
+* The public interface of the `\AppserverIo\Doppelgaenger\AutoLoader` class
+* The public interface of the `\AppserverIo\Doppelgaenger\Config` class
+* The syntax and amount of usable annotations (NOT including common annotations such as `@param` and `@return`)
+* The format of its configuration files
+
 # External Links
 
-* Documentation at [appserver.io](http://docs.appserver.io) (have a look at `AOP` and `Design by Contract` section)
+* Documentation at [appserver.io](http://docs.appserver.io) (have a look at [`AOP`](http://appserver.io/get-started/documentation/aop.html) and [`Design by Contract`](http://appserver.io/get-started/documentation/design-by-contract.html) section)

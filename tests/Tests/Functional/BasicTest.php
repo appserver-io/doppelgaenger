@@ -33,28 +33,45 @@ use AppserverIo\Doppelgaenger\Tests\Data\BasicTestClass;
  */
 class BasicTest extends \PHPUnit_Framework_TestCase
 {
+
+    /**
+     * Instance of our test class
+     *
+     * @var \AppserverIo\Doppelgaenger\Tests\Data\BasicTestClass $testClass
+     */
+    protected $testClass;
+
+    /**
+     * Get our test class
+     *
+     * @return null
+     */
+    public function setUp()
+    {
+        $this->testClass = new BasicTestClass();
+    }
+
     /**
      * Will check if operations on invariant protected attributes will bring the intended result
      *
      * @return null
      */
+    public function testInvariantHolds()
+    {
+        // This one should not break
+        $this->testClass->iDontBreakTheInvariant();
+    }
+
+    /**
+     * Will check if operations on invariant protected attributes will bring the intended result
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenInvariantException
+     */
     public function testInvariantBreaks()
     {
-        // Get the object to test
-        $test = new BasicTestClass();
-
-        // This one should not break
-        $test->iDontBreakTheInvariant();
-
-        $e = null;
-        try {
-            $test->iBreakTheInvariant();
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertInstanceOf('\AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenInvariantException', $e);
+        $this->testClass->iBreakTheInvariant();
     }
 
     /**
@@ -64,44 +81,45 @@ class BasicTest extends \PHPUnit_Framework_TestCase
      */
     public function testParamTyping()
     {
-        // Get the object to test
-        $test = new BasicTestClass();
-
         // These tests should all be successful
-        $test->stringToArray("null");
-        $test->concatSomeStuff(17, 'test', new \Exception());
-        $test->stringToWelcome('stranger');
+        $this->testClass->stringToArray("null");
+        $this->testClass->concatSomeStuff(17, 'test', new \Exception());
+        $this->testClass->stringToWelcome('stranger');
+    }
 
+    /**
+     * Will test enforcement of type hinting
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPreconditionException
+     */
+    public function testParamTypingSinglePrecondition1()
+    {
+        $this->testClass->stringToArray(13);
+    }
 
-        // These should all fail
-        $e = null;
-        try {
-            $test->stringToArray(13);
+    /**
+     * Will test enforcement of type hinting
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPreconditionException
+     */
+    public function testParamTypingSinglePrecondition2()
+    {
+        $this->testClass->stringToWelcome(34);
+    }
 
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertInstanceOf('\AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPreconditionException', $e);
-
-        $e = null;
-        try {
-            $test->concatSomeStuff("26", array(), new \Exception());
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertInstanceOf('\AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPreconditionException', $e);
-
-        $e = null;
-        try {
-            $test->stringToWelcome(34);
-
-        } catch (\Exception $e) {
-        }
-
-        // Did we get the right $e?
-        $this->assertInstanceOf('\AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPreconditionException', $e);
+    /**
+     * Will test enforcement of type hinting
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPreconditionException
+     */
+    public function testParamTypingMultiplePreconditions()
+    {
+        $this->testClass->concatSomeStuff("26", array(), new \Exception());
     }
 }

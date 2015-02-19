@@ -125,7 +125,7 @@ class PreconditionFilter extends AbstractFilter
         // We only use contracting if we're not inside another contract already
         $code = '/* BEGIN OF PRECONDITION ENFORCEMENT */
         if (' . ReservedKeywords::CONTRACT_CONTEXT . ') {
-            $passedOne = false;' .
+            ' . ReservedKeywords::PASSED_ASSERTION_FLAG . ' = false;' .
             ReservedKeywords::FAILURE_VARIABLE . ' = array();';
 
         // We need a counter to check how much conditions we got
@@ -142,34 +142,32 @@ class PreconditionFilter extends AbstractFilter
                 continue;
             }
 
-            $codeFragment = array();
-            for ($j = 0; $j < $assertionIterator->count(); $j++) {
-                $codeFragment[] = $assertionIterator->current()->getString();
+            // create a wrap around assuring that inherited conditions get or-combined
+            $code .= 'if (' . ReservedKeywords::PASSED_ASSERTION_FLAG . ' === false) {';
 
+            // iterate through the conditions for this certain instance
+            for ($j = 0; $j < $assertionIterator->count(); $j++) {
+                $conditionCounter++;
+
+                // Code to catch failed assertions
+                $code .= $assertionIterator->current()->toCode();
                 $assertionIterator->next();
             }
 
-            // Preconditions need or-ed conditions so we make sure only one conditionlist gets checked
-            $conditionCounter++;
-
-            // Code to catch failed assertions
-            $code .= 'if ($passedOne === false && !((' .
-                implode(') && (', $codeFragment) . '))){' .
-                ReservedKeywords::FAILURE_VARIABLE . '[] = \'(' . str_replace('\'', '"', implode(') && (', $codeFragment)) . ')\';
-                } else {$passedOne = true;}';
+            // close the or-combined wrap
+            $code .= 'if (empty(' . ReservedKeywords::FAILURE_VARIABLE . ')) {' .
+                ReservedKeywords::PASSED_ASSERTION_FLAG . ' = true;
+                }}';
 
             // increment the outer loop
             $listIterator->next();
         }
 
-        // Preconditions need or-ed conditions so we make sure only one conditionlist gets checked
-        $code .= 'if ($passedOne === false){' .
+        // Preconditions need or-ed conditions so we make sure only one condition list gets checked
+        $code .= 'if (' . ReservedKeywords::PASSED_ASSERTION_FLAG . ' === false){' .
             ReservedKeywords::FAILURE_VARIABLE . ' = implode(" and ", ' . ReservedKeywords::FAILURE_VARIABLE . ');' .
             Placeholders::PROCESSING . 'precondition' . Placeholders::PLACEHOLDER_CLOSE . '
-            }';
-
-        // Closing bracket for contract depth check
-        $code .= '}
+            }}
             /* END OF PRECONDITION ENFORCEMENT */';
 
         // If there were no assertions we will just return a comment

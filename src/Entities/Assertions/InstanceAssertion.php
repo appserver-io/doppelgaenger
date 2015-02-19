@@ -20,6 +20,8 @@
 
 namespace AppserverIo\Doppelgaenger\Entities\Assertions;
 
+use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
+
 /**
  * This class is used to provide an object base way to pass assertions as e.g. a precondition.
  *
@@ -92,5 +94,25 @@ class InstanceAssertion extends AbstractAssertion
         } else {
             return false;
         }
+    }
+
+    /**
+     * Return a string representation of the classes logic as a piece of PHP code.
+     * Used to transfer important logic into generated code
+     *
+     * @return string
+     */
+    public function toCode()
+    {
+        $code = 'if ('. $this->getInvertString() .') {
+                ' . ReservedKeywords::FAILURE_VARIABLE . '[] = sprintf(
+                    \'%s must be an instance of %s, %s found instead.\',
+                    \'' . $this->operand . '\',
+                    \'' . $this->class . '\',
+                    get_class(' . $this->operand . ')
+                );
+            }';
+
+        return $code;
     }
 }
