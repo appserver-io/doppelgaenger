@@ -68,6 +68,14 @@ class ReservedKeywords
     const FAILURE_VARIABLE = '$doppelgaengerFailureMessage';
 
     /**
+     * Reserved local variable which is used to build up messages regarding failed contracts.
+     * Messages contained in this variable MUST NOT be wrapped
+     *
+     * @var string UNWRAPPED_FAILURE_VARIABLE
+     */
+    const UNWRAPPED_FAILURE_VARIABLE = '$doppelgaengerUnwrappedFailureMessage';
+
+    /**
      * Reserved constant name which is used for a substitute of the __FILE__ constant
      *
      * @var string FILE_SUBSTITUTE

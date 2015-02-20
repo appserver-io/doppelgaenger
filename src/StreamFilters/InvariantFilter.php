@@ -175,7 +175,7 @@ class InvariantFilter extends AbstractFilter
      *
      * @return string
      */
-    private function generateAttributeCode(AttributeDefinitionList $attributeDefinitions)
+    protected function generateAttributeCode(AttributeDefinitionList $attributeDefinitions)
     {
         // We should create attributes to store our attribute types
         $code = '/**
@@ -219,7 +219,7 @@ class InvariantFilter extends AbstractFilter
      *
      * @return string
      */
-    private function generateSetCode($hasParents, $injected = false)
+    protected function generateSetCode($hasParents, $injected = false)
     {
 
         // We only need the method header if we don't inject
@@ -236,7 +236,9 @@ class InvariantFilter extends AbstractFilter
         }
 
         $code .= ReservedKeywords::CONTRACT_CONTEXT . ' = \AppserverIo\Doppelgaenger\ContractContext::open();
-        // Does this property even exist? If not, throw an exception
+            ' . ReservedKeywords::FAILURE_VARIABLE . ' = array();
+            ' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ' = array();
+            // Does this property even exist? If not, throw an exception
             if (!isset($this->' . ReservedKeywords::ATTRIBUTE_STORAGE . '[$name])) {';
 
         if ($hasParents) {
@@ -244,14 +246,14 @@ class InvariantFilter extends AbstractFilter
         } else {
             $code .= 'if (property_exists($this, $name)) {' .
 
-                ReservedKeywords::FAILURE_VARIABLE . ' = "accessing $name in an invalid way";' .
-                Placeholders::PROCESSING . 'InvalidArgumentException' . Placeholders::PLACEHOLDER_CLOSE .
+                ReservedKeywords::FAILURE_VARIABLE . '[] = "accessing $name in an invalid way";' .
+                Placeholders::ENFORCEMENT . 'InvalidArgumentException' . Placeholders::PLACEHOLDER_CLOSE .
                 '\AppserverIo\Doppelgaenger\ContractContext::close();
                 return false;
                 } else {' .
 
-                ReservedKeywords::FAILURE_VARIABLE . ' = "accessing $name as it does not exist";' .
-                Placeholders::PROCESSING . 'MissingPropertyException' . Placeholders::PLACEHOLDER_CLOSE .
+                ReservedKeywords::FAILURE_VARIABLE . '[] = "accessing $name as it does not exist";' .
+                Placeholders::ENFORCEMENT . 'MissingPropertyException' . Placeholders::PLACEHOLDER_CLOSE .
                 '\AppserverIo\Doppelgaenger\ContractContext::close();
                 return false;
                 }';
@@ -272,8 +274,8 @@ class InvariantFilter extends AbstractFilter
 
                     } else {' .
 
-            ReservedKeywords::FAILURE_VARIABLE . ' = "accessing $name in an invalid way";' .
-            Placeholders::PROCESSING . 'InvalidArgumentException' . Placeholders::PLACEHOLDER_CLOSE .
+            ReservedKeywords::FAILURE_VARIABLE . '[] = "accessing $name in an invalid way";' .
+            Placeholders::ENFORCEMENT . 'InvalidArgumentException' . Placeholders::PLACEHOLDER_CLOSE .
             '\AppserverIo\Doppelgaenger\ContractContext::close();
             return false;
             }
@@ -286,8 +288,8 @@ class InvariantFilter extends AbstractFilter
 
                 default :' .
 
-            ReservedKeywords::FAILURE_VARIABLE . ' = "accessing $name in an invalid way";' .
-            Placeholders::PROCESSING . 'InvalidArgumentException' . Placeholders::PLACEHOLDER_CLOSE .
+            ReservedKeywords::FAILURE_VARIABLE . '[] = "accessing $name in an invalid way";' .
+            Placeholders::ENFORCEMENT . 'InvalidArgumentException' . Placeholders::PLACEHOLDER_CLOSE .
             '\AppserverIo\Doppelgaenger\ContractContext::close();
             return false;
             break;
@@ -314,7 +316,7 @@ class InvariantFilter extends AbstractFilter
      *
      * @return string
      */
-    private function generateGetCode($hasParents, $injected = false)
+    protected function generateGetCode($hasParents, $injected = false)
     {
 
         // We only need the method header if we don't inject
@@ -329,8 +331,9 @@ class InvariantFilter extends AbstractFilter
         } else {
             $code = '';
         }
-        $code .=
-            '// Does this property even exist? If not, throw an exception
+        $code .= ReservedKeywords::FAILURE_VARIABLE . ' = array();
+            ' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ' = array();
+            // Does this property even exist? If not, throw an exception
             if (!isset($this->' . ReservedKeywords::ATTRIBUTE_STORAGE . '[$name])) {';
 
         if ($hasParents) {
@@ -338,14 +341,14 @@ class InvariantFilter extends AbstractFilter
         } else {
             $code .= 'if (property_exists($this, $name)) {' .
 
-                ReservedKeywords::FAILURE_VARIABLE . ' = "accessing $name in an invalid way";' .
-                Placeholders::PROCESSING . 'InvalidArgumentException' . Placeholders::PLACEHOLDER_CLOSE .
+                ReservedKeywords::FAILURE_VARIABLE . '[] = "accessing $name in an invalid way";' .
+                Placeholders::ENFORCEMENT . 'InvalidArgumentException' . Placeholders::PLACEHOLDER_CLOSE .
                 '\AppserverIo\Doppelgaenger\ContractContext::close();
                 return false;
                 } else {' .
 
-                ReservedKeywords::FAILURE_VARIABLE . ' = "accessing $name as it does not exist";' .
-                Placeholders::PROCESSING . 'MissingPropertyException' . Placeholders::PLACEHOLDER_CLOSE .
+                ReservedKeywords::FAILURE_VARIABLE . '[] = "accessing $name as it does not exist";' .
+                Placeholders::ENFORCEMENT . 'MissingPropertyException' . Placeholders::PLACEHOLDER_CLOSE .
                 '\AppserverIo\Doppelgaenger\ContractContext::close();
                 return false;
                 }';
@@ -365,8 +368,8 @@ class InvariantFilter extends AbstractFilter
 
                 } else {' .
 
-            ReservedKeywords::FAILURE_VARIABLE . ' = "accessing $name in an invalid way";' .
-            Placeholders::PROCESSING . 'InvalidArgumentException' . Placeholders::PLACEHOLDER_CLOSE .
+            ReservedKeywords::FAILURE_VARIABLE . '[] = "accessing $name in an invalid way";' .
+            Placeholders::ENFORCEMENT . 'InvalidArgumentException' . Placeholders::PLACEHOLDER_CLOSE .
             '\AppserverIo\Doppelgaenger\ContractContext::close();
             return false;}
                 break;
@@ -378,8 +381,8 @@ class InvariantFilter extends AbstractFilter
 
             default :' .
 
-            ReservedKeywords::FAILURE_VARIABLE . ' = "accessing $name in an invalid way";' .
-            Placeholders::PROCESSING . 'InvalidArgumentException' . Placeholders::PLACEHOLDER_CLOSE .
+            ReservedKeywords::FAILURE_VARIABLE . '[] = "accessing $name in an invalid way";' .
+            Placeholders::ENFORCEMENT . 'InvalidArgumentException' . Placeholders::PLACEHOLDER_CLOSE .
             '\AppserverIo\Doppelgaenger\ContractContext::close();
             return false;
             break;
@@ -401,7 +404,7 @@ class InvariantFilter extends AbstractFilter
      *
      * @return boolean
      */
-    private function injectInvariantCall(& $bucketData)
+    protected function injectInvariantCall(& $bucketData)
     {
         $code = 'if (' . ReservedKeywords::CONTRACT_CONTEXT . ' === true) {
             $this->' . ReservedKeywords::CLASS_INVARIANT . '(__METHOD__);}';
@@ -424,10 +427,13 @@ class InvariantFilter extends AbstractFilter
      *
      * @return string
      */
-    private function generateFunctionCode(TypedListList $assertionLists)
+    protected function generateFunctionCode(TypedListList $assertionLists)
     {
         $code = 'protected function ' . ReservedKeywords::CLASS_INVARIANT . '($callingMethod) {' .
-            ReservedKeywords::CONTRACT_CONTEXT . ' = \AppserverIo\Doppelgaenger\ContractContext::open();if (' . ReservedKeywords::CONTRACT_CONTEXT . ') {';
+            ReservedKeywords::CONTRACT_CONTEXT . ' = \AppserverIo\Doppelgaenger\ContractContext::open();
+            if (' . ReservedKeywords::CONTRACT_CONTEXT . ') {
+            ' . ReservedKeywords::FAILURE_VARIABLE . ' = array();
+            ' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ' = array();';
 
         $conditionCounter = 0;
         $invariantIterator = $assertionLists->getIterator();
@@ -446,9 +452,8 @@ class InvariantFilter extends AbstractFilter
 
                 // generate the check for assertions results
                 if ($conditionCounter > 0) {
-                    $code .= 'if (!empty(' . ReservedKeywords::FAILURE_VARIABLE . ')) {' .
-                        ReservedKeywords::FAILURE_VARIABLE . ' = implode(" and ", ' . ReservedKeywords::FAILURE_VARIABLE . ');' .
-                        Placeholders::PROCESSING . 'invariant' . Placeholders::PLACEHOLDER_CLOSE . '
+                    $code .= 'if (!empty(' . ReservedKeywords::FAILURE_VARIABLE . ') || !empty(' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE .')) {' .
+                        Placeholders::ENFORCEMENT . 'invariant' . Placeholders::PLACEHOLDER_CLOSE . '
                 }';
                 }
             }

@@ -1,9 +1,8 @@
 {
-	"enforcement":
-	{
-		"dirs":
-		[
-			"./../tests/Tests"
-		]
-	}
+    "enforcement": {
+        "dirs": [
+            "./../tests/Tests"
+        ],
+        "logger": "\\AppserverIo\\Doppelgaenger\\Tests\\TestExceptionLogger"
+    }
 }

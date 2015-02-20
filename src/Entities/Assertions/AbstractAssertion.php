@@ -23,7 +23,6 @@ namespace AppserverIo\Doppelgaenger\Entities\Assertions;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 use AppserverIo\Doppelgaenger\Exceptions\ParserException;
 use AppserverIo\Doppelgaenger\Interfaces\AssertionInterface;
-use AppserverIo\Doppelgaenger\Interfaces\CodifyableInterface;
 use AppserverIo\Doppelgaenger\Utils\PhpLint;
 
 /**
@@ -35,7 +34,7 @@ use AppserverIo\Doppelgaenger\Utils\PhpLint;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
-abstract class AbstractAssertion implements AssertionInterface, CodifyableInterface
+abstract class AbstractAssertion implements AssertionInterface
 {
     /**
      * Minimal scope is "function" per default as we don't have DbC checks right know (would be body)
@@ -45,9 +44,18 @@ abstract class AbstractAssertion implements AssertionInterface, CodifyableInterf
     const DEFAULT_MIN_SCOPE = 'function';
 
     /**
-     * @var boolean $inverted If the logical meaning was inverted
+     * If the logical meaning was inverted
+     *
+     * @var boolean $inverted
      */
     protected $inverted;
+
+    /**
+     * If the error message produced by the assertion does not require wrapping by enforcement mechanisms
+     *
+     * @var boolean $needsWrapping
+     */
+    protected $needsWrapping;
 
     /**
      * If the assertion is only used in a private context. This will be used for inheritance to determine which

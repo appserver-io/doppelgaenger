@@ -1,3 +1,14 @@
+# Version 1.2.0
+
+## Bugfixes
+
+* Fixed typo within class name "TraitDefinition"
+
+## Features
+
+* Introduced assertions which allow for unwrapped error messages to not expose system internals
+* Added structure and method based override for enforcement processing configuration based on annotations
+
 # Version 1.1.0
 
 ## Bugfixes

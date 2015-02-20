@@ -86,6 +86,18 @@ class BasicTestClass
     }
 
     /**
+     * @param string $ourString
+     *
+     * @Ensures("$dgResult === 'Welcome stranger'")
+     *
+     * @return string
+     */
+    public function stringToWelcomeUnchecked($ourString)
+    {
+        return "Welcome " . $ourString;
+    }
+
+    /**
      *
      */
     public function iBreakTheInvariant()

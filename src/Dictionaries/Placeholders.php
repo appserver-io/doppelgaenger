@@ -67,6 +67,13 @@ class Placeholders
     const BEFORE_JOINPOINT = '/* DOPPELGAENGER_BEFORE_JOINPOINT ';
 
     /**
+     * Placeholder to insert the actual processing of needed contract enforcing
+     *
+     * @var string ENFORCEMENT
+     */
+    const ENFORCEMENT = '/* DOPPELGAENGER_ENFORCEMENT_PLACEHOLDER ';
+
+    /**
      * Placeholder for a hook right after the structure head at which functions might be inserted
      *
      * @var string FUNCTION_HOOK
@@ -138,13 +145,6 @@ class Placeholders
      * @var string PRECONDITION
      */
     const PRECONDITION = '/* DOPPELGAENGER_PRECONDITION_PLACEHOLDER ';
-
-    /**
-     * Placeholder to insert the actual processing of needed contract enforcing
-     *
-     * @var string PROCESSING
-     */
-    const PROCESSING = '/* DOPPELGAENGER_PROCESSING_PLACEHOLDER ';
 
     /**
      * Placeholder for injection of additional methods, properties, etc.

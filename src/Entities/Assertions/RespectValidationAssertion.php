@@ -48,9 +48,9 @@ class RespectValidationAssertion extends RawAssertion
             }
         } catch (\Respect\Validation\Exceptions\ExceptionInterface $e) {
             if ($e instanceof \Respect\Validation\Exceptions\NestedValidationExceptionInterface) {
-                ' . ReservedKeywords::FAILURE_VARIABLE . '[] = $e->getFullMessage();
+                ' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . '[] = $e->getFullMessage();
             } else {
-                ' . ReservedKeywords::FAILURE_VARIABLE . '[] = $e->getMainMessage();
+                ' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . '[] = $e->getMainMessage();
             }
         }';
 

@@ -90,7 +90,7 @@ class PostconditionFilter extends AbstractFilter
                         $this->injectOldCode($bucket->data, $functionDefinition);
 
                         // Get the code for the assertions
-                        $code = $this->generateCode($functionDefinition->getAllPostconditions());
+                        $code = $this->generateCode($functionDefinition->getAllPostconditions(), $functionName);
 
                         // Insert the code
                         $bucket->data = str_replace(
@@ -126,7 +126,7 @@ class PostconditionFilter extends AbstractFilter
      *
      * @return boolean
      */
-    private function injectOldCode(& $bucketData, FunctionDefinition & $functionDefinition)
+    protected function injectOldCode(& $bucketData, FunctionDefinition & $functionDefinition)
     {
         // Do we even need to do anything?
         if ($functionDefinition->usesOld() !== true) {
@@ -153,14 +153,17 @@ class PostconditionFilter extends AbstractFilter
      * Will generate the code needed to enforce made postcondition assertions
      *
      * @param \AppserverIo\Doppelgaenger\Entities\Lists\TypedListList $assertionLists List of assertion lists
+     * @param string                                                  $functionName   The name of the function for which we create the enforcement code
      *
      * @return string
      */
-    private function generateCode(TypedListList $assertionLists)
+    protected function generateCode(TypedListList $assertionLists, $functionName)
     {
         // We only use contracting if we're not inside another contract already
         $code = '/* BEGIN OF POSTCONDITION ENFORCEMENT */
-        if (' . ReservedKeywords::CONTRACT_CONTEXT . ') {';
+        if (' . ReservedKeywords::CONTRACT_CONTEXT . ') {' .
+            ReservedKeywords::FAILURE_VARIABLE . ' = array();' .
+            ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ' = array();';
 
         // We need a counter to check how much conditions we got
         $conditionCounter = 0;
@@ -186,9 +189,8 @@ class PostconditionFilter extends AbstractFilter
 
             // generate the check for assertions results
             if ($conditionCounter > 0) {
-                $code .= 'if (!empty(' . ReservedKeywords::FAILURE_VARIABLE . ')) {' .
-                    ReservedKeywords::FAILURE_VARIABLE . ' = implode(" and ", ' . ReservedKeywords::FAILURE_VARIABLE . ');' .
-                    Placeholders::PROCESSING . 'postcondition' . Placeholders::PLACEHOLDER_CLOSE . '
+                $code .= 'if (!empty(' . ReservedKeywords::FAILURE_VARIABLE . ') || !empty(' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ')) {' .
+                    Placeholders::ENFORCEMENT . $functionName . 'postcondition' . Placeholders::PLACEHOLDER_CLOSE . '
                 }';
             }
 
