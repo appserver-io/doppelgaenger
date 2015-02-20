@@ -21,6 +21,8 @@
 namespace AppserverIo\Doppelgaenger\Tests\Functional;
 
 use AppserverIo\Doppelgaenger\Tests\Data\AroundAdviceTestClass;
+use AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\CustomProcessingTestClass;
+use AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\LocalCustomProcessingTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\TagPlacementTestClass;
 
 /**
@@ -115,5 +117,59 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         $testClass->countedBeforeAdvisedMethod();
         $this->assertSame(1, AroundAdviceTestClass::$testableState1);
         $this->assertSame(2, AroundAdviceTestClass::$testableState2);
+    }
+
+    /**
+     * Will test if we can enable custom enforcement processing on class level using the @Processing annotation
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Doppelgaenger\Tests\TestLoggerUsedException
+     */
+    public function testCustomClassProcessing()
+    {
+        $testCase = new CustomProcessingTestClass();
+        $testCase->iHaveNoCustomProcessing();
+    }
+
+    /**
+     * Will test if we can enable custom enforcement processing on method level using the @Processing annotation
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException
+     */
+    public function testCustomMethodProcessing()
+    {
+        $testCase = new CustomProcessingTestClass();
+        $testCase->iHaveACustomExceptionProcessing();
+    }
+
+    /**
+     * Will test if we can enable custom enforcement processing on method level using the @Processing annotation
+     * without any annotation within the class doc block
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Doppelgaenger\Tests\TestLoggerUsedException
+     */
+    public function testCustomMethodOnlyProcessing1()
+    {
+        $testCase = new LocalCustomProcessingTestClass();
+        $testCase->iHaveACustomLoggingProcessing();
+    }
+
+    /**
+     * Will test if we can enable custom enforcement processing on method level using the @Processing annotation
+     * without any annotation within the class doc block
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException
+     */
+    public function testCustomMethodOnlyProcessing2()
+    {
+        $testCase = new LocalCustomProcessingTestClass();
+        $testCase->iHaveACustomExceptionProcessing();
     }
 }

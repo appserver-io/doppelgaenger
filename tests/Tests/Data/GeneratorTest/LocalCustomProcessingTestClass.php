@@ -1,7 +1,7 @@
 <?php
 
 /**
- * \AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\CustomProcessingTestClass
+ * \AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\LocalCustomProcessingTestClass
  *
  * NOTICE OF LICENSE
  *
@@ -28,10 +28,8 @@ namespace AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest;
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
- *
- * @Processing("logging")
  */
-class CustomProcessingTestClass
+class LocalCustomProcessingTestClass
 {
 
     /**
@@ -45,8 +43,9 @@ class CustomProcessingTestClass
 
     /**
      * @Ensures("$dgResult === 'This will never work'")
+     * @Processing("logging")
      */
-    public function iHaveNoCustomProcessing()
+    public function iHaveACustomLoggingProcessing()
     {
 
     }

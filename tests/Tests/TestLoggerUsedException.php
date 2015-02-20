@@ -1,7 +1,7 @@
 <?php
 
 /**
- * \AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\CustomProcessingTestClass
+ * \AppserverIo\Doppelgaenger\Tests\TestLoggerUsedException
  *
  * NOTICE OF LICENSE
  *
@@ -18,36 +18,17 @@
  * @link      http://www.appserver.io/
  */
 
-namespace AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest;
+namespace AppserverIo\Doppelgaenger\Tests;
 
 /**
- * Class used to test the functionality of the RespectValidation assertion type
+ * Exception used for log testing
  *
  * @author    Bernhard Wick <bw@appserver.io>
  * @copyright 2015 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
- *
- * @Processing("logging")
  */
-class CustomProcessingTestClass
+class TestLoggerUsedException extends \Exception
 {
-
-    /**
-     * @Ensures("$dgResult === 'This will never work'")
-     * @Processing("exception")
-     */
-    public function iHaveACustomExceptionProcessing()
-    {
-
-    }
-
-    /**
-     * @Ensures("$dgResult === 'This will never work'")
-     */
-    public function iHaveNoCustomProcessing()
-    {
-
-    }
 }

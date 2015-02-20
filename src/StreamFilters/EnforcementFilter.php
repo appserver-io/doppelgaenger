@@ -231,8 +231,13 @@ class EnforcementFilter extends AbstractFilter
                 // Create the code
                 $code .= $errorCollectionCode .
                     '$container = new \AppserverIo\Doppelgaenger\Utils\InstanceContainer();
-                    $logger = $container[' . ReservedKeywords::LOGGER_CONTAINER_ENTRY . '];
-                    $logger->error(' . ReservedKeywords::FAILURE_VARIABLE . ');';
+                    $logger = @$container[\'' . ReservedKeywords::LOGGER_CONTAINER_ENTRY . '\'];
+                    if (is_null($logger)) {
+                        error_log(' . ReservedKeywords::FAILURE_VARIABLE . ');
+                    } else {
+                        $logger->error(' . ReservedKeywords::FAILURE_VARIABLE . ');
+                    }';
+
                 break;
 
             default:
