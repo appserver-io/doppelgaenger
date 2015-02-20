@@ -68,6 +68,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
      * @return null
      *
      * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenInvariantException
+     * @expectedExceptionMessageRegExp /Failed invariant .+/
      */
     public function testInvariantBreaks()
     {
@@ -93,6 +94,7 @@ class BasicTest extends \PHPUnit_Framework_TestCase
      * @return null
      *
      * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPreconditionException
+     * @expectedExceptionMessageRegExp /Failed precondition .+/
      */
     public function testParamTypingSinglePrecondition1()
     {
@@ -121,5 +123,18 @@ class BasicTest extends \PHPUnit_Framework_TestCase
     public function testParamTypingMultiplePreconditions()
     {
         $this->testClass->concatSomeStuff("26", array(), new \Exception());
+    }
+
+    /**
+     * Will test enforcement of ensured method logic
+     *
+     * @return null
+     *
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException
+     * @expectedExceptionMessageRegExp /Failed postcondition .+/
+     */
+    public function testBrokenPostcondition()
+    {
+        $this->testClass->stringToWelcomeUnchecked('wrong person');
     }
 }
