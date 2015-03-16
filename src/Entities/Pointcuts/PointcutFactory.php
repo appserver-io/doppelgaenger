@@ -143,12 +143,7 @@ class PointcutFactory
 
             // if we are already in a wrapping connector pointcut then we will cut it off as those are not distinguished
             // by type but rather by their connector
-            if (strpos($expression, AndPointcut::TYPE) === 0) {
-                $expression = str_replace(AndPointcut::TYPE, '', $expression);
-
-            } elseif (strpos($expression, OrPointcut::TYPE) === 0) {
-                $expression = str_replace(OrPointcut::TYPE, '', $expression);
-            }
+            $expression = $this->trimConnectorTypes($expression);
 
             // now lets have a look if we are wrapped in some outer brackets
             if (strlen($expression) === $this->getBracketSpan($expression)) {
@@ -164,7 +159,7 @@ class PointcutFactory
                 }
             }
 
-            // or-connection comes secondly
+            // or-connection comes second
             if (strpos($expression, OrPointcut::CONNECTOR) !== false) {
                 $class = '\AppserverIo\Doppelgaenger\Entities\Pointcuts\OrPointcut';
                 $tmp = $this->findConnectorPointcut($expression, $class);
@@ -196,6 +191,24 @@ class PointcutFactory
         $pointcut = new $class(substr(trim(str_replace($type, '', $expression), '( '), 0, -1), $isNegated);
 
         return $pointcut;
+    }
 
+    /**
+     * Will cut of any connector pointcut type as they are distinguished by connector rather than type
+     *
+     * @param string $expression The pointcut expression to trim
+     *
+     * @return string
+     */
+    protected function trimConnectorTypes($expression)
+    {
+        if (strpos($expression, AndPointcut::TYPE) === 0) {
+            $expression = str_replace(AndPointcut::TYPE, '', $expression);
+
+        } elseif (strpos($expression, OrPointcut::TYPE) === 0) {
+            $expression = str_replace(OrPointcut::TYPE, '', $expression);
+        }
+
+        return $expression;
     }
 }

@@ -6,8 +6,7 @@
 
 ## Features
 
-* Introduced assertions which allow for unwrapped error messages to not expose system internals
-* Added structure and method based override for enforcement processing configuration based on annotations
+* Advices can reference several pointcuts now using pointcut(<Name1>, <Name2>) annotation now
 
 # Version 1.2.0
 

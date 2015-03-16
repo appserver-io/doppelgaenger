@@ -167,7 +167,7 @@ class PointcutReferencingTestAspect
     {}
 
     /**
-     * Basic Around advice incrementing the param of the wrapped method
+     * Basic Before advice incrementing the param of the wrapped method
      *
      * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
@@ -189,7 +189,7 @@ class PointcutReferencingTestAspect
     {}
 
     /**
-     * Basic Around advice incrementing the param of the wrapped method
+     * Basic Before advice incrementing the param of the wrapped method
      *
      * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
@@ -205,7 +205,7 @@ class PointcutReferencingTestAspect
     }
 
     /**
-     * Basic Around advice incrementing the param of the wrapped method
+     * Basic Before advice incrementing the param of the wrapped method
      *
      * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
      *
@@ -214,6 +214,35 @@ class PointcutReferencingTestAspect
      * @Before("pointcut(PointcutReferencingIHaveTwoBeforeAdvicesOfTheSameAspect)")
      */
     public static function paramIncrementingAdvice2(MethodInvocationInterface $methodInvocation)
+    {
+        $param = $methodInvocation->getParameters()['param'];
+        $param++;
+        $methodInvocation->setParameters(array('param' => $param));
+    }
+
+    /**
+     * @Pointcut("call(\AppserverIo\Doppelgaenger\Tests\Data\Advised\PointcutReferencingTestClass->iHaveASimpleBeforeAdvice1())")
+     */
+    public function PointcutReferencingIHaveASimpleBeforeAdvice1()
+    {}
+
+    /**
+     * @Pointcut("call(\AppserverIo\Doppelgaenger\Tests\Data\Advised\PointcutReferencingTestClass->iHaveASimpleBeforeAdvice2())")
+     */
+    public function PointcutReferencingIHaveASimpleBeforeAdvice2()
+    {}
+
+    /**
+     * Basic Before advice incrementing the param of the wrapped methods.
+     * Will reference two pointcuts
+     *
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
+     *
+     * @return void
+     *
+     * @Before("pointcut(PointcutReferencingIHaveASimpleBeforeAdvice1, PointcutReferencingIHaveASimpleBeforeAdvice2)")
+     */
+    public static function paramIncrementingSeveralPointcutsAdvice(MethodInvocationInterface $methodInvocation)
     {
         $param = $methodInvocation->getParameters()['param'];
         $param++;

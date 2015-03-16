@@ -71,6 +71,9 @@ class AspectRegister extends AbstractTypedList
      */
     public function lookupAdvice($adviceExpression)
     {
+        // clean the expression
+        $adviceExpression = trim(ltrim(rtrim($adviceExpression, '()'), '\\'));
+
         // if there is an aspect name within the expression we have to filter our search range and cut the expression
         $container = $this->container;
         if (strpos($adviceExpression, '->')) {
@@ -112,7 +115,7 @@ class AspectRegister extends AbstractTypedList
     {
 
         // clean the expression
-        $expression = ltrim(rtrim($expression, '()'), '\\');
+        $expression = trim(ltrim(rtrim($expression, '()'), '\\'));
 
         // if we got the complete name of the aspect we can return it alone
         if ($this->entryExists($expression)) {
@@ -139,6 +142,9 @@ class AspectRegister extends AbstractTypedList
      */
     public function lookupPointcuts($pointcutExpression)
     {
+        // clean the expression
+        $pointcutExpression = trim(ltrim(rtrim($pointcutExpression, '()'), '\\'));
+
         // if there is an aspect name within the expression we have to filter our search range and cut the expression
         $container = $this->container;
         if (strpos($pointcutExpression, '->')) {
@@ -241,7 +247,15 @@ class AspectRegister extends AbstractTypedList
                     $pointcut = $pointcutFactory->getInstance(array_pop($annotation->values));
                     if ($pointcut instanceof PointcutPointcut) {
                         // get the referenced pointcuts for the split parts of the expression
-                        $pointcut->setReferencedPointcuts($this->lookupPointcuts($pointcut->getExpression()));
+                        $expressionParts = explode(PointcutPointcut::EXPRESSION_CONNECTOR, $pointcut->getExpression());
+
+                        // lookup all the referenced pointcuts
+                        $referencedPointcuts = array();
+                        foreach ($expressionParts as $expressionPart) {
+                            $referencedPointcuts = array_merge($referencedPointcuts, $this->lookupPointcuts($expressionPart));
+                        }
+
+                        $pointcut->setReferencedPointcuts($referencedPointcuts);
                     }
 
                     $advice->getPointcuts()->add($pointcut);

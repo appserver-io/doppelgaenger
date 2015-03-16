@@ -182,20 +182,20 @@ class PointcutReferencingTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function testMultipleAfterAdvicesOfSameAspectForOnePointcut()
+    public function testMultipleBeforeAdvicesOfSameAspectForOnePointcut()
     {
         $result = $this->testClass->iHaveTwoBeforeAdvicesOfTheSameAspect(1);
         $this->assertEquals(3, $result);
     }
 
     /**
-     * Tests if multiple around advices with the same name, but from different aspects can be used with one central pointcut
+     * Tests if multiple pointcuts can be referenced by one advice
      *
      * @return void
      */
-    public function testMultipleBeforeAdvicesOfSameAspectForOnePointcut()
+    public function testMultiplePointcutsForOneBeforeAdvice()
     {
-        $result = $this->testClass->iHaveTwoBeforeAdvicesOfTheSameAspect(1);
-        $this->assertEquals(3, $result);
+        $this->assertEquals(2, $this->testClass->iHaveASimpleBeforeAdvice1(1));
+        $this->assertEquals(2, $this->testClass->iHaveASimpleBeforeAdvice2(1));
     }
 }

@@ -173,4 +173,28 @@ class PointcutReferencingTestClass
     {
         return $param;
     }
+
+    /**
+     * Used to test pointcut based weaving of one "Before" advice
+     *
+     * @param integer $param An integer param
+     *
+     * @return integer
+     */
+    public function iHaveASimpleBeforeAdvice1($param)
+    {
+        return $param;
+    }
+
+    /**
+     * Used to test pointcut based weaving of one "Before" advice
+     *
+     * @param integer $param An integer param
+     *
+     * @return integer
+     */
+    public function iHaveASimpleBeforeAdvice2($param)
+    {
+        return $param;
+    }
 }
