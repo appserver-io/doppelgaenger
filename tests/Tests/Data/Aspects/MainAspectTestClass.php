@@ -182,4 +182,36 @@ class MainAspectTestClass
     {
         return true;
     }
+
+    /**
+     * Basic Around advice incrementing the result of the wrapped method
+     *
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
+     *
+     * @return integer
+     *
+     * @Around("pointcut(\AppserverIo\Doppelgaenger\Tests\Data\Aspects\PointcutReferencingTestAspect->PointcutReferencingIHaveTwoAroundAdvicesIncrementingMyResult)")
+     */
+    public static function incrementResultAdvice(MethodInvocationInterface $methodInvocation)
+    {
+        $result = (int) $methodInvocation->proceed();
+        $result++;
+        return $result;
+    }
+
+    /**
+     * Basic Around advice incrementing the param of the wrapped method
+     *
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
+     *
+     * @return void
+     *
+     * @Before("pointcut(\AppserverIo\Doppelgaenger\Tests\Data\Aspects\PointcutReferencingTestAspect->PointcutReferencingIHaveTwoBeforeAdvicesIncrementingTheParam)")
+     */
+    public static function paramIncrementingAdvice(MethodInvocationInterface $methodInvocation)
+    {
+        $param = $methodInvocation->getParameters()['param'];
+        $param++;
+        $methodInvocation->setParameters(array('param' => $param));
+    }
 }

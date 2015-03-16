@@ -137,4 +137,86 @@ class PointcutReferencingTestAspect
         $methodInvocation->proceed();
         PointcutReferencingTestClass::$staticStorage = clone $methodInvocation;
     }
+
+    /**
+     * @Pointcut("call(\AppserverIo\Doppelgaenger\Tests\Data\Advised\PointcutReferencingTestClass->iHaveTwoAroundAdvicesIncrementingMyResult())")
+     */
+    public function PointcutReferencingIHaveTwoAroundAdvicesIncrementingMyResult()
+    {}
+
+    /**
+     * Basic Around advice incrementing the result of the wrapped method
+     *
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
+     *
+     * @return integer
+     *
+     * @Around("pointcut(PointcutReferencingIHaveTwoAroundAdvicesIncrementingMyResult)")
+     */
+    public static function incrementResultAdvice(MethodInvocationInterface $methodInvocation)
+    {
+        $result = (int) $methodInvocation->proceed();
+        $result++;
+        return $result;
+    }
+
+    /**
+     * @Pointcut("call(\AppserverIo\Doppelgaenger\Tests\Data\Advised\PointcutReferencingTestClass->iHaveTwoBeforeAdvices())")
+     */
+    public function PointcutReferencingIHaveTwoBeforeAdvicesIncrementingTheParam()
+    {}
+
+    /**
+     * Basic Around advice incrementing the param of the wrapped method
+     *
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
+     *
+     * @return void
+     *
+     * @Before("pointcut(PointcutReferencingIHaveTwoBeforeAdvicesIncrementingTheParam)")
+     */
+    public static function paramIncrementingAdvice(MethodInvocationInterface $methodInvocation)
+    {
+        $param = $methodInvocation->getParameters()['param'];
+        $param++;
+        $methodInvocation->setParameters(array('param' => $param));
+    }
+
+    /**
+     * @Pointcut("call(\AppserverIo\Doppelgaenger\Tests\Data\Advised\PointcutReferencingTestClass->iHaveTwoBeforeAdvicesOfTheSameAspect())")
+     */
+    public function PointcutReferencingIHaveTwoBeforeAdvicesOfTheSameAspect()
+    {}
+
+    /**
+     * Basic Around advice incrementing the param of the wrapped method
+     *
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
+     *
+     * @return void
+     *
+     * @Before("pointcut(PointcutReferencingIHaveTwoBeforeAdvicesOfTheSameAspect)")
+     */
+    public static function paramIncrementingAdvice1(MethodInvocationInterface $methodInvocation)
+    {
+        $param = $methodInvocation->getParameters()['param'];
+        $param++;
+        $methodInvocation->setParameters(array('param' => $param));
+    }
+
+    /**
+     * Basic Around advice incrementing the param of the wrapped method
+     *
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
+     *
+     * @return void
+     *
+     * @Before("pointcut(PointcutReferencingIHaveTwoBeforeAdvicesOfTheSameAspect)")
+     */
+    public static function paramIncrementingAdvice2(MethodInvocationInterface $methodInvocation)
+    {
+        $param = $methodInvocation->getParameters()['param'];
+        $param++;
+        $methodInvocation->setParameters(array('param' => $param));
+    }
 }

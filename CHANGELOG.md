@@ -1,3 +1,14 @@
+# Version 1.3.0
+
+## Bugfixes
+
+* Multiple before advices have not been stacked correctly
+
+## Features
+
+* Introduced assertions which allow for unwrapped error messages to not expose system internals
+* Added structure and method based override for enforcement processing configuration based on annotations
+
 # Version 1.2.0
 
 ## Bugfixes

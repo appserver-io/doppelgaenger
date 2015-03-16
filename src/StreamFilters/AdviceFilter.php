@@ -173,35 +173,37 @@ class AdviceFilter extends AbstractFilter
                     $bucketData
                 );
 
-            } elseif ($joinpoint === Before::ANNOTATION) {
-                // before advices have to be woven differently as we have to take changes of the call parameters into account
-
-                // we have to build up an assignment of the potentially altered parameters in our method invocation object
-                // to the original parameters of the method call.
-                // This way we can avoid e.g. broken references by func_get_args and other problems
-                $parameterNames = array();
-                foreach ($functionDefinition->getParameterDefinitions() as $parameterDefinition) {
-                    $parameterNames[] = $parameterDefinition->name;
-                }
-                $parameterAssignmentCode = 'list(' .
-                    implode(',', $parameterNames) .
-                    ') = array_values(' . ReservedKeywords::METHOD_INVOCATION_OBJECT . '->getParameters());';
-
-                $pointcutExpression = $pointcutExpressions[0];
-                $bucketData = str_replace(
-                    $placeholderHook,
-                    $placeholderHook . $pointcutExpression->toCode() . $parameterAssignmentCode,
-                    $bucketData
-                );
-
             } else {
                 // iterate all the others and inject the code
                 foreach ($pointcutExpressions as $pointcutExpression) {
-                    $bucketData = str_replace(
-                        $placeholderHook,
-                        $placeholderHook . $pointcutExpression->toCode(),
-                        $bucketData
-                    );
+                    if ($joinpoint === Before::ANNOTATION) {
+                        // before advices have to be woven differently as we have to take changes of the call parameters into account
+
+                        // we have to build up an assignment of the potentially altered parameters in our method invocation object
+                        // to the original parameters of the method call.
+                        // This way we can avoid e.g. broken references by func_get_args and other problems
+                        $parameterNames = array();
+                        foreach ($functionDefinition->getParameterDefinitions() as $parameterDefinition) {
+                            $parameterNames[] = $parameterDefinition->name;
+                        }
+                        $parameterAssignmentCode = 'list(' .
+                            implode(',', $parameterNames) .
+                            ') = array_values(' . ReservedKeywords::METHOD_INVOCATION_OBJECT . '->getParameters());';
+
+                        $bucketData = str_replace(
+                            $placeholderHook,
+                            $placeholderHook . $pointcutExpression->toCode() . $parameterAssignmentCode,
+                            $bucketData
+                        );
+
+                    } else {
+                        // all join-point NOT Before or Around can be woven very simply
+                        $bucketData = str_replace(
+                            $placeholderHook,
+                            $placeholderHook . $pointcutExpression->toCode(),
+                            $bucketData
+                        );
+                    }
                 }
             }
         }

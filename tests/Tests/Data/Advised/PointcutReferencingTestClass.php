@@ -139,4 +139,38 @@ class PointcutReferencingTestClass
     {
         return 'iHaveAnAroundAdvice';
     }
+
+    /**
+     * Used to test pointcut based weaving of several "Around" advices
+     *
+     * @return integer
+     */
+    public function iHaveTwoAroundAdvicesIncrementingMyResult()
+    {
+        return 1;
+    }
+
+    /**
+     * Used to test pointcut based weaving of several "Before" advices
+     *
+     * @param integer $param An integer param
+     *
+     * @return integer
+     */
+    public function iHaveTwoBeforeAdvices($param)
+    {
+        return $param;
+    }
+
+    /**
+     * Used to test pointcut based weaving of several "Before" advices
+     *
+     * @param integer $param An integer param
+     *
+     * @return integer
+     */
+    public function iHaveTwoBeforeAdvicesOfTheSameAspect($param)
+    {
+        return $param;
+    }
 }

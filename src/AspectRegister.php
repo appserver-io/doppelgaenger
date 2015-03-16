@@ -59,7 +59,7 @@ class AspectRegister extends AbstractTypedList
         parent::__construct();
 
         $this->itemType = '\AppserverIo\Doppelgaenger\Entities\Definitions\Aspect';
-        $this->defaultOffset = 'name';
+        $this->defaultOffset = 'qualifiedName';
     }
 
     /**
@@ -110,6 +110,10 @@ class AspectRegister extends AbstractTypedList
      */
     protected function lookupEntries($container, $expression)
     {
+
+        // clean the expression
+        $expression = ltrim(rtrim($expression, '()'), '\\');
+
         // if we got the complete name of the aspect we can return it alone
         if ($this->entryExists($expression)) {
             return array($this->get($expression));
@@ -118,7 +122,7 @@ class AspectRegister extends AbstractTypedList
         // as it seems we got something else we have to get all regex about
         $matches = array();
         foreach ($container as $entry) {
-            if (fnmatch(ltrim(rtrim($expression, '()'), '\\'), $entry->getQualifiedName())) {
+            if (fnmatch($expression, $entry->getQualifiedName())) {
                 $matches[] = $entry;
             }
         }
@@ -247,6 +251,6 @@ class AspectRegister extends AbstractTypedList
             }
         }
 
-        $this->set($aspect->getName(), $aspect);
+        $this->set($aspectDefinition->getQualifiedName(), $aspect);
     }
 }
