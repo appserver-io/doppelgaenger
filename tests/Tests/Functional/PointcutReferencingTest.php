@@ -21,7 +21,6 @@
 namespace AppserverIo\Doppelgaenger\Tests\Functional;
 
 use AppserverIo\Doppelgaenger\Tests\Data\Advised\PointcutReferencingTestClass;
-use AppserverIo\Doppelgaenger\Tests\Data\Aspects\PointcutReferencingTestAspect;
 
 /**
  * Test class which will test if we can reference the correct methods using pointcuts
@@ -43,18 +42,9 @@ class PointcutReferencingTest extends \PHPUnit_Framework_TestCase
     protected $testClass;
 
     /**
-     * Default constructor
-     */
-    public function __construct()
-    {
-        // pipe the aspect through the generator to make it known
-        new PointcutReferencingTestAspect();
-    }
-
-    /**
      * Set up our test class
      *
-     * @return null
+     * @return void
      */
     public function setUp()
     {
@@ -65,7 +55,7 @@ class PointcutReferencingTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests if a Before advice gets woven at its correct position
      *
-     * @return null
+     * @return void
      */
     public function testPointcutBeforeSelection()
     {
@@ -80,7 +70,7 @@ class PointcutReferencingTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests if a After advice gets woven at its correct position
      *
-     * @return null
+     * @return void
      *
      * @throws \Exception
      *
@@ -111,7 +101,7 @@ class PointcutReferencingTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests if a AfterReturning advice gets woven at its correct position
      *
-     * @return null
+     * @return void
      *
      * @throws \Exception
      *
@@ -140,7 +130,7 @@ class PointcutReferencingTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests if a AfterThrowing advice gets woven at its correct position
      *
-     * @return null
+     * @return void
      *
      * @throws \Exception
      *
@@ -164,5 +154,48 @@ class PointcutReferencingTest extends \PHPUnit_Framework_TestCase
             $this->assertInstanceOf('\Exception', $methodInvocation->getThrownException());
             throw $e;
         }
+    }
+
+    /**
+     * Tests if multiple around advices with the same name, but from different aspects can be used with one central pointcut
+     *
+     * @return void
+     */
+    public function testMultipleAroundAdvicesForOnePointcut()
+    {
+        $this->assertEquals(3, $this->testClass->iHaveTwoAroundAdvicesIncrementingMyResult());
+    }
+
+    /**
+     * Tests if multiple around advices with the same name, but from different aspects can be used with one central pointcut
+     *
+     * @return void
+     */
+    public function testMultipleBeforeAdvicesForOnePointcut()
+    {
+        $result = $this->testClass->iHaveTwoBeforeAdvices(1);
+        $this->assertEquals(3, $result);
+    }
+
+    /**
+     * Tests if multiple around advices with the same name, but from different aspects can be used with one central pointcut
+     *
+     * @return void
+     */
+    public function testMultipleBeforeAdvicesOfSameAspectForOnePointcut()
+    {
+        $result = $this->testClass->iHaveTwoBeforeAdvicesOfTheSameAspect(1);
+        $this->assertEquals(3, $result);
+    }
+
+    /**
+     * Tests if multiple pointcuts can be referenced by one advice
+     *
+     * @return void
+     */
+    public function testMultiplePointcutsForOneBeforeAdvice()
+    {
+        $this->assertEquals(2, $this->testClass->iHaveASimpleBeforeAdvice1(1));
+        $this->assertEquals(2, $this->testClass->iHaveASimpleBeforeAdvice2(1));
     }
 }

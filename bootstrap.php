@@ -42,3 +42,7 @@ foreach (scandir($cacheDir) as $cachedFile) {
 
     unlink($cacheDir . DIRECTORY_SEPARATOR . $cachedFile);
 }
+
+// make the aspects known
+new \AppserverIo\Doppelgaenger\Tests\Data\Aspects\PointcutReferencingTestAspect();
+new \AppserverIo\Doppelgaenger\Tests\Data\Aspects\MainAspectTestClass();

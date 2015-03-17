@@ -59,7 +59,7 @@ class AspectRegister extends AbstractTypedList
         parent::__construct();
 
         $this->itemType = '\AppserverIo\Doppelgaenger\Entities\Definitions\Aspect';
-        $this->defaultOffset = 'name';
+        $this->defaultOffset = 'qualifiedName';
     }
 
     /**
@@ -71,6 +71,9 @@ class AspectRegister extends AbstractTypedList
      */
     public function lookupAdvice($adviceExpression)
     {
+        // clean the expression
+        $adviceExpression = trim(ltrim(rtrim($adviceExpression, '()'), '\\'));
+
         // if there is an aspect name within the expression we have to filter our search range and cut the expression
         $container = $this->container;
         if (strpos($adviceExpression, '->')) {
@@ -110,6 +113,10 @@ class AspectRegister extends AbstractTypedList
      */
     protected function lookupEntries($container, $expression)
     {
+
+        // clean the expression
+        $expression = trim(ltrim(rtrim($expression, '()'), '\\'));
+
         // if we got the complete name of the aspect we can return it alone
         if ($this->entryExists($expression)) {
             return array($this->get($expression));
@@ -118,7 +125,7 @@ class AspectRegister extends AbstractTypedList
         // as it seems we got something else we have to get all regex about
         $matches = array();
         foreach ($container as $entry) {
-            if (fnmatch(ltrim(rtrim($expression, '()'), '\\'), $entry->getQualifiedName())) {
+            if (fnmatch($expression, $entry->getQualifiedName())) {
                 $matches[] = $entry;
             }
         }
@@ -135,6 +142,9 @@ class AspectRegister extends AbstractTypedList
      */
     public function lookupPointcuts($pointcutExpression)
     {
+        // clean the expression
+        $pointcutExpression = trim(ltrim(rtrim($pointcutExpression, '()'), '\\'));
+
         // if there is an aspect name within the expression we have to filter our search range and cut the expression
         $container = $this->container;
         if (strpos($pointcutExpression, '->')) {
@@ -237,7 +247,15 @@ class AspectRegister extends AbstractTypedList
                     $pointcut = $pointcutFactory->getInstance(array_pop($annotation->values));
                     if ($pointcut instanceof PointcutPointcut) {
                         // get the referenced pointcuts for the split parts of the expression
-                        $pointcut->setReferencedPointcuts($this->lookupPointcuts($pointcut->getExpression()));
+                        $expressionParts = explode(PointcutPointcut::EXPRESSION_CONNECTOR, $pointcut->getExpression());
+
+                        // lookup all the referenced pointcuts
+                        $referencedPointcuts = array();
+                        foreach ($expressionParts as $expressionPart) {
+                            $referencedPointcuts = array_merge($referencedPointcuts, $this->lookupPointcuts($expressionPart));
+                        }
+
+                        $pointcut->setReferencedPointcuts($referencedPointcuts);
                     }
 
                     $advice->getPointcuts()->add($pointcut);
@@ -247,6 +265,6 @@ class AspectRegister extends AbstractTypedList
             }
         }
 
-        $this->set($aspect->getName(), $aspect);
+        $this->set($aspectDefinition->getQualifiedName(), $aspect);
     }
 }

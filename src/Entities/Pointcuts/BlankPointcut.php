@@ -1,7 +1,7 @@
 <?php
 
 /**
- * \AppserverIo\Doppelgaenger\Entities\Pointcut\PointcutPointcut
+ * \AppserverIo\Doppelgaenger\Entities\Pointcut\BlankPointcut
  *
  * NOTICE OF LICENSE
  *
@@ -20,10 +20,8 @@
 
 namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
 
-use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
-
 /**
- * Pointcut expression for specifying a collection of other pointcuts and annotations expressing them
+ * Dummy pointcut expression as a placeholder if an advice does not specify any explicitly e.g. @Around
  *
  * @author    Bernhard Wick <bw@appserver.io>
  * @copyright 2015 TechDivision GmbH - <info@appserver.io>
@@ -35,13 +33,6 @@ use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
  */
 class BlankPointcut extends AbstractPointcut
 {
-
-    /**
-     * Connector for referencing of several pointcuts at once
-     *
-     * @var string ADD_CONNECTOR
-     */
-    const ADD_CONNECTOR = '&&';
 
     /**
      * Whether or not the pointcut is considered static, meaning is has to be weaved and evaluated during runtime
@@ -89,16 +80,6 @@ class BlankPointcut extends AbstractPointcut
     }
 
     /**
-     * Getter for the $referencedPointcuts property
-     *
-     * @return array
-     */
-    public function getReferencedPointcuts()
-    {
-        return array();
-    }
-
-    /**
      * Whether or not the pointcut matches a given candidate.
      * Weave pointcuts will always return true, as they do not pose any condition
      *
@@ -109,17 +90,5 @@ class BlankPointcut extends AbstractPointcut
     public function matches($candidate)
     {
         return true;
-    }
-
-    /**
-     * Setter for the $referencedPointcuts property
-     *
-     * @param array $referencedPointcuts Pointcuts referenced by this pointcut's expression
-     *
-     * @return null
-     */
-    public function setReferencedPointcuts(array $referencedPointcuts)
-    {
-        $this->referencedPointcuts = $referencedPointcuts;
     }
 }

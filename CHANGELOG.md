@@ -1,3 +1,13 @@
+# Version 1.3.0
+
+## Bugfixes
+
+* Multiple before advices have not been stacked correctly
+
+## Features
+
+* Advices can reference several pointcuts now using pointcut(<Name1>, <Name2>) annotation now
+
 # Version 1.2.0
 
 ## Bugfixes

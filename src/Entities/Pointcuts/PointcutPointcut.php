@@ -39,9 +39,9 @@ class PointcutPointcut extends AbstractPointcut
     /**
      * Connector for referencing of several pointcuts at once
      *
-     * @var string ADD_CONNECTOR
+     * @var string EXPRESSION_CONNECTOR
      */
-    const ADD_CONNECTOR = '&&';
+    const EXPRESSION_CONNECTOR = ',';
 
     /**
      * Whether or not the pointcut is considered static, meaning is has to be weaved and evaluated during runtime
@@ -61,7 +61,7 @@ class PointcutPointcut extends AbstractPointcut
     /**
      * Pointcuts referenced by this pointcut's expression
      *
-     * @var array $referencedPointcuts
+     * @var \AppserverIo\Doppelgaenger\Interfaces\PointcutInterface[] $referencedPointcuts
      */
     protected $referencedPointcuts;
 
@@ -126,7 +126,7 @@ class PointcutPointcut extends AbstractPointcut
     /**
      * Setter for the $referencedPointcuts property
      *
-     * @param array $referencedPointcuts Pointcuts referenced by this pointcut's expression
+     * @param \AppserverIo\Doppelgaenger\Interfaces\PointcutInterface[] $referencedPointcuts Pointcuts referenced by this pointcut's expression
      *
      * @return null
      */
