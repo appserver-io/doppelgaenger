@@ -36,5 +36,10 @@
     },
     "autoload-dev": {
         "psr-4": { "AppserverIo\\Doppelgaenger\\": "tests/" }
-    }
+    },
+    "config" : {
+		"github-oauth" : {
+			"github.com" : "bb0ca6adf013e65b1e630197308621791517b5d8"
+		}
+	}
 }
