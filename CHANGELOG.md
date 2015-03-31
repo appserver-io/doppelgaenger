@@ -1,3 +1,13 @@
+# Version 1.3.1
+
+## Bugfixes
+
+* Fixed [#719](https://github.com/appserver-io/appserver/issues/719) - Around advice chain does break at certain size
+
+## Features
+
+* None
+
 # Version 1.3.0
 
 ## Bugfixes

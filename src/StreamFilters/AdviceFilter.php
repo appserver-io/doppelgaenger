@@ -414,7 +414,8 @@ class AdviceFilter extends AbstractFilter
         }
 
         // filter the combined callback chain to avoid doubled calls to the original implementation
-        for ($i = 0; $i < (count($callbackChain) - 1); $i ++) {
+        $callbackChainCount = (count($callbackChain) - 1);
+        for ($i = 0; $i < $callbackChainCount; $i ++) {
             if ($callbackChain[$i][1] === $functionDefinition->getName()) {
                 unset($callbackChain[$i]);
             }
