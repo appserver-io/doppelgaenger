@@ -32,18 +32,11 @@ use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
+ *
+ * @property \AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface $currentDefinition The current definition we are working on. Assumed to be present in parent
  */
 trait PropertyParserTrait
 {
-
-    /**
-     * The current definition we are working on.
-     * This should be filled during parsing and should be passed down to whatever parser we need so we know about
-     * the current "parent" definition parts.
-     *
-     * @var \AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface $currentDefinition
-     */
-    protected $currentDefinition;
 
     /**
      * Retrieves class attributes from token array.
