@@ -38,6 +38,7 @@ use AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface;
  * @property array                  $usedStructures      All classes which are referenced by the "use" keyword
  * @property string                 $docBlock            The initial class docblock header
  * @property string                 $name                Name of the class
+ * @property array|string           $extends             Parent structures this structure extends from
  * @property FunctionDefinitionList $functionDefinitions List of methods
  */
 abstract class AbstractStructureDefinition extends AbstractDefinition implements StructureDefinitionInterface
@@ -123,7 +124,7 @@ abstract class AbstractStructureDefinition extends AbstractDefinition implements
      *
      * @param boolean $nonPrivateOnly Make this true if you only want conditions which do not have a private context
      *
-     * @return \AppserverIo\Doppelgaenger\Entities\Lists\TypedListList
+     * @return \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList
      */
     public function getInvariants($nonPrivateOnly = false)
     {

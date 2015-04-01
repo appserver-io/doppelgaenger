@@ -92,7 +92,7 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
             return $this->structureDefinitionHierarchy->getEntry($name);
         }
 
-        // First of all we need to get the class tokens
+        // First of all we need to get the structure tokens
         $tokens = $this->getStructureTokens($this->getToken());
 
         // Did we get something valuable?
@@ -100,7 +100,7 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
             return false;
 
         } elseif ($name === null && count($tokens) > 1) {
-            // If we did not get a class name and we got more than one class we can fail right here
+            // If we did not get a structure name and we got more than one class we can fail right here
             return false;
 
         } elseif (count($tokens) === 1) {
@@ -108,7 +108,7 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
             return $this->getDefinitionFromTokens($tokens[0], $getRecursive);
 
         } elseif (is_string($name) && count($tokens) > 1) {
-            // We are still here, but got a class name to look for
+            // We are still here, but got a structure name to look for
 
             foreach ($tokens as $key => $token) {
                 // Now iterate over the array and search for the class we want
@@ -264,8 +264,9 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
         for ($i = 0; $i < $this->tokenCount; $i++) {
             // If we got a class keyword, we have to check how far the class extends,
             // then copy the array withing that bounds
+
             if (is_array($this->tokens[$i]) && $this->tokens[$i][0] === $structureToken) {
-                // The lower bound should be the last semicolon|closing curly bracket|PHP tag before the class
+                // The lower bound should be the last semicolon|closing curly bracket|PHP tag before the structure
                 $lowerBound = 0;
                 for ($j = $i - 1; $j >= 0; $j--) {
                     if ($this->tokens[$j] === ';' || $this->tokens[$j] === '}' ||
@@ -317,39 +318,27 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
     }
 
     /**
-     * Will return the token representing the structure the parser is used for e.g. T_CLASS
-     *
-     * @return integer
-     */
-    public function getToken()
-    {
-        return static::TOKEN;
-    }
-
-    /**
      * Will return an array of structures which this structure references by use statements
      *
      * @return array
-     *
-     * TODO namespaces does not make any sense here, as we are referencing structures!
      */
     public function getUsedStructures()
     {
         // Check the tokens
-        $namespaces = array();
+        $structures = array();
         for ($i = 0; $i < $this->tokenCount; $i++) {
             // If we got a use statement
             if ($this->tokens[$i][0] === T_USE) {
-                $namespace = '';
+                $structure = '';
                 for ($j = $i + 1; $j < count($this->tokens); $j++) {
                     if ($this->tokens[$j][0] === T_STRING) {
-                        $namespace .= '\\' . $this->tokens[$j][1];
+                        $structure .= '\\' . $this->tokens[$j][1];
 
                     } elseif ($this->tokens[$j] === '{' ||
                         $this->tokens[$j] === ';' ||
                         $this->tokens[$j][0] === T_CURLY_OPEN
                     ) {
-                        $namespaces[] = $namespace;
+                        $structures[] = $structure;
                         break;
                     }
                 }
@@ -357,7 +346,7 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
         }
 
         // Return what we did or did not found
-        return $namespaces;
+        return $structures;
     }
 
     /**

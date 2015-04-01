@@ -20,6 +20,7 @@
 
 namespace AppserverIo\Doppelgaenger;
 
+use AppserverIo\Doppelgaenger\Entities\Definitions\AbstractStructureDefinition;
 use AppserverIo\Doppelgaenger\Entities\Definitions\AspectDefinition;
 use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
 use AppserverIo\Doppelgaenger\Entities\Definitions\ClassDefinition;
@@ -194,7 +195,7 @@ class Generator
         // Check if we got something, if not we will default to class
         if (!method_exists($this, $creationMethod)) {
             // per default we will try to create a class definition
-            $creationMethod = 'createFileFromClassDefinition';
+            $creationMethod = 'createFileFromArbitraryDefinition';
         }
 
         return $this->$creationMethod($targetFileName, $structureDefinition);
@@ -216,7 +217,7 @@ class Generator
         $this->aspectRegister->register($aspectDefinition);
 
         // create the new definition
-        return $this->createFileFromClassDefinition($targetFileName, $aspectDefinition);
+        return $this->createFileFromArbitraryDefinition($targetFileName, $aspectDefinition);
     }
 
     /**
@@ -253,14 +254,14 @@ class Generator
     /**
      * Will create a file with the altered class definition as its content
      *
-     * @param string                                                          $targetFileName      The intended name of the new file
-     * @param \AppserverIo\Doppelgaenger\Entities\Definitions\ClassDefinition $structureDefinition The definition of the structure we will alter
+     * @param string                                                                      $targetFileName      The intended name of the new file
+     * @param \AppserverIo\Doppelgaenger\Entities\Definitions\AbstractStructureDefinition $structureDefinition The definition of the structure we will alter
      *
      * @return boolean
      */
-    protected function createFileFromClassDefinition(
+    protected function createFileFromArbitraryDefinition(
         $targetFileName,
-        ClassDefinition $structureDefinition
+        AbstractStructureDefinition $structureDefinition
     ) {
 
         $res = fopen(
@@ -380,12 +381,15 @@ class Generator
             }
         }
 
-        // add the filter used for introductions
-        $filters['IntroductionFilter'] = $this->appendFilter(
-            $res,
-            'AppserverIo\Doppelgaenger\StreamFilters\IntroductionFilter',
-            $structureDefinition->getIntroductions()
-        );
+        // introductions make only sense for classes
+        if ($structureDefinition instanceof ClassDefinition) {
+            // add the filter used for introductions
+            $filters['IntroductionFilter'] = $this->appendFilter(
+                $res,
+                'AppserverIo\Doppelgaenger\StreamFilters\IntroductionFilter',
+                $structureDefinition->getIntroductions()
+            );
+        }
 
         // add the filter we need for our AOP advices
         $filters['AdviceFilter'] = $this->appendFilter(

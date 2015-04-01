@@ -50,6 +50,16 @@ class TraitParser extends AbstractStructureParser
     const TOKEN = T_TRAIT;
 
     /**
+     * Will return the token representing the structure the parser is used for e.g. T_CLASS
+     *
+     * @return integer
+     */
+    public function getToken()
+    {
+        return self::TOKEN;
+    }
+
+    /**
      * Will return the constants within the main token array.
      * Traits cannot have constants sadly...
      *
@@ -92,21 +102,18 @@ class TraitParser extends AbstractStructureParser
         // File based namespaces do not make much sense, so hand it over here.
         $this->currentDefinition->setNamespace($this->getNamespace());
         $this->currentDefinition->setName($this->getName($tokens));
-        $this->currentDefinition->setUsedNamespaces($this->getUsedStructures());
+        $this->currentDefinition->setUsedStructures($this->getUsedStructures());
 
         // For our next step we would like to get the doc comment (if any)
-        $this->currentDefinition->setDocBlock($this->getDocBlock($tokens, T_CLASS));
-
-        // Lets get the attributes the class might have
-        $this->currentDefinition->attributeDefinitions = $this->getAttributes(
-            $tokens
-        );
+        $this->currentDefinition->setDocBlock($this->getDocBlock($tokens, $this->getToken()));
 
         // So we got our docBlock, now we can parse the invariant annotations from it
         $annotationParser = new AnnotationParser($this->file, $this->config, $this->tokens, $this->currentDefinition);
-        $this->currentDefinition->invariantConditions = $annotationParser->getConditions(
-            $this->currentDefinition->getDocBlock(),
-            Invariant::ANNOTATION
+        $this->currentDefinition->setInvariantConditions(
+            $annotationParser->getConditions(
+                $this->currentDefinition->getDocBlock(),
+                Invariant::ANNOTATION
+            )
         );
 
         // Only thing still missing are the methods, so ramp up our FunctionParser
@@ -119,16 +126,15 @@ class TraitParser extends AbstractStructureParser
             $this->tokens
         );
 
-        $this->currentDefinition->functionDefinitions = $functionParser->getDefinitionListFromTokens(
-            $tokens,
-            $getRecursive
+        $this->currentDefinition->setFunctionDefinitions(
+            $functionParser->getDefinitionListFromTokens(
+                $tokens,
+                $getRecursive
+            )
         );
 
         // Lets get the attributes the class might have
-        $this->currentDefinition->attributeDefinitions = $this->getAttributes(
-            $tokens,
-            $this->currentDefinition->getInvariants()
-        );
+        $this->currentDefinition->setAttributeDefinitions($this->getAttributes($tokens));
 
         // Before exiting we will add the entry to the current structure definition hierarchy
         $this->structureDefinitionHierarchy->insert($this->currentDefinition);

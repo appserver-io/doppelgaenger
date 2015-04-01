@@ -32,9 +32,12 @@ use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
+ *
+ * @property \AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface $currentDefinition The current definition we are working on. Assumed to be present in parent
  */
 trait PropertyParserTrait
 {
+
     /**
      * Retrieves class attributes from token array.
      *
@@ -106,6 +109,8 @@ trait PropertyParserTrait
                     if ($listIterator->current() === null) {
                         continue;
                     }
+
+                    /** @var \AppserverIo\Doppelgaenger\Interfaces\TypedListInterface|\Iterator $invariantIterator */
                     $invariantIterator = $listIterator->current()->getIterator();
                     $invariantCount = $invariantIterator->count();
                     for ($k = 0; $k < $invariantCount; $k++) {

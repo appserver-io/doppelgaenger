@@ -315,7 +315,9 @@ class AssertionFactory
                     $potentialAssertion = '\AppserverIo\Doppelgaenger\Entities\Assertions\\' . $annotation->values['type'] . 'Assertion';
                     if (class_exists($potentialAssertion) && isset($annotation->values['constraint'])) {
                         // we know the class! Create an instance using the passed constraint
-                        return new $potentialAssertion($annotation->values['constraint']);
+                        /** @var \AppserverIo\Doppelgaenger\Interfaces\AssertionInterface $assertionInstance */
+                        $assertionInstance = new $potentialAssertion($annotation->values['constraint']);
+                        return $assertionInstance;
 
                     } else {
                         throw new \Exception(sprintf('Cannot create complex assertion of type %s'), $annotation->values['type']);

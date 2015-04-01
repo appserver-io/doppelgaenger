@@ -45,7 +45,7 @@ class InterfaceDefinition extends AbstractStructureDefinition
     /**
      * The parent interfaces (if any)
      *
-     * @var array $extends
+     * @var string $extends
      */
     protected $extends;
 
@@ -67,7 +67,7 @@ class InterfaceDefinition extends AbstractStructureDefinition
      * @param array                       $extends             The parent interfaces (if any)
      * @param array                       $constants           Possible constants the interface defines
      * @param AssertionList|null          $invariantConditions Invariant conditions
-     * @param TypedListList|null          $ancestralInvariants Ancestral invariants
+     * @param AssertionList|null          $ancestralInvariants Ancestral invariants
      * @param FunctionDefinitionList|null $functionDefinitions List of functions defined within the interface
      */
     public function __construct(

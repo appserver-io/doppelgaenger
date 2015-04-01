@@ -32,11 +32,11 @@ use AppserverIo\Doppelgaenger\Interfaces\TypedListInterface;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  *
- * @property array   $container     The actual container holding the entries
- * @property integer $position      Keeps track of the currently iterated position
- * @property string  $defaultOffset Default member of an entity which will be used as offset e.g. "name"
- * @property string  $itemType      Type of the contained elements
- * @property array   $keyTracker    Internally used array which provides a mapping for associative offset keys to integer ones, which allows for a more easy iteration process
+ * @property array   $container       The actual container holding the entries
+ * @property integer $currentPosition Keeps track of the currently iterated position
+ * @property string  $defaultOffset   Default member of an entity which will be used as offset e.g. "name"
+ * @property string  $itemType        Type of the contained elements
+ * @property array   $keyTracker      Internally used array which provides a mapping for associative offset keys to integer ones, which allows for a more easy iteration process
  */
 abstract class AbstractTypedList implements TypedListInterface, \Iterator
 {

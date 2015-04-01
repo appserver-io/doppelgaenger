@@ -21,7 +21,6 @@
 namespace AppserverIo\Doppelgaenger;
 
 // Load the constants if not already done
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Constants.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Dictionaries' . DIRECTORY_SEPARATOR . 'Placeholders.php';
 
 /**

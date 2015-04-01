@@ -34,6 +34,7 @@ use AppserverIo\Doppelgaenger\Entities\Lists\StructureDefinitionList;
  */
 interface StructureParserInterface extends ParserInterface
 {
+
     /**
      * Will return a structure definition. If a name is gives method will search for this particular structure.
      *
@@ -54,4 +55,11 @@ interface StructureParserInterface extends ParserInterface
      * @return StructureDefinitionList
      */
     public function getDefinitionListFromFile($file, FileDefinition $fileDefinition, $getRecursive = true);
+
+    /**
+     * Will return the token representing the structure the parser is used for e.g. T_CLASS
+     *
+     * @return integer
+     */
+    public function getToken();
 }

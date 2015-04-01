@@ -13,10 +13,10 @@
     "license": "OSL 3.0",
     "authors": [
         {
-            "name" : "Bernhard Wick",
-            "email" : "bw@appserver.io",
-            "homepage" : "https://github.com/wick-ed",
-            "role" : "Developer"
+            "name": "Bernhard Wick",
+            "email": "bw@appserver.io",
+            "homepage": "https://github.com/wick-ed",
+            "role": "Developer"
         }
     ],
     "require": {
@@ -27,7 +27,7 @@
     "require-dev": {
         "appserver-io/build": "~1.0",
         "respect/validation": "0.8.*",
-        "squizlabs/php_codesniffer" : "dev-master as 2.1.0"
+        "squizlabs/php_codesniffer": "dev-master as 2.1.0"
     },
     "autoload": {
         "psr-4": {
@@ -35,11 +35,13 @@
         }
     },
     "autoload-dev": {
-        "psr-4": { "AppserverIo\\Doppelgaenger\\": "tests/" }
+        "psr-4": {
+            "AppserverIo\\Doppelgaenger\\": "tests/"
+        }
     },
-    "config" : {
-		"github-oauth" : {
-			"github.com" : "bb0ca6adf013e65b1e630197308621791517b5d8"
-		}
-	}
+    "config": {
+        "github-oauth": {
+            "github.com": "bb0ca6adf013e65b1e630197308621791517b5d8"
+        }
+    }
 }
