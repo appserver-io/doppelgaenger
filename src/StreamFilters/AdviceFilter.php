@@ -175,6 +175,7 @@ class AdviceFilter extends AbstractFilter
 
             } else {
                 // iterate all the others and inject the code
+                $parameterAssignmentCode = '';
                 foreach ($pointcutExpressions as $pointcutExpression) {
                     if ($joinpoint === Before::ANNOTATION) {
                         // before advices have to be woven differently as we have to take changes of the call parameters into account
@@ -190,9 +191,10 @@ class AdviceFilter extends AbstractFilter
                             implode(',', $parameterNames) .
                             ') = array_values(' . ReservedKeywords::METHOD_INVOCATION_OBJECT . '->getParameters());';
 
+                        // insert the actual before code
                         $bucketData = str_replace(
                             $placeholderHook,
-                            $placeholderHook . $pointcutExpression->toCode() . $parameterAssignmentCode,
+                            $pointcutExpression->toCode() . $placeholderHook,
                             $bucketData
                         );
 
@@ -204,6 +206,15 @@ class AdviceFilter extends AbstractFilter
                             $bucketData
                         );
                     }
+                }
+
+                // if the before join-point has been used we also have a parameter assignment code we have to insert
+                if (!empty($parameterAssignmentCode)) {
+                    $bucketData = str_replace(
+                        $placeholderHook,
+                        $parameterAssignmentCode . $placeholderHook,
+                        $bucketData
+                    );
                 }
             }
         }
