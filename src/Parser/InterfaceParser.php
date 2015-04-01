@@ -47,6 +47,16 @@ class InterfaceParser extends AbstractStructureParser
     const TOKEN = T_INTERFACE;
 
     /**
+     * Will return the token representing the structure the parser is used for e.g. T_CLASS
+     *
+     * @return integer
+     */
+    public function getToken()
+    {
+        return self::TOKEN;
+    }
+
+    /**
      * Will get all parent interfaces (if any).
      * Might return false on error
      *
@@ -121,7 +131,7 @@ class InterfaceParser extends AbstractStructureParser
         $this->currentDefinition->setUsedStructures($this->getUsedStructures());
 
         // For our next step we would like to get the doc comment (if any)
-        $this->currentDefinition->setDocBlock($this->getDocBlock($tokens, T_INTERFACE));
+        $this->currentDefinition->setDocBlock($this->getDocBlock($tokens, self::TOKEN));
 
         // Get the interface identity
         $this->currentDefinition->setName($this->getName($tokens));

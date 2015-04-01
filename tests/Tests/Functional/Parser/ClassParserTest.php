@@ -1,7 +1,7 @@
 <?php
 
 /**
- * \AppserverIo\Doppelgaenger\Tests\Functional\Parser\TraitParserTest
+ * \AppserverIo\Doppelgaenger\Tests\Functional\Parser\ClassParserTest
  *
  * NOTICE OF LICENSE
  *
@@ -21,10 +21,10 @@
 namespace AppserverIo\Doppelgaenger\Tests\Functional\Parser;
 
 use AppserverIo\Doppelgaenger\Config;
-use AppserverIo\Doppelgaenger\Parser\TraitParser;
+use AppserverIo\Doppelgaenger\Parser\ClassParser;
 
 /**
- * Some functional tests for the trait parser
+ * Some functional tests for the class parser
  *
  * @author    Bernhard Wick <bw@appserver.io>
  * @copyright 2015 TechDivision GmbH - <info@appserver.io>
@@ -32,20 +32,20 @@ use AppserverIo\Doppelgaenger\Parser\TraitParser;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
-class TraitParserTest extends \PHPUnit_Framework_TestCase
+class ClassParserTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
      * Instance of our test class
      *
-     * @var \AppserverIo\Doppelgaenger\Parser\TraitParser $testClass
+     * @var \AppserverIo\Doppelgaenger\Parser\ClassParser $testClass
      */
     protected $testClass;
 
     /**
      * Instance of the result produces by our test class
      *
-     * @var \AppserverIo\Doppelgaenger\Entities\Definitions\TraitDefinition $resultClass
+     * @var \AppserverIo\Doppelgaenger\Entities\Definitions\ClassDefinition $resultClass
      */
     protected $resultClass;
 
@@ -55,19 +55,19 @@ class TraitParserTest extends \PHPUnit_Framework_TestCase
     public function __construct()
     {
         $filePath = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' .
-            DIRECTORY_SEPARATOR . 'Data' . DIRECTORY_SEPARATOR . 'ParserTest' . DIRECTORY_SEPARATOR . 'BasicTestTrait.php';
-        $this->testClass = new TraitParser($filePath, new Config());
+            DIRECTORY_SEPARATOR . 'Data' . DIRECTORY_SEPARATOR . 'ParserTest' . DIRECTORY_SEPARATOR . 'BasicTestClass.php';
+        $this->testClass = new ClassParser($filePath, new Config());
         $this->resultClass = $this->testClass->getDefinition();
     }
 
     /**
-     * Tests if the parser produces an instance of the expected Trait
+     * Tests if the parser produces an instance of the expected class
      *
      * @return void
      */
     public function testInstanceOfTraitDefinition()
     {
-        $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Entities\Definitions\TraitDefinition', $this->resultClass);
+        $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Entities\Definitions\ClassDefinition', $this->resultClass);
     }
 
     /**

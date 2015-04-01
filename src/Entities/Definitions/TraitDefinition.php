@@ -1,7 +1,7 @@
 <?php
 
 /**
- * \AppserverIo\Doppelgaenger\Entities\Definitions\Traitdefinition
+ * \AppserverIo\Doppelgaenger\Entities\Definitions\TraitDefinition
  *
  * NOTICE OF LICENSE
  *

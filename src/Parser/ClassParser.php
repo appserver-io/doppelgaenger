@@ -53,6 +53,16 @@ class ClassParser extends AbstractStructureParser
     const TOKEN = T_CLASS;
 
     /**
+     * Will return the token representing the structure the parser is used for e.g. T_CLASS
+     *
+     * @return integer
+     */
+    public function getToken()
+    {
+        return self::TOKEN;
+    }
+
+    /**
      * Returns a ClassDefinition from a token array.
      *
      * This method will use a set of other methods to parse a token array and retrieve any
