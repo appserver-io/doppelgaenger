@@ -178,6 +178,20 @@ abstract class AbstractFilter extends \php_user_filter implements StreamFilterIn
     }
 
     /**
+     * Will filter portions of incoming stream content.
+     * Should return FALSE if filter run has to be repeated with extended buffer or TRUE if the currently available
+     * buffer did already contain all needed information.
+     *
+     * @param string $content The content to be filtered
+     *
+     * @return boolean
+     */
+    public function filterContent($content)
+    {
+        return true;
+    }
+
+    /**
      * Preparation hook which is intended to be called before the first filter() iteration.
      * We will provide an empty implementation here, to not force the hook on filter classes.
      * So override if needed.

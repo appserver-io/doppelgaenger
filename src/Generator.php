@@ -380,12 +380,15 @@ class Generator
             }
         }
 
-        // add the filter used for introductions
-        $filters['IntroductionFilter'] = $this->appendFilter(
-            $res,
-            'AppserverIo\Doppelgaenger\StreamFilters\IntroductionFilter',
-            $structureDefinition->getIntroductions()
-        );
+        // introductions make only sense for classes
+        if ($structureDefinition instanceof ClassDefinition) {
+            // add the filter used for introductions
+            $filters['IntroductionFilter'] = $this->appendFilter(
+                $res,
+                'AppserverIo\Doppelgaenger\StreamFilters\IntroductionFilter',
+                $structureDefinition->getIntroductions()
+            );
+        }
 
         // add the filter we need for our AOP advices
         $filters['AdviceFilter'] = $this->appendFilter(

@@ -215,7 +215,7 @@ class ClassParser extends AbstractStructureParser
 
             // Only classes and traits have invariants
             if ($fileEntry->getType() === 'class') {
-                $classDefinition->ancestralInvariants = $dependencyDefinition->getInvariants(true);
+                $classDefinition->setAncestralInvariants($dependencyDefinition->getInvariants(true));
             }
 
             // Finally add the dependency definition to our structure definition hierarchy to avoid

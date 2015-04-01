@@ -52,7 +52,7 @@ class InterfaceParser extends AbstractStructureParser
      *
      * @param array $tokens The token array
      *
-     * @return array|boolean
+     * @return array
      */
     public function getParents($tokens)
     {
@@ -75,23 +75,16 @@ class InterfaceParser extends AbstractStructureParser
 
         // Normally we will have one or several interface names separated by commas
         $parents = explode(',', $interfaceString);
+        foreach ($parents as $key => $parent) {
+            $parents[$key] = trim($parent);
 
-        // Did we get something useful?
-        if (is_array($parents)) {
-            foreach ($parents as $key => $parent) {
-                $parents[$key] = trim($parent);
-
-                // We do not want empty stuff
-                if (empty($parents[$key])) {
-                    unset($parents[$key]);
-                }
+            // We do not want empty stuff
+            if (empty($parents[$key])) {
+                unset($parents[$key]);
             }
-
-            return $parents;
-
-        } else {
-            return false;
         }
+
+        return $parents;
     }
 
     /**

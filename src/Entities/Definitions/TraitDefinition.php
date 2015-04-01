@@ -68,7 +68,6 @@ class TraitDefinition extends AbstractStructureDefinition implements PropertiedS
      *
      * @param string $path                 File path to the class definition
      * @param string $namespace            The namespace the class belongs to
-     * @param array  $usedNamespaces       All classes which are referenced by the "use" keyword
      * @param string $docBlock             The initial class docblock header
      * @param string $name                 Name of the class
      * @param null   $attributeDefinitions List of defined attributes
@@ -77,7 +76,6 @@ class TraitDefinition extends AbstractStructureDefinition implements PropertiedS
     public function __construct(
         $path = '',
         $namespace = '',
-        $usedNamespaces = array(),
         $docBlock = '',
         $name = '',
         $attributeDefinitions = null,
@@ -85,7 +83,6 @@ class TraitDefinition extends AbstractStructureDefinition implements PropertiedS
     ) {
         $this->path = $path;
         $this->namespace = $namespace;
-        $this->usedNamespaces = $usedNamespaces;
         $this->docBlock = $docBlock;
         $this->name = $name;
         $this->attributeDefinitions = is_null(
@@ -129,7 +126,7 @@ class TraitDefinition extends AbstractStructureDefinition implements PropertiedS
      *
      * @param boolean $nonPrivateOnly Make this true if you only want conditions which do not have a private context
      *
-     * @return \AppserverIo\Doppelgaenger\Entities\Lists\TypedListList
+     * @return \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList
      */
     public function getInvariants($nonPrivateOnly = false)
     {

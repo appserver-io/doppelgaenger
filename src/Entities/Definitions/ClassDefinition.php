@@ -36,16 +36,6 @@ use AppserverIo\Doppelgaenger\Interfaces\PropertiedStructureInterface;
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
- *
- * @property \AppserverIo\Doppelgaenger\Entities\Lists\IntroductionList        $introductions        List of introductions
- * @property boolean                                                           $isFinal              Is this a final class
- * @property boolean                                                           $isAbstract           Is this class abstract
- * @property string                                                            $extends              Name of the parent class (if any)
- * @property array                                                             $implements           Array of interface names this class implements
- * @property array                                                             $constants            Class constants
- * @property \AppserverIo\Doppelgaenger\Entities\Lists\AttributeDefinitionList $attributeDefinitions List of defined attributes
- * @property \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList           $invariantConditions  List of directly defined invariant conditions
- * @property \AppserverIo\Doppelgaenger\Entities\Lists\TypedListList           $ancestralInvariants  List of lists of any ancestral invariants
  */
 class ClassDefinition extends AbstractStructureDefinition implements PropertiedStructureInterface
 {
@@ -79,7 +69,7 @@ class ClassDefinition extends AbstractStructureDefinition implements PropertiedS
     /**
      * Name of the parent class (if any)
      *
-     * @var string $extends
+     * @var array $extends
      */
     protected $extends;
 
@@ -114,7 +104,7 @@ class ClassDefinition extends AbstractStructureDefinition implements PropertiedS
     /**
      * List of lists of any ancestral invariants
      *
-     * @var \AppserverIo\Doppelgaenger\Entities\Lists\TypedListList $ancestralInvariants
+     * @var \AppserverIo\Doppelgaenger\Entities\Lists\AssertionList $ancestralInvariants
      */
     protected $ancestralInvariants;
 
@@ -123,7 +113,6 @@ class ClassDefinition extends AbstractStructureDefinition implements PropertiedS
      *
      * @param string $path                 File path to the class definition
      * @param string $namespace            The namespace the class belongs to
-     * @param array  $usedNamespaces       All classes which are referenced by the "use" keyword
      * @param string $docBlock             The initial class docblock header
      * @param null   $introductions        List of introductions defined in the docblock
      * @param bool   $isFinal              Is this a final class
@@ -140,7 +129,6 @@ class ClassDefinition extends AbstractStructureDefinition implements PropertiedS
     public function __construct(
         $path = '',
         $namespace = '',
-        $usedNamespaces = array(),
         $docBlock = '',
         $introductions = null,
         $isFinal = false,
@@ -156,7 +144,6 @@ class ClassDefinition extends AbstractStructureDefinition implements PropertiedS
     ) {
         $this->path = $path;
         $this->namespace = $namespace;
-        $this->usedNamespaces = $usedNamespaces;
         $this->docBlock = $docBlock;
         $this->introductions = is_null($introductions) ? new IntroductionList() : $introductions;
         $this->isFinal = $isFinal;

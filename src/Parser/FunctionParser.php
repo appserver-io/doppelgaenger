@@ -56,10 +56,11 @@ class FunctionParser extends AbstractParser
 
         // Did we get something valuable?
         $functionDefinitionList = new FunctionDefinitionList();
+        $tokenCount = count($tokens);
         if ($tokens === false) {
             return false;
 
-        } elseif (count($tokens) === 1) {
+        } elseif ($tokenCount === 1) {
             // We got what we came for, or did we?
             if (isset($tokens[0])) {
                 $functionDefinitionList->add($this->getDefinitionFromTokens($tokens[0], $getRecursive));
@@ -67,7 +68,7 @@ class FunctionParser extends AbstractParser
 
             return $functionDefinitionList;
 
-        } elseif (count($tokens) > 1) {
+        } elseif ($tokenCount > 1) {
             // We are still here, but got a function name to look for
             foreach ($tokens as $token) {
                 try {
@@ -95,18 +96,19 @@ class FunctionParser extends AbstractParser
     {
         // First of all we need to get the function tokens
         $tokens = $this->getFunctionTokens($this->tokens);
+        $tokenCount = count($tokens);
 
         // Did we get something valuable?
         if ($tokens === false) {
             return false;
 
-        } elseif (count($tokens) === 1) {
+        } elseif ($tokenCount === 1) {
             // We got what we came for, or did we?
             if (isset($tokens[0])) {
                 return $this->getDefinitionFromTokens($tokens[0], $getRecursive);
             }
 
-        } elseif (count($tokens) > 1) {
+        } elseif ($tokenCount > 1) {
             // We are still here, but got a function name to look for
             foreach ($tokens as $token) {
                 // Now iterate over the array and search for the class we want

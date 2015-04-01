@@ -330,26 +330,24 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
      * Will return an array of structures which this structure references by use statements
      *
      * @return array
-     *
-     * TODO namespaces does not make any sense here, as we are referencing structures!
      */
     public function getUsedStructures()
     {
         // Check the tokens
-        $namespaces = array();
+        $structures = array();
         for ($i = 0; $i < $this->tokenCount; $i++) {
             // If we got a use statement
             if ($this->tokens[$i][0] === T_USE) {
-                $namespace = '';
+                $structure = '';
                 for ($j = $i + 1; $j < count($this->tokens); $j++) {
                     if ($this->tokens[$j][0] === T_STRING) {
-                        $namespace .= '\\' . $this->tokens[$j][1];
+                        $structure .= '\\' . $this->tokens[$j][1];
 
                     } elseif ($this->tokens[$j] === '{' ||
                         $this->tokens[$j] === ';' ||
                         $this->tokens[$j][0] === T_CURLY_OPEN
                     ) {
-                        $namespaces[] = $namespace;
+                        $structures[] = $structure;
                         break;
                     }
                 }
@@ -357,7 +355,7 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
         }
 
         // Return what we did or did not found
-        return $namespaces;
+        return $structures;
     }
 
     /**
