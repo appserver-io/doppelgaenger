@@ -20,21 +20,12 @@ Doppelgaenger currently supports the known techniques of:
 - [AOP](http://en.wikipedia.org/wiki/Aspect-oriented_programming)
 - [Design by Contract](http://en.wikipedia.org/wiki/Design_by_contract)
 
-## Installation
+## Issues
+In order to bundle our efforts we would like to collect all issues regarding this package in [the main project repository's issue tracker](https://github.com/appserver-io/appserver/issues).
+Please reference the originating repository as the first element of the issue title e.g.:
+`[appserver-io/<ORIGINATING_REPO>] A issue I am having`
 
-If you want to give this project a try you can do so using composer.
-Just include the following code into your composer.json` and you are good to go.
-
-```js
-{
-    "require": {
-        "appserver-io/doppelgaenger": "dev-master"
-    }
-}
-```
-
-# Semantic versioning
-
+## Semantic versioning
 This library follows semantic versioning and its public API defines as follows:
 
 * The public API of [its related appserver.io PSR](https://github.com/appserver-io-psr/mop)
@@ -43,6 +34,5 @@ This library follows semantic versioning and its public API defines as follows:
 * The syntax and amount of usable annotations (NOT including common annotations such as `@param` and `@return`)
 * The format of its configuration files
 
-# External Links
-
+## External Links
 * Documentation at [appserver.io](http://docs.appserver.io) (have a look at [`AOP`](http://appserver.io/get-started/documentation/aop.html) and [`Design by Contract`](http://appserver.io/get-started/documentation/design-by-contract.html) section)
