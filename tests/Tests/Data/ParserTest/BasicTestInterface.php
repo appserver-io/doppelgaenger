@@ -32,6 +32,6 @@ use AppserverIo\Doppelgaenger\Parser\InterfaceParser;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
- interface BasicTestInterface
- {
- }
+interface BasicTestInterface
+{
+}

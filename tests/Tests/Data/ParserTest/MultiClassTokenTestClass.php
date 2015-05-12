@@ -1,7 +1,7 @@
 <?php
 
 /**
- * \AppserverIo\Doppelgaenger\Tests\Data\ParserTest\BasicTestClass
+ * \AppserverIo\Doppelgaenger\Tests\Data\ParserTest\MultiClassTokenTestClass
  *
  * NOTICE OF LICENSE
  *
@@ -20,11 +20,8 @@
 
 namespace AppserverIo\Doppelgaenger\Tests\Data\ParserTest;
 
-use AppserverIo\Doppelgaenger\Config;
-use AppserverIo\Doppelgaenger\Parser\ClassParser;
-
 /**
- * Test class for testing class support
+ * Test class for testing if legal class keywords within other structures break anything
  *
  * @author    Bernhard Wick <bw@appserver.io>
  * @copyright 2015 TechDivision GmbH - <info@appserver.io>
@@ -32,6 +29,15 @@ use AppserverIo\Doppelgaenger\Parser\ClassParser;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
-class BasicTestClass
+class MultiClassTokenTestClass
 {
+    /**
+     * Method containing a legally class keyword
+     *
+     * @return void
+     */
+    public function iContainAClassKeyoword()
+    {
+        return ucfirst(MultiClassTokenTestClass::class);
+    }
 }

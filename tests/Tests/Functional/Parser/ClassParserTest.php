@@ -65,7 +65,7 @@ class ClassParserTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function testInstanceOfTraitDefinition()
+    public function testInstanceOfClassDefinition()
     {
         $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Entities\Definitions\ClassDefinition', $this->resultClass);
     }
