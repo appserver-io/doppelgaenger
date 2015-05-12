@@ -1,3 +1,13 @@
+# Version 1.3.2
+
+## Bugfixes
+
+* Fixed [#805](https://github.com/appserver-io/appserver/issues/805) - Constructs like <CLASSNAME>::class break parsing
+
+## Features
+
+* None
+
 # Version 1.3.1
 
 ## Bugfixes

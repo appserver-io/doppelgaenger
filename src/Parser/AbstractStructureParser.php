@@ -105,7 +105,7 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
 
         } elseif (count($tokens) === 1) {
             // We got what we came for
-            return $this->getDefinitionFromTokens($tokens[0], $getRecursive);
+            return $tmp=$this->getDefinitionFromTokens($tokens[0], $getRecursive);
 
         } elseif (is_string($name) && count($tokens) > 1) {
             // We are still here, but got a structure name to look for
@@ -265,7 +265,7 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
             // If we got a class keyword, we have to check how far the class extends,
             // then copy the array withing that bounds
 
-            if (is_array($this->tokens[$i]) && $this->tokens[$i][0] === $structureToken) {
+            if (is_array($this->tokens[$i]) && $this->tokens[$i][0] === $structureToken && $this->tokens[$i - 1][0] !== T_PAAMAYIM_NEKUDOTAYIM) {
                 // The lower bound should be the last semicolon|closing curly bracket|PHP tag before the structure
                 $lowerBound = 0;
                 for ($j = $i - 1; $j >= 0; $j--) {

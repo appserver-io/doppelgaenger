@@ -32,6 +32,6 @@ use AppserverIo\Doppelgaenger\Parser\TraitParser;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
- trait BasicTestTrait
- {
- }
+trait BasicTestTrait
+{
+}

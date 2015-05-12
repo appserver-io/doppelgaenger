@@ -33,6 +33,7 @@ use AppserverIo\Doppelgaenger\Tests\Data\MethodTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\MultiRegex\A\Data\RegexTestClass1;
 use AppserverIo\Doppelgaenger\Tests\Data\MultiRegex\B\Data\RegexTestClass2;
 use AppserverIo\Doppelgaenger\Tests\Data\RegexTest1\RegexTestClass;
+use AppserverIo\Doppelgaenger\Tests\Data\ParserTest\MultiClassTokenTestClass;
 
 /**
  * Will test basic parser usage
@@ -45,10 +46,11 @@ use AppserverIo\Doppelgaenger\Tests\Data\RegexTest1\RegexTestClass;
  */
 class ParserTest extends \PHPUnit_Framework_TestCase
 {
+
     /**
      * Will test parsing of special annotations like typed arrays
      *
-     * @return null
+     * @return void
      */
     public function testAnnotationParsing()
     {
@@ -61,7 +63,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test parsing of special annotations like typed arrays
      *
-     * @return null
+     * @return void
      */
     public function testAnnotationParsingTypeCollectionParameter()
     {
@@ -73,7 +75,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test parsing of special annotations like typed arrays
      *
-     * @return null
+     * @return void
      *
      * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPreconditionException
      */
@@ -87,7 +89,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test parsing of special annotations like typed arrays
      *
-     * @return null
+     * @return void
      */
     public function testAnnotationParsingTypeCollectionReturn()
     {
@@ -99,7 +101,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test parsing of special annotations like typed arrays
      *
-     * @return null
+     * @return void
      *
      * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException
      */
@@ -113,7 +115,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test parsing of special annotations like typed arrays
      *
-     * @return null
+     * @return void
      */
     public function testAnnotationParsingTypeCollectionAlternativeParameter()
     {
@@ -125,7 +127,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test parsing of special annotations like typed arrays
      *
-     * @return null
+     * @return void
      *
      * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPreconditionException
      */
@@ -139,7 +141,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test parsing of special annotations like typed arrays
      *
-     * @return null
+     * @return void
      */
     public function testAnnotationParsingTypeCollectionAlternativeReturn()
     {
@@ -151,7 +153,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test parsing of special annotations like typed arrays
      *
-     * @return null
+     * @return void
      *
      * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException
      */
@@ -165,7 +167,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test parsing of special annotations like typed arrays
      *
-     * @return null
+     * @return void
      */
     public function testAnnotationParsingSimpleTypeCollectionParameter()
     {
@@ -177,7 +179,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test parsing of special annotations like typed arrays
      *
-     * @return null
+     * @return void
      *
      * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPreconditionException
      */
@@ -191,7 +193,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test parsing of special annotations like typed arrays
      *
-     * @return null
+     * @return void
      */
     public function testAnnotationParsingSimpleTypeCollectionReturn()
     {
@@ -203,7 +205,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test parsing of special annotations like typed arrays
      *
-     * @return null
+     * @return void
      *
      * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException
      */
@@ -217,7 +219,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will check for proper method parsing
      *
-     * @return null
+     * @return void
      */
     public function testMethodParsingWithoutException()
     {
@@ -227,7 +229,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test if a configuration using regexed paths can be used properly
      *
-     * @return null
+     * @return void
      */
     public function testRegexMappingWithoutException()
     {
@@ -272,7 +274,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test if classes with methods which have a single advice each are processable
      *
-     * @return null
+     * @return void
      */
     public function testSingleDirectAdvices()
     {
@@ -283,7 +285,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test if classes with methods which have several advices each are processable
      *
-     * @return null
+     * @return void
      */
     public function testSeveralDirectAdvices()
     {
@@ -294,7 +296,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test if classes with methods which have advices with mixed joinpoints are processable
      *
-     * @return null
+     * @return void
      */
     public function testMixedDirectAdvices()
     {
@@ -305,7 +307,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test if classes with methods which have complex advices are processable
      *
-     * @return null
+     * @return void
      */
     public function testComplexDirectAdvices()
     {
@@ -316,7 +318,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test if classes with an introduction will get their characteristics extended correctly
      *
-     * @return null
+     * @return void
      */
     public function testSingleIntroduction()
     {
@@ -328,7 +330,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test if classes with several introductions will get their characteristics extended correctly
      *
-     * @return null
+     * @return void
      */
     public function testSeveralIntroductions()
     {
@@ -341,7 +343,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test if classes with an introduction will get their characteristics extended correctly
      *
-     * @return null
+     * @return void
      */
     public function testExtendedIntroduction()
     {
@@ -349,5 +351,19 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Tests\Data\Annotations\ExtendedIntroductionTestClass', $test);
         $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Tests\Data\Annotations\TestInterface1', $test);
         $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Tests\Data\Annotations\TestInterface2', $test);
+    }
+
+    /**
+     * Will test whether or not a class containing additional class keywords can be parsed and used
+     *
+     * @return void
+     *
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException
+     */
+    public function testMultiClassTokensInStructure()
+    {
+        $testClass = new MultiClassTokenTestClass();
+        $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Tests\Data\ParserTest\MultiClassTokenTestClass', $testClass);
+        $testClass->iContainAClassKeyoword();
     }
 }
