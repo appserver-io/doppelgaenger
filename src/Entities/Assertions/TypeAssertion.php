@@ -121,7 +121,7 @@ class TypeAssertion extends AbstractAssertion
         return 'if ('. $this->getInvertString() .') {
                 ' . ReservedKeywords::FAILURE_VARIABLE . '[] = sprintf(
                     \'%s must be of the type %s, %s found instead.\',
-                    \'' . $this->operand . '\',
+                    \'' . str_replace(ReservedKeywords::RESULT, 'The returned value', $this->operand) . '\',
                     \'' . $this->type . '\',
                     gettype(' . $this->operand . ')
                 );

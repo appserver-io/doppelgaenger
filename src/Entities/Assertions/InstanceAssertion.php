@@ -107,7 +107,7 @@ class InstanceAssertion extends AbstractAssertion
         return 'if ('. $this->getInvertString() .') {
                 ' . ReservedKeywords::FAILURE_VARIABLE . '[] = sprintf(
                     \'%s must be an instance of %s, %s found instead.\',
-                    \'' . $this->operand . '\',
+                    \'' . str_replace(ReservedKeywords::RESULT, 'The returned object', $this->operand) . '\',
                     \'' . $this->class . '\',
                     get_class(' . $this->operand . ')
                 );

@@ -67,6 +67,13 @@ class Placeholders
     const BEFORE_JOINPOINT = '/* DOPPELGAENGER_BEFORE_JOINPOINT ';
 
     /**
+     * Placeholder for any structure constants we might want to weave in
+     *
+     * @var string CONSTANT_HOOK
+     */
+    const CONSTANT_HOOK = '/* DOPPELGAENGER_CONSTANT_HOOK */';
+
+    /**
      * Placeholder to insert the actual processing of needed contract enforcing
      *
      * @var string ENFORCEMENT
@@ -129,8 +136,14 @@ class Placeholders
      *
      * @var string PLACEHOLDER_CLOSE
      */
-    const PLACEHOLDER_CLOSE = ' */
-    ';
+    const PLACEHOLDER_CLOSE = ' */';
+
+    /**
+     * String opening generic placeholders to allow filling dynamic parts into them
+     *
+     * @var string PLACEHOLDER_OPEN
+     */
+    const PLACEHOLDER_OPEN = '/* ';
 
     /**
      * Placeholder for inserting the postcondition checks
@@ -153,6 +166,14 @@ class Placeholders
      * @var string STRUCTURE_BEGIN
      */
     const STRUCTURE_BEGIN = '/* DOPPELGAENGER_STRUCTURE_BEGIN_PLACEHOLDER */';
+
+    /**
+     * Placeholder for injection of additional methods, properties, etc.
+     * Placed right before the end of the structure body
+     *
+     * @var string STRUCTURE_END
+     */
+    const STRUCTURE_END = '/* DOPPELGAENGER_STRUCTURE_END_PLACEHOLDER */';
 
     /**
      * Placeholder for additional inheritance or interfaces to implement.

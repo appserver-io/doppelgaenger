@@ -124,7 +124,7 @@ class TypedCollectionAssertion extends AbstractAssertion
         return 'if ('. $this->getInvertString() .') {
                 ' . ReservedKeywords::FAILURE_VARIABLE . '[] = sprintf(
                     \'%s must only contain entries of the type %s\',
-                    \'' . $this->operand . '\',
+                    \'' . str_replace(ReservedKeywords::RESULT, 'The returned collection', $this->operand) . '\',
                     \'' . $this->type . '\'
                 );
             }';

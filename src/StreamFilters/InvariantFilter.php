@@ -94,7 +94,7 @@ class InvariantFilter extends AbstractFilter
         while ($bucket = stream_bucket_make_writeable($in)) {
             // We only have to do that once!
             if (empty($functionHook)) {
-                $functionHook = Placeholders::FUNCTION_HOOK . Placeholders::PLACEHOLDER_CLOSE;
+                $functionHook = Placeholders::STRUCTURE_END;
 
                 // Get the code for our attribute storage
                 $attributeCode = $this->generateAttributeCode($structureDefinition->getAttributeDefinitions());

@@ -412,6 +412,9 @@ class Generator
             array('structureDefinition' => $structureDefinition, 'config' => $this->config)
         );
 
+        // at last we want to make the output beatiful and detect sysntax errors
+        // $filters['BeautifyFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\BeautifyFilter', array());
+
         return $filters;
     }
 
