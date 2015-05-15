@@ -24,6 +24,7 @@ use AppserverIo\Doppelgaenger\Tests\Data\AroundAdviceTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\CustomProcessingTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\LocalCustomProcessingTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\TagPlacementTestClass;
+use AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\RecursionTestClass2;
 
 /**
  * This test covers known generator problems
@@ -40,7 +41,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test if a randomly placed php tag will throw of the generator
      *
-     * @return null
+     * @return void
      */
     public function testPhpTag()
     {
@@ -50,7 +51,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     /**
      * Method to test if an around advice is able to proceed the initially called method
      *
-     * @return null
+     * @return void
      */
     public function testProceededMethod()
     {
@@ -68,7 +69,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     /**
      * Method to test if an around advice is able to block the initially called method
      *
-     * @return null
+     * @return void
      */
     public function testBlockedMethod()
     {
@@ -86,7 +87,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     /**
      * Method to test if an around advice can proceed the advised method AFTER the own logic
      *
-     * @return null
+     * @return void
      */
     public function testAdviceAfterAdvisedOrder()
     {
@@ -104,7 +105,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     /**
      * Method to test if an around advice can proceed the advised method BEFORE the own logic
      *
-     * @return null
+     * @return void
      */
     public function testAdviceBeforeAdvisedOrder()
     {
@@ -122,54 +123,67 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     /**
      * Will test if we can enable custom enforcement processing on class level using the @Processing annotation
      *
-     * @return null
+     * @return void
      *
      * @expectedException \AppserverIo\Doppelgaenger\Tests\TestLoggerUsedException
      */
     public function testCustomClassProcessing()
     {
-        $testCase = new CustomProcessingTestClass();
-        $testCase->iHaveNoCustomProcessing();
+        $testClass = new CustomProcessingTestClass();
+        $testClass->iHaveNoCustomProcessing();
     }
 
     /**
      * Will test if we can enable custom enforcement processing on method level using the @Processing annotation
      *
-     * @return null
+     * @return void
      *
      * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException
      */
     public function testCustomMethodProcessing()
     {
-        $testCase = new CustomProcessingTestClass();
-        $testCase->iHaveACustomExceptionProcessing();
+        $testClass = new CustomProcessingTestClass();
+        $testClass->iHaveACustomExceptionProcessing();
     }
 
     /**
      * Will test if we can enable custom enforcement processing on method level using the @Processing annotation
      * without any annotation within the class doc block
      *
-     * @return null
+     * @return void
      *
      * @expectedException \AppserverIo\Doppelgaenger\Tests\TestLoggerUsedException
      */
     public function testCustomMethodOnlyProcessing1()
     {
-        $testCase = new LocalCustomProcessingTestClass();
-        $testCase->iHaveACustomLoggingProcessing();
+        $testClass = new LocalCustomProcessingTestClass();
+        $testClass->iHaveACustomLoggingProcessing();
     }
 
     /**
      * Will test if we can enable custom enforcement processing on method level using the @Processing annotation
      * without any annotation within the class doc block
      *
-     * @return null
+     * @return void
      *
      * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException
      */
     public function testCustomMethodOnlyProcessing2()
     {
-        $testCase = new LocalCustomProcessingTestClass();
-        $testCase->iHaveACustomExceptionProcessing();
+        $testClass = new LocalCustomProcessingTestClass();
+        $testClass->iHaveACustomExceptionProcessing();
+    }
+
+    /**
+     * Tests if we can catch potential endless recursions based on a call like parent::<METHOD_NAME>
+     *
+     * @return void
+     */
+    public function testEndlessRecursionSafety()
+    {
+        $testClass = new RecursionTestClass2();
+        $testClass->iDontWantToBeRecursive();
+
+        $this->assertEquals(1, $testClass->recursionCounter);
     }
 }

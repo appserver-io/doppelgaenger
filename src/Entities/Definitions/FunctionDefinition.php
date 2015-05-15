@@ -356,13 +356,14 @@ class FunctionDefinition extends AbstractDefinition
      * Will return the header of this function either in calling or in defining manner.
      * String will stop after the closing ")" bracket, so the string can be used for interfaces as well.
      *
-     * @param string  $type   Can be either "call" or "definition"
-     * @param string  $suffix Suffix for the function name
-     * @param boolean $showMe Will mark a method as original by extending it with a suffix
+     * @param string  $type        Can be either "call" or "definition"
+     * @param string  $suffix      Suffix for the function name
+     * @param boolean $showMe      Will mark a method as original by extending it with a suffix
+     * @param boolean $forceStatic Will force static call for call type headers
      *
      * @return  string
      */
-    public function getHeader($type, $suffix = '', $showMe = false)
+    public function getHeader($type, $suffix = '', $showMe = false, $forceStatic = false)
     {
         $header = '';
 
@@ -395,7 +396,7 @@ class FunctionDefinition extends AbstractDefinition
 
         // If we have to generate code for a call we have to check for either static or normal access
         if ($type === 'call') {
-            if ($this->isStatic === true) {
+            if ($this->isStatic === true || $forceStatic) {
                 $header .= 'self::';
             } else {
                 $header .= '$this->';
