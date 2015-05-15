@@ -122,6 +122,6 @@ class ProcessingFilter extends AbstractFilter
     protected function generateCode(FunctionDefinition $functionDefinition)
     {
         // Build up the call to the original function
-        return ReservedKeywords::RESULT . ' = ' . $functionDefinition->getHeader('call', ReservedKeywords::ORIGINAL_FUNCTION_SUFFIX) . ';';
+        return ReservedKeywords::RESULT . ' = ' . $functionDefinition->getHeader('call', ReservedKeywords::ORIGINAL_FUNCTION_SUFFIX, false, true) . ';';
     }
 }
