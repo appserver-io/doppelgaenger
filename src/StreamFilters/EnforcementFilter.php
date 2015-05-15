@@ -206,11 +206,11 @@ class EnforcementFilter extends AbstractFilter
 
         // what we will always need is collection of all errors that occurred
         $errorCollectionCode = 'if (empty(' . ReservedKeywords::FAILURE_VARIABLE . ')) {
-            ' . ReservedKeywords::FAILURE_VARIABLE . ' = "";
-            } else {
-                ' . ReservedKeywords::FAILURE_VARIABLE . ' = \'Failed ' . $target . ' "\' . implode(\'" and "\', ' . ReservedKeywords::FAILURE_VARIABLE . ') . \'" in \' . ' . $place . ';
-            }' .
-            ReservedKeywords::FAILURE_VARIABLE . ' .= implode(" and ", ' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ');';
+                        ' . ReservedKeywords::FAILURE_VARIABLE . ' = "";
+                    } else {
+                        ' . ReservedKeywords::FAILURE_VARIABLE . ' = \'Failed ' . $target . ' "\' . implode(\'" and "\', ' . ReservedKeywords::FAILURE_VARIABLE . ') . \'" in \' . ' . $place . ';
+                    }
+                    ' . ReservedKeywords::FAILURE_VARIABLE . ' .= implode(" and ", ' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ');';
 
         // what kind of processing should we create?
         switch ($type) {

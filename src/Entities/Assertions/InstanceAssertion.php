@@ -105,12 +105,12 @@ class InstanceAssertion extends AbstractAssertion
     public function toCode()
     {
         return 'if ('. $this->getInvertString() .') {
-                ' . ReservedKeywords::FAILURE_VARIABLE . '[] = sprintf(
-                    \'%s must be an instance of %s, %s found instead.\',
-                    \'' . str_replace(ReservedKeywords::RESULT, 'The returned object', $this->operand) . '\',
-                    \'' . $this->class . '\',
-                    get_class(' . $this->operand . ')
-                );
-            }';
+                    ' . ReservedKeywords::FAILURE_VARIABLE . '[] = sprintf(
+                        \'%s must be an instance of %s, %s found instead.\',
+                        \'' . str_replace(ReservedKeywords::RESULT, 'The returned object', $this->operand) . '\',
+                        \'' . $this->class . '\',
+                        get_class(' . $this->operand . ')
+                    );
+                }';
     }
 }

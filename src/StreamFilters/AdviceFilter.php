@@ -335,7 +335,8 @@ class AdviceFilter extends AbstractFilter
     {
 
         // start building up the code
-        $code = ReservedKeywords::METHOD_INVOCATION_OBJECT . ' = new \AppserverIo\Doppelgaenger\Entities\MethodInvocation(
+        $code = '
+            ' . ReservedKeywords::METHOD_INVOCATION_OBJECT . ' = new \AppserverIo\Doppelgaenger\Entities\MethodInvocation(
             ';
 
         // add the original method call to the callback chain so it can be integrated, add it and add the context
@@ -354,7 +355,7 @@ class AdviceFilter extends AbstractFilter
             $callbackChain[] = array($functionDefinition->getStructureName(), $functionDefinition->getName());
         }
 
-        $code .= 'array(';
+        $code .= '    array(';
         foreach ($callbackChain as $callback) {
             // do some brushing up for the structure
             $structure = $callback[0];
@@ -373,25 +374,25 @@ class AdviceFilter extends AbstractFilter
         ';
 
         // continue with the access modifiers
-        $code .= $contextCode . ',
-            ' . ($functionDefinition->isAbstract() ? 'true' : 'false') . ',
-            ' . ($functionDefinition->isFinal() ? 'true' : 'false') . ',
-            ' . ($functionDefinition->isStatic() ? 'true' : 'false') . ',
+        $code .= '        ' . $contextCode . ',
+                ' . ($functionDefinition->isAbstract() ? 'true' : 'false') . ',
+                ' . ($functionDefinition->isFinal() ? 'true' : 'false') . ',
+                ' . ($functionDefinition->isStatic() ? 'true' : 'false') . ',
             ';
 
         // we have to build up manual parameter collection as func_get_args() only returns copies
         // @see http://php.net/manual/en/function.func-get-args.php
-        $parametersCode = 'array(';
+        $parametersCode = '    array(';
         foreach ($functionDefinition->getParameterDefinitions() as $parameterDefinition) {
             $name = $parameterDefinition->name;
             $parametersCode .= '\'' . substr($name, 1) . '\' => ' . $name . ',';
         }
         $parametersCode .= ')';
 
-        $code .= '\'' . $functionDefinition->getName() . '\',
+        $code .= '    \'' . $functionDefinition->getName() . '\',
             ' .$parametersCode . ',
-             __CLASS__,
-            \'' . $functionDefinition->getVisibility() . '\'
+                __CLASS__,
+                \'' . $functionDefinition->getVisibility() . '\'
             );';
 
         // Insert the code

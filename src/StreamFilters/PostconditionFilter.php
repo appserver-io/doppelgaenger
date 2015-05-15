@@ -134,7 +134,7 @@ class PostconditionFilter extends AbstractFilter
         }
         // If the function is static it should not use the dgOld keyword as there is no state to the class!
         if ($functionDefinition->isStatic() === true) {
-            throw new GeneratorException('Cannot clone class state in static method ' . $functionDefinition->getName());
+            throw new GeneratorException(sprintf('Cannot clone class state in static method %s.', $functionDefinition->getName()));
         }
 
         // Still here? Then inject the clone statement to preserve an instance of the object prior to our call.
@@ -161,9 +161,11 @@ class PostconditionFilter extends AbstractFilter
     {
         // We only use contracting if we're not inside another contract already
         $code = '/* BEGIN OF POSTCONDITION ENFORCEMENT */
-        if (' . ReservedKeywords::CONTRACT_CONTEXT . ') {' .
-            ReservedKeywords::FAILURE_VARIABLE . ' = array();' .
-            ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ' = array();';
+            if (' . ReservedKeywords::CONTRACT_CONTEXT . ') {
+                ' . ReservedKeywords::FAILURE_VARIABLE . ' = array();
+                ' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ' = array();
+
+                ';
 
         // We need a counter to check how much conditions we got
         $conditionCounter = 0;
@@ -189,9 +191,10 @@ class PostconditionFilter extends AbstractFilter
 
             // generate the check for assertions results
             if ($conditionCounter > 0) {
-                $code .= 'if (!empty(' . ReservedKeywords::FAILURE_VARIABLE . ') || !empty(' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ')) {' .
-                    Placeholders::ENFORCEMENT . $functionName . 'postcondition' . Placeholders::PLACEHOLDER_CLOSE . '
-                }';
+                $code .= '    if (!empty(' . ReservedKeywords::FAILURE_VARIABLE . ') || !empty(' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ')) {
+                    ' . Placeholders::ENFORCEMENT . $functionName . 'postcondition' . Placeholders::PLACEHOLDER_CLOSE . '
+                }
+            ';
             }
 
             // increment the outer loop
@@ -199,8 +202,8 @@ class PostconditionFilter extends AbstractFilter
         }
 
         // Closing bracket for contract depth check
-        $code .= '}' .
-            '/* END OF POSTCONDITION ENFORCEMENT */';
+        $code .= '}
+            ' . '/* END OF POSTCONDITION ENFORCEMENT */';
 
         // Did we get anything at all? If not only give back a comment.
         if ($conditionCounter === 0) {

@@ -93,7 +93,7 @@ class SkeletonFilter extends AbstractFilter
         $this->bucketBuffer = substr_replace($this->bucketBuffer, Placeholders::STRUCTURE_END, $lastLineIndex, 0);
 
         // inject the code for the function skeletons
-        $this->injectFunctionSkeletons($this->bucketBuffer, $this->structureDefinition);
+        $this->injectFunctionSkeletons($this->bucketBuffer, $this->structureDefinition, true);
     }
 
     /**
@@ -126,10 +126,11 @@ class SkeletonFilter extends AbstractFilter
      *
      * @param string                                                             $bucketData          Payload of the currently filtered bucket
      * @param \AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface $structureDefinition The original path we have to place as our constants
+     * @param boolean                                                            $beautify            Whether or not the injected code should be beautified first
      *
      * @return boolean
      */
-    protected function injectFunctionSkeletons(& $bucketData, StructureDefinitionInterface $structureDefinition)
+    protected function injectFunctionSkeletons(& $bucketData, StructureDefinitionInterface $structureDefinition, $beautify = false)
     {
 
         // generate the skeleton code for all known functions
@@ -197,18 +198,20 @@ class SkeletonFilter extends AbstractFilter
     {
 
         // first of all: the docblock
-        $code = $functionDefinition->getDocBlock();
-
-        // now finish the injected code with the new header of the original method, same signature but different name
-        $code .= $functionDefinition->getHeader('definition') . '{';
-
-        // mark the function beginning
-        $code .= Placeholders::FUNCTION_BEGIN . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
+        $code = '
+        ' . $functionDefinition->getDocBlock() . '
+        ' . $functionDefinition->getHeader('definition') . '
+        {
+            ' . Placeholders::FUNCTION_BEGIN . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
+            ';
 
         // right after: the "before" join-point
-        $code .= Placeholders::BEFORE_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
+        $code .= Placeholders::BEFORE_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
+            ';
 
-        $code .= ReservedKeywords::CONTRACT_CONTEXT . ' = \AppserverIo\Doppelgaenger\ContractContext::open();';
+        // open the contract context so we are able to avoid endless recursion
+        $code .= ReservedKeywords::CONTRACT_CONTEXT . ' = \AppserverIo\Doppelgaenger\ContractContext::open();
+            ';
 
         // Invariant is not needed in private or static functions.
         // Also make sure that there is none in front of the constructor check
@@ -220,24 +223,23 @@ class SkeletonFilter extends AbstractFilter
         }
 
         $code .= Placeholders::PRECONDITION . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
-        ' . Placeholders::OLD_SETUP . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
+            ' . Placeholders::OLD_SETUP . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE. '
+            ';
 
         // we will wrap code execution in order to provide a "finally" and "after throwing" placeholder hook.
         // we will also predefine the result as NULL to avoid warnings
         $code .= ReservedKeywords::RESULT . ' = null;
-        try {';
-
-        // we have to build up the placeholders for the around advice, first of all the beginning of the wrapper
-        $code .= Placeholders::AROUND_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
+            try {
+                ' .  Placeholders::AROUND_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
         ';
 
         // add the second part of the try/catch/finally block
-        $code .= '} catch (\Exception ' . ReservedKeywords::THROWN_EXCEPTION_OBJECT . ') {
-        ' . Placeholders::AFTERTHROWING_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
-
-            // rethrow the exception
-            throw ' . ReservedKeywords::THROWN_EXCEPTION_OBJECT . ';
-        } finally {
+        $code .= '
+            } catch (\Exception ' . ReservedKeywords::THROWN_EXCEPTION_OBJECT . ') {
+                ' . Placeholders::AFTERTHROWING_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
+                // rethrow the exception
+                throw ' . ReservedKeywords::THROWN_EXCEPTION_OBJECT . ';
+            } finally {
         ';
 
         // if we have to inject additional code, we might do so here
@@ -246,23 +248,31 @@ class SkeletonFilter extends AbstractFilter
         }
 
         // finish of the block
-        $code .= Placeholders::AFTER_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
-        }';
+        $code .= '        ' . Placeholders::AFTER_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
+            }
+        ';
 
         // now just place all the other placeholder for other filters to come
-        $code .= Placeholders::POSTCONDITION . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
+        $code .= '    ' . Placeholders::POSTCONDITION . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE;
 
         // Invariant is not needed in private or static functions
         if ($functionDefinition->getVisibility() !== 'private' && !$functionDefinition->isStatic()) {
-            $code .= Placeholders::INVARIANT . Placeholders::PLACEHOLDER_CLOSE;
+            $code .= '
+            ' . Placeholders::INVARIANT . Placeholders::PLACEHOLDER_CLOSE . '
+            ';
         }
 
         // close of the contract context
-        $code .= 'if (' . ReservedKeywords::CONTRACT_CONTEXT . ') {\AppserverIo\Doppelgaenger\ContractContext::close();}';
+        $code .= 'if (' . ReservedKeywords::CONTRACT_CONTEXT . ') {
+                \AppserverIo\Doppelgaenger\ContractContext::close();
+            }
+        ';
 
         // last of all: the "after returning" join-point and the final return from the proxy
-        $code .= Placeholders::AFTERRETURNING_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
-            return ' . ReservedKeywords::RESULT . ';}';
+        $code .= '    ' . Placeholders::AFTERRETURNING_JOINPOINT . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
+            return ' . ReservedKeywords::RESULT . ';
+        }
+        ';
 
         return $code;
     }
