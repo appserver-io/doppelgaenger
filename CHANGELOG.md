@@ -1,3 +1,13 @@
+# Version 1.3.3
+
+## Bugfixes
+
+* Fixed [#811](https://github.com/appserver-io/appserver/issues/811) - Endless recursion on parent::<METHOD> call
+
+## Features
+
+* None
+
 # Version 1.3.2
 
 ## Bugfixes
