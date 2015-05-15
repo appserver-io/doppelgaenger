@@ -125,6 +125,7 @@ class TypeAssertion extends AbstractAssertion
                         \'' . $this->type . '\',
                         gettype(' . $this->operand . ')
                     );
-                }';
+                }
+                ';
     }
 }

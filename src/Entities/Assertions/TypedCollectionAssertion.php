@@ -79,12 +79,12 @@ class TypedCollectionAssertion extends AbstractAssertion
         }
 
         // build up the check itself
-        $code = 'count(array_filter(' . $this->operand . ', function(&$value) {
-        if (!' . $validationString . ') {
-
-            return true;
-        }
-        })) ' . $this->comparator . ' 0';
+        $code = 'count(array_filter(' . $this->operand . ', function(&$value)
+            {
+                if (!' . $validationString . ') {
+                    return true;
+                }
+            })) ' . $this->comparator . ' 0';
 
         return $code;
     }

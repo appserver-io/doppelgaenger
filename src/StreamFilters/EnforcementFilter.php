@@ -220,8 +220,8 @@ class EnforcementFilter extends AbstractFilter
                 $exception = $exceptionFactory->getClassName($target);
 
                 // Create the code
-                $code .= '\AppserverIo\Doppelgaenger\ContractContext::close();' .
-                    $errorCollectionCode . '
+                $code .= '\AppserverIo\Doppelgaenger\ContractContext::close();
+                    ' . $errorCollectionCode . '
                     throw new \\' . $exception . '(' . ReservedKeywords::FAILURE_VARIABLE . ');';
 
                 break;
