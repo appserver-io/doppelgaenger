@@ -20,6 +20,8 @@
 
 namespace AppserverIo\Doppelgaenger\Entities\Pointcuts;
 
+use AppserverIo\Doppelgaenger\Utils\Parser;
+
 /**
  * Factory which will produce instances of specific pointcut classes based on their type and expression
  *
@@ -48,14 +50,17 @@ class PointcutFactory
         if (strpos($expression, $connector) !== false) {
             $connectorCount = substr_count($expression, $connector);
             $connectionIndex = 0;
+
+            // get a parsing helper and analyze bracket counts to determine where we are at
+            $parserUtil = new Parser();
             for ($i = 0; $i < $connectorCount; $i++) {
                 $connectionIndex = strpos($expression, $connector, $connectionIndex + 1);
                 $leftCandidate = substr($expression, 0, $connectionIndex);
                 $rightCandidate = str_replace($leftCandidate . $connector, '', $expression);
 
-                $leftBrackets = $this->getBracketCount($leftCandidate);
+                $leftBrackets = $parserUtil->getBracketCount($leftCandidate, '(');
                 if ($leftBrackets === 0 && !empty($leftCandidate)) {
-                    if ($this->getBracketCount($rightCandidate) === 0 && !empty($rightCandidate)) {
+                    if ($parserUtil->getBracketCount($rightCandidate, '(') === 0 && !empty($rightCandidate)) {
                         return new $class($leftCandidate, $rightCandidate);
                     }
 
@@ -65,57 +70,6 @@ class PointcutFactory
 
         // if we arrived here we did not find anything
         return false;
-    }
-
-    /**
-     * Will get the count of round brackets within a string.
-     * Will return an integer which is calculated as the number of opening brackets against closing ones.
-     *
-     * @param string $string The string to search in
-     *
-     * @return integer
-     */
-    protected function getBracketCount($string)
-    {
-        return substr_count($string, '(') - substr_count($string, ')');
-    }
-
-    /**
-     * Will return an integer value representing the length of the first portion of the given string which is completely
-     * enclosed by round brackets.
-     * Will return 0 if nothing is found.
-     *
-     * @param string  $string String to investigate
-     * @param integer $offset Offset at which to start looking, will default to 0
-     *
-     * @return integer
-     */
-    protected function getBracketSpan($string, $offset = 0)
-    {
-        // split up the string and analyse it character for character
-        $bracketCounter = null;
-        $stringArray = str_split($string);
-        $strlen = strlen($string);
-        $firstBracket = 0;
-        for ($i = $offset; $i < $strlen; $i++) {
-            // count different bracket types by de- and increasing the counter
-            if ($stringArray[$i] === '(') {
-                if (is_null($bracketCounter)) {
-                    $firstBracket = $i;
-                }
-                $bracketCounter = (int) $bracketCounter + 1;
-
-            } elseif ($stringArray[$i] === ')') {
-                $bracketCounter = (int) $bracketCounter - 1;
-            }
-
-            // if we reach 0 again we have a completely enclosed string
-            if ($bracketCounter === 0) {
-                return $i + 1 - $firstBracket;
-            }
-        }
-
-        return 0;
     }
 
     /**
@@ -146,7 +100,8 @@ class PointcutFactory
             $expression = $this->trimConnectorTypes($expression);
 
             // now lets have a look if we are wrapped in some outer brackets
-            if (strlen($expression) === $this->getBracketSpan($expression)) {
+            $parserUtil = new Parser();
+            if (strlen($expression) === $parserUtil->getBracketSpan($expression, '(')) {
                 $expression = substr($expression, 1, strlen($expression) - 2);
             }
 

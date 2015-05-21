@@ -105,7 +105,7 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
 
         } elseif (count($tokens) === 1) {
             // We got what we came for
-            return $tmp=$this->getDefinitionFromTokens($tokens[0], $getRecursive);
+            return $this->getDefinitionFromTokens($tokens[0], $getRecursive);
 
         } elseif (is_string($name) && count($tokens) > 1) {
             // We are still here, but got a structure name to look for
@@ -170,8 +170,8 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
         $name = '';
         $targetToken = $this->getToken();
         for ($i = 0; $i < count($tokens); $i++) {
-            // If we got the class name
-            if ($tokens[$i][0] === $targetToken) {
+            // If we got the structure name
+            if ($tokens[$i][0] === $targetToken && $tokens[$i - 1][0] !== T_PAAMAYIM_NEKUDOTAYIM) {
                 for ($j = $i + 1; $j < count($tokens); $j++) {
                     if ($tokens[$j] === '{') {
                         $name = $tokens[$i + 2][1];

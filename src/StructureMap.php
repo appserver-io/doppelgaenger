@@ -699,7 +699,7 @@ class StructureMap implements MapInterface
         $stuctureName = '';
 
         // get the buffer step by step
-        for ($k = 0; $k < 5; $k++) {
+        for ($k = 0; $k < 20; $k++) {
             // clear collected things on every iteration, so we will not chain them on in case of several needed loops
             $namespace = '';
 

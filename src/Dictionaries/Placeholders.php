@@ -67,6 +67,13 @@ class Placeholders
     const BEFORE_JOINPOINT = '/* DOPPELGAENGER_BEFORE_JOINPOINT ';
 
     /**
+     * Placeholder for any structure constants we might want to weave in
+     *
+     * @var string CONSTANT_HOOK
+     */
+    const CONSTANT_HOOK = '/* DOPPELGAENGER_CONSTANT_HOOK */';
+
+    /**
      * Placeholder to insert the actual processing of needed contract enforcing
      *
      * @var string ENFORCEMENT
@@ -89,11 +96,25 @@ class Placeholders
     const FUNCTION_BEGIN = '/* DOPPELGAENGER_FUNCTION_BEGIN_PLACEHOLDER ';
 
     /**
-     * Placeholder for inserting the invariant checks
+     * Placeholder for inserting the invariant checks at the end of a construct
      *
-     * @var string INVARIANT
+     * @var string INVARIANT_CALL_END
      */
-    const INVARIANT = '/* DOPPELGAENGER_INVARIANT_PLACEHOLDER ';
+    const INVARIANT_CALL_END = '/* DOPPELGAENGER_INVARIANT_CALL_END_PLACEHOLDER */';
+
+    /**
+     * Placeholder for inserting the invariant checks at random places
+     *
+     * @var string INVARIANT_CALL
+     */
+    const INVARIANT_CALL = '/* DOPPELGAENGER_INVARIANT_CALL_PLACEHOLDER */';
+
+    /**
+     * Placeholder for inserting the invariant checks at the start of a construct
+     *
+     * @var string INVARIANT_CALL_START
+     */
+    const INVARIANT_CALL_START = '/* DOPPELGAENGER_INVARIANT_CALL_START_PLACEHOLDER */';
 
     /**
      * Placeholder for injecting additional logic into generated proxy methods
@@ -129,8 +150,14 @@ class Placeholders
      *
      * @var string PLACEHOLDER_CLOSE
      */
-    const PLACEHOLDER_CLOSE = ' */
-    ';
+    const PLACEHOLDER_CLOSE = ' */';
+
+    /**
+     * String opening generic placeholders to allow filling dynamic parts into them
+     *
+     * @var string PLACEHOLDER_OPEN
+     */
+    const PLACEHOLDER_OPEN = '/* ';
 
     /**
      * Placeholder for inserting the postcondition checks
@@ -153,6 +180,14 @@ class Placeholders
      * @var string STRUCTURE_BEGIN
      */
     const STRUCTURE_BEGIN = '/* DOPPELGAENGER_STRUCTURE_BEGIN_PLACEHOLDER */';
+
+    /**
+     * Placeholder for injection of additional methods, properties, etc.
+     * Placed right before the end of the structure body
+     *
+     * @var string STRUCTURE_END
+     */
+    const STRUCTURE_END = '/* DOPPELGAENGER_STRUCTURE_END_PLACEHOLDER */';
 
     /**
      * Placeholder for additional inheritance or interfaces to implement.

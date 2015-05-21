@@ -21,6 +21,7 @@
 namespace AppserverIo\Doppelgaenger\StreamFilters;
 
 use AppserverIo\Doppelgaenger\Interfaces\StreamFilterInterface;
+use Monolog\Handler\error_log;
 
 /**
  * This abstract class provides a clean parent class for custom stream filters
@@ -64,6 +65,18 @@ abstract class AbstractFilter extends \php_user_filter implements StreamFilterIn
      * @var string $bucketBuffer
      */
     protected $bucketBuffer = '';
+
+    /**
+     * Hook to be called right before the stream closes.
+     * We will provide an empty implementation here, to not force the hook on filter classes.
+     * So override if needed.
+     *
+     * @return void
+     */
+    public function cleanup()
+    {
+        // Do nothing here
+    }
 
     /**
      * Will collect the content of ongoing tokens until a certain token is reached.
@@ -130,49 +143,58 @@ abstract class AbstractFilter extends \php_user_filter implements StreamFilterIn
      */
     public function filter($in, $out, &$consumed, $closing)
     {
-        // Before we get started we might prepare something
+        // before we get started we might prepare something
         $this->prepare();
 
-        // Get our buckets from the stream
+        // allow for cleanup on closing streams
+        if ($closing == true) {
+            $this->cleanup();
+            return PSFS_FEED_ME;
+        }
+
+        // get our buckets from the stream
         $firstIteration = true;
         while ($bucket = stream_bucket_make_writeable($in)) {
-            // Lets call the firstRun() hook on the first run
+            // lets call the firstBucket() hook on the first run
             if ($firstIteration === true) {
-                $this->firstRun();
+                $this->firstBucket($bucket->data);
                 $firstIteration = false;
-
-                // We have to fill the buffer with our first bucket
-                $this->bucketBuffer = $bucket->data;
             }
 
-            // Get the filtered content from the current bucket(s)
+            // we have to fill the buffer with our current bucket
+            $this->bucketBuffer .= $bucket->data;
+
+            // get the filtered content from the current bucket(s)
             $filteredContent = $this->filterContent($this->bucketBuffer);
 
-            // If we got a string the filtering has been finished for this buffer stack,
+            // if we got a string the filtering has been finished for this buffer stack,
             // we can append the content and clear the buffer.
             // If not we have to keep buffering and make another iteration.
             if (is_string($filteredContent)) {
-                // Tell them how much we already processed
-                $contentLength = strlen($filteredContent);
-                $consumed += $contentLength;
-
-                // Alter the current bucket, we will use it as a "new" bucket to append
+                // alter the current bucket, we will use it as a "new" bucket to append
                 $bucket->data = $filteredContent;
-                $bucket->datalen = $contentLength;
-                // Append the altered bucket
+                // append the altered bucket
                 stream_bucket_append($out, $bucket);
 
-                // Clear the buffer
+                // restart buffering
                 $this->bucketBuffer = '';
-
-            } else {
-                // Buffer the bucket data for further use
-                $this->bucketBuffer .= $bucket->data;
             }
+
+            // tell them what we have already consumed and save a bucket for later
+            $consumed += $bucket->datalen;
+            $lastBucket = clone $bucket;
         }
 
-        // Call the finish() hook of potential child filters
-        $this->finish($out);
+        // call the finish() hook of potential child filters
+        $this->finish();
+
+        // if there is still content in the buffer we have to append it as well
+        $bufferLength = strlen($this->bucketBuffer);
+        if ($bufferLength > 0) {
+            // attach the remaining buffer content to the stream
+            $lastBucket->data = $this->bucketBuffer;
+            stream_bucket_append($out, $lastBucket);
+        }
 
         return PSFS_PASS_ON;
     }
@@ -208,9 +230,11 @@ abstract class AbstractFilter extends \php_user_filter implements StreamFilterIn
      * We will provide an empty implementation here, to not force the hook on filter classes.
      * So override if needed.
      *
+     * @param string $bucketData Payload of the first filtered bucket
+     *
      * @return void
      */
-    public function firstRun()
+    public function firstBucket(&$bucketData)
     {
         // Do nothing here
     }
@@ -220,11 +244,9 @@ abstract class AbstractFilter extends \php_user_filter implements StreamFilterIn
      * We will provide an empty implementation here, to not force the hook on filter classes.
      * So override if needed.
      *
-     * @param resource $out Outgoing bucket brigade with already filtered content
-     *
      * @return void
      */
-    public function finish(&$out)
+    public function finish()
     {
         // Do nothing here
     }

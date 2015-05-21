@@ -193,8 +193,9 @@ abstract class AbstractAssertion implements AssertionInterface
     public function toCode()
     {
         $code = 'if ('. $this->getInvertString() .') {
-                ' . ReservedKeywords::FAILURE_VARIABLE . '[] = \'The assertion (' . str_replace('\'', '"', $this->getString()) . ') must hold\';
-            }';
+                    ' . ReservedKeywords::FAILURE_VARIABLE . '[] = \'The assertion (' . str_replace('\'', '"', $this->getString()) . ') must hold\';
+                }
+            ';
 
         return $code;
     }

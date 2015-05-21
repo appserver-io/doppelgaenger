@@ -29,6 +29,7 @@ use AppserverIo\Doppelgaenger\Entities\Lists\ParameterDefinitionList;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Ensures;
 use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Requires;
+use AppserverIo\Doppelgaenger\Utils\Parser;
 
 /**
  * This class implements a parser to find all useful information in function definitions
@@ -41,6 +42,24 @@ use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Requires;
  */
 class FunctionParser extends AbstractParser
 {
+
+    /**
+     * Token representing the structure this parser is used for
+     *
+     * @var integer TOKEN
+     */
+    const TOKEN = T_FUNCTION;
+
+    /**
+     * Will return the token representing the construct
+     *
+     * @return integer
+     */
+    public function getToken()
+    {
+        return self::TOKEN;
+    }
+
     /**
      * Will return a list of function definition objects extracted from a given token array
      *
@@ -142,6 +161,10 @@ class FunctionParser extends AbstractParser
 
         // For our next step we would like to get the doc comment (if any)
         $functionDefinition->setDocBlock($this->getDocBlock($tokens, T_FUNCTION));
+
+        // Get start and end line
+        $functionDefinition->setStartLine($this->getStartLine($tokens));
+        $functionDefinition->setEndLine($this->getEndLine($tokens));
 
         // Get the function signature
         $functionDefinition->setIsFinal($this->hasSignatureToken($tokens, T_FINAL, T_FUNCTION));
@@ -309,8 +332,9 @@ class FunctionParser extends AbstractParser
 
         // Now lets analyse what we got
         $parameterStrings = explode(',', $parameterString);
+        $parserUtils = new Parser();
         foreach ($parameterStrings as $key => $param) {
-            if ($this->getBracketCount($param, '(') > 0) {
+            if ($parserUtils->getBracketCount($param, '(') > 0) {
                 $param = $param . ', ' . $parameterStrings[$key + 1];
                 unset($parameterStrings[$key + 1]);
             }

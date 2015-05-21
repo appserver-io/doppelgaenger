@@ -38,7 +38,7 @@ class MixedTestClass
      */
     public function iHaveSeveralAdvices1($param1)
     {
-
+        return \stdClass::class;
     }
 
     /**

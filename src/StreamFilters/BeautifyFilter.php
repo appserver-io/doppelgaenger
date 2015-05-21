@@ -57,12 +57,10 @@ class BeautifyFilter extends AbstractFilter
      * As we depend on a fully buffered bucket brigade we will do all the work here.
      * We will pretty-print the buffer and write the result as one big bucket into the stream
      *
-     * @param resource $out Outgoing bucket brigade with already filtered content
-     *
      * @return void
      * @throws \AppserverIo\Doppelgaenger\Exceptions\GeneratorException
      */
-    public function finish(&$out)
+    public function finish()
     {
         // Beautify all the buckets!
         $parser = new \PHPParser_Parser(new \PHPParser_Lexer);
@@ -72,19 +70,10 @@ class BeautifyFilter extends AbstractFilter
             // parse
             $stmts = $parser->parse($this->bucketBuffer);
 
-            $data = '<?php ' . $prettyPrinter->prettyPrint($stmts);
+            $this->bucketBuffer = '<?php ' . $prettyPrinter->prettyPrint($stmts);
 
         } catch (\PHPParser_Error $e) {
             throw new GeneratorException($e->getMessage());
         }
-
-        // Refill the bucket with the beautified data
-        // Do not forget to set the length!
-        $bigBucket = new \Bucket();
-        $bigBucket->data = $data;
-        $bigBucket->datalen = strlen($data);
-
-        // Only append our big bucket
-        stream_bucket_append($out, $bigBucket);
     }
 }

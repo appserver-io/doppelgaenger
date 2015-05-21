@@ -99,6 +99,10 @@ class ClassParser extends AbstractStructureParser
         // For our next step we would like to get the doc comment (if any)
         $this->currentDefinition->setDocBlock($this->getDocBlock($tokens, self::TOKEN));
 
+        // Get start and end line
+        $this->currentDefinition->setStartLine($this->getStartLine($tokens));
+        $this->currentDefinition->setEndLine($this->getEndLine($tokens));
+
         // Lets get the attributes the class might have
         $this->currentDefinition->setAttributeDefinitions($this->getAttributes(
             $tokens

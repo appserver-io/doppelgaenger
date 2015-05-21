@@ -124,10 +124,11 @@ class PreconditionFilter extends AbstractFilter
     {
         // We only use contracting if we're not inside another contract already
         $code = '/* BEGIN OF PRECONDITION ENFORCEMENT */
-        if (' . ReservedKeywords::CONTRACT_CONTEXT . ') {
-            ' . ReservedKeywords::PASSED_ASSERTION_FLAG . ' = false;' .
-            ReservedKeywords::FAILURE_VARIABLE . ' = array();' .
-            ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ' = array();';
+            if (' . ReservedKeywords::CONTRACT_CONTEXT . ') {
+                ' . ReservedKeywords::PASSED_ASSERTION_FLAG . ' = false;
+                ' . ReservedKeywords::FAILURE_VARIABLE . ' = array();
+                ' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ' = array();
+                ';
 
         // We need a counter to check how much conditions we got
         $conditionCounter = 0;
@@ -144,7 +145,9 @@ class PreconditionFilter extends AbstractFilter
             }
 
             // create a wrap around assuring that inherited conditions get or-combined
-            $code .= 'if (' . ReservedKeywords::PASSED_ASSERTION_FLAG . ' === false) {';
+            $code .= '
+                if (' . ReservedKeywords::PASSED_ASSERTION_FLAG . ' === false) {
+                    ';
 
             // iterate through the conditions for this certain instance
             for ($j = 0; $j < $assertionIterator->count(); $j++) {
@@ -156,18 +159,21 @@ class PreconditionFilter extends AbstractFilter
             }
 
             // close the or-combined wrap
-            $code .= 'if (empty(' . ReservedKeywords::FAILURE_VARIABLE . ') && empty(' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ')) {' .
-                ReservedKeywords::PASSED_ASSERTION_FLAG . ' = true;
-                }}';
+            $code .= '    if (empty(' . ReservedKeywords::FAILURE_VARIABLE . ') && empty(' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ')) {
+                        ' . ReservedKeywords::PASSED_ASSERTION_FLAG . ' = true;
+                    }
+                }
+                ';
 
             // increment the outer loop
             $listIterator->next();
         }
 
         // Preconditions need or-ed conditions so we make sure only one condition list gets checked
-        $code .= 'if (' . ReservedKeywords::PASSED_ASSERTION_FLAG . ' === false){' .
-            Placeholders::ENFORCEMENT . $functionName . 'precondition' . Placeholders::PLACEHOLDER_CLOSE . '
-            }}
+        $code .= 'if (' . ReservedKeywords::PASSED_ASSERTION_FLAG . ' === false){
+                    ' . Placeholders::ENFORCEMENT . $functionName . 'precondition' . Placeholders::PLACEHOLDER_CLOSE . '
+                }
+            }
             /* END OF PRECONDITION ENFORCEMENT */';
 
         // If there were no assertions we will just return a comment

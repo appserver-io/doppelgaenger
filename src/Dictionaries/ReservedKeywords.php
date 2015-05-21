@@ -37,35 +37,56 @@ class ReservedKeywords
      *
      * @var string ATTRIBUTE_STORAGE
      */
-    const ATTRIBUTE_STORAGE = 'doppelgaengerAttributes';
+    const ATTRIBUTE_STORAGE = 'dgAttributes';
 
     /**
      * Reserved name of the function wrapping invariant checks
      *
      * @var string CLASS_INVARIANT
      */
-    const CLASS_INVARIANT = 'doppelgaengerClassInvariant';
+    const CLASS_INVARIANT = 'dgClassInvariant';
+
+    /**
+     * Reserved local variable containing the method calling the invariant
+     *
+     * @var string INVARIANT_CALLER_VARIABLE
+     */
+    const INVARIANT_CALLER_VARIABLE = '$dgCallingMethod';
+
+    /**
+     * Reserved local variable containing the line in which a condition has been broken
+     *
+     * @var string ERROR_LINE_VARIABLE
+     */
+    const ERROR_LINE_VARIABLE = '$dgErrorLine';
+
+    /**
+     * Reserved local variable containing the line the original function starts
+     *
+     * @var string ERROR_LINE_VARIABLE
+     */
+    const START_LINE_VARIABLE = '$dgStartLine';
+
+    /**
+     * Reserved local variable containing the line the original function ends
+     *
+     * @var string ERROR_LINE_VARIABLE
+     */
+    const END_LINE_VARIABLE = '$dgEndLine';
 
     /**
      * Reserved local variable containing a flag which indications if we currently are within a contract
      *
      * @var string CONTRACT_CONTEXT
      */
-    const CONTRACT_CONTEXT = '$doppelgaengerOngoingContract';
-
-    /**
-     * Reserved constant name which is used for a substitute of the __DIR__ constant
-     *
-     * @var string DIR_SUBSTITUTE
-     */
-    const DIR_SUBSTITUTE = 'DOPPELGAENGER_DIR_SUBSTITUTE';
+    const CONTRACT_CONTEXT = '$dgOngoingContract';
 
     /**
      * Reserved local variable which is used to build up messages regarding failed contracts
      *
      * @var string FAILURE_VARIABLE
      */
-    const FAILURE_VARIABLE = '$doppelgaengerFailureMessage';
+    const FAILURE_VARIABLE = '$dgFailureMessage';
 
     /**
      * Reserved local variable which is used to build up messages regarding failed contracts.
@@ -73,14 +94,7 @@ class ReservedKeywords
      *
      * @var string UNWRAPPED_FAILURE_VARIABLE
      */
-    const UNWRAPPED_FAILURE_VARIABLE = '$doppelgaengerUnwrappedFailureMessage';
-
-    /**
-     * Reserved constant name which is used for a substitute of the __FILE__ constant
-     *
-     * @var string FILE_SUBSTITUTE
-     */
-    const FILE_SUBSTITUTE = 'DOPPELGAENGER_FILE_SUBSTITUTE';
+    const UNWRAPPED_FAILURE_VARIABLE = '$dgUnwrappedFailureMessage';
 
     /**
      * Reserved local variable containing a flag which indications if we currently are within a contract
@@ -94,14 +108,14 @@ class ReservedKeywords
      *
      * @var string MARK_CONTRACT_ENTRY
      */
-    const MARK_CONTRACT_ENTRY = '$doppelgaengerContractEntry';
+    const MARK_CONTRACT_ENTRY = '$dgContractEntry';
 
     /**
      * Name of the local variable representing the method invocation within woven advices
      *
      * @var string METHOD_INVOCATION_OBJECT
      */
-    const METHOD_INVOCATION_OBJECT = '$doppelgaengerMethodInvocationObject';
+    const METHOD_INVOCATION_OBJECT = '$dgMethodInvocationObject';
 
     /**
      * Reserved local variable containing a scope copy before function execution
@@ -122,7 +136,7 @@ class ReservedKeywords
      *
      * @var string PASSED_ASSERTION_FLAG
      */
-    const PASSED_ASSERTION_FLAG = '$doppelgaengerPassedBlock';
+    const PASSED_ASSERTION_FLAG = '$dgPassedBlock';
 
     /**
      * Reserved local variable containing the result of the actual function execution
@@ -136,5 +150,5 @@ class ReservedKeywords
      *
      * @var string THROWN_EXCEPTION_OBJECT
      */
-    const THROWN_EXCEPTION_OBJECT = '$doppelgaengerThrownExceptionObject';
+    const THROWN_EXCEPTION_OBJECT = '$dgThrownExceptionObject';
 }

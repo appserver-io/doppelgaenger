@@ -38,7 +38,7 @@ trait TestTrait1
      */
     public function test1()
     {
-
+        return \stdClass::class;
     }
 
     /**

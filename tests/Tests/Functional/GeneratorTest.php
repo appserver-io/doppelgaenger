@@ -25,6 +25,7 @@ use AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\CustomProcessingTestClass
 use AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\LocalCustomProcessingTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\TagPlacementTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\RecursionTestClass2;
+use AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\BasicTestClass;
 
 /**
  * This test covers known generator problems
@@ -144,6 +145,21 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $testClass = new CustomProcessingTestClass();
         $testClass->iHaveACustomExceptionProcessing();
+    }
+
+    /**
+     * Will test if we can disable custom enforcement processing on method level using the @Processing annotation
+     *
+     * @return void
+     */
+    public function testCustomMethodNoneProcessing()
+    {
+        $testClass = new CustomProcessingTestClass();
+        try {
+            $testClass->iHaveNoProcessingAtAll();
+        } catch (Exception $e) {
+            $this->fail('There should not be an exception at all');
+        }
     }
 
     /**

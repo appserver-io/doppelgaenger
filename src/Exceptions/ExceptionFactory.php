@@ -72,17 +72,17 @@ class ExceptionFactory
         switch ($type) {
             case 'precondition':
 
-                $name = 'AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPreconditionException';
+                $name = 'AppserverIo\Doppelgaenger\Exceptions\BrokenPreconditionException';
                 break;
 
             case 'postcondition':
 
-                $name = 'AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException';
+                $name = 'AppserverIo\Doppelgaenger\Exceptions\BrokenPostconditionException';
                 break;
 
             case 'invariant':
 
-                $name = 'AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenInvariantException';
+                $name = 'AppserverIo\Doppelgaenger\Exceptions\BrokenInvariantException';
                 break;
 
             default:

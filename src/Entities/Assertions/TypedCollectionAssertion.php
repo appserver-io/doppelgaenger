@@ -79,12 +79,12 @@ class TypedCollectionAssertion extends AbstractAssertion
         }
 
         // build up the check itself
-        $code = 'count(array_filter(' . $this->operand . ', function(&$value) {
-        if (!' . $validationString . ') {
-
-            return true;
-        }
-        })) ' . $this->comparator . ' 0';
+        $code = 'count(array_filter(' . $this->operand . ', function(&$value)
+            {
+                if (!' . $validationString . ') {
+                    return true;
+                }
+            })) ' . $this->comparator . ' 0';
 
         return $code;
     }
@@ -124,7 +124,7 @@ class TypedCollectionAssertion extends AbstractAssertion
         return 'if ('. $this->getInvertString() .') {
                 ' . ReservedKeywords::FAILURE_VARIABLE . '[] = sprintf(
                     \'%s must only contain entries of the type %s\',
-                    \'' . $this->operand . '\',
+                    \'' . str_replace(ReservedKeywords::RESULT, 'The returned collection', $this->operand) . '\',
                     \'' . $this->type . '\'
                 );
             }';

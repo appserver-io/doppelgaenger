@@ -34,6 +34,7 @@ use AppserverIo\Doppelgaenger\Tests\Data\MultiRegex\A\Data\RegexTestClass1;
 use AppserverIo\Doppelgaenger\Tests\Data\MultiRegex\B\Data\RegexTestClass2;
 use AppserverIo\Doppelgaenger\Tests\Data\RegexTest1\RegexTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\ParserTest\MultiClassTokenTestClass;
+use AppserverIo\Doppelgaenger\Tests\Data\ParserTest\ErrorLineTestClass;
 
 /**
  * Will test basic parser usage
@@ -365,5 +366,83 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $testClass = new MultiClassTokenTestClass();
         $this->assertInstanceOf('\AppserverIo\Doppelgaenger\Tests\Data\ParserTest\MultiClassTokenTestClass', $testClass);
         $testClass->iContainAClassKeyoword();
+    }
+
+    /**
+     * Will test whether the returned error line of a precondition is correct in relation to the original class declaration
+     *
+     * @return void
+     */
+    public function testErrorLineOfPrecondition()
+    {
+        $testClass = new ErrorLineTestClass();
+        $errorLine = 0;
+        try {
+            $testClass->iShouldFailAt63(array());
+
+        } catch (\Exception $e) {
+            $errorLine = $e->getLine();
+        }
+
+        $this->assertEquals(63, $errorLine);
+    }
+
+    /**
+     * Will test whether the returned error line of a postcondition is correct in relation to the original class declaration
+     *
+     * @return void
+     */
+    public function testErrorLineOfPostcondition()
+    {
+        $testClass = new ErrorLineTestClass();
+        $errorLine = 0;
+        try {
+            $testClass->iShouldFailAt54();
+
+        } catch (\Exception $e) {
+            $errorLine = $e->getLine();
+        }
+
+        $this->assertEquals(54, $errorLine);
+    }
+
+    /**
+     * Will test whether the returned error line of a postcondition is correct in relation to the original class declaration even if
+     * the declaration contains trailing whitespaces
+     *
+     * @return void
+     */
+    public function testErrorLineOfPostconditionWithTrailingWhitespace()
+    {
+        $testClass = new ErrorLineTestClass();
+        $errorLine = 0;
+        try {
+            $testClass->iShouldFailAt88();
+
+        } catch (\Exception $e) {
+            $errorLine = $e->getLine();
+        }
+
+        $this->assertEquals(88, $errorLine);
+    }
+
+    /**
+     * Will test whether the returned error line of an invariant check is correct in relation to the original class declaration and
+     * place of the check
+     *
+     * @return void
+     */
+    public function testErrorLineOfMethodExitInvariant()
+    {
+        $testClass = new ErrorLineTestClass();
+        $errorLine = 0;
+        try {
+            $testClass->iShouldFailAt101();
+
+        } catch (\Exception $e) {
+            $errorLine = $e->getLine();
+        }
+
+        $this->assertEquals(101, $errorLine);
     }
 }

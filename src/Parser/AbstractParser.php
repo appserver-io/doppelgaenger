@@ -157,28 +157,54 @@ abstract class AbstractParser implements ParserInterface
     }
 
     /**
-     * Will return the length of the string a token array is based on.
+     * Get the starting line of the structure, FALSE if unknown
      *
      * @param array $tokens The token array
      *
-     * @return integer
+     * @return integer|boolean
      */
-    protected function getStringLength(
-        $tokens
-    ) {
-        // Iterator over the tokens and get their lengt
-        $result = 0;
+    protected function getStartLine($tokens)
+    {
+        // Check the tokens
+        $targetToken = $this->getToken();
         $tokenCount = count($tokens);
         for ($i = 0; $i < $tokenCount; $i++) {
-            if (is_array($tokens[$i])) {
-                $result += strlen($tokens[$i][1]);
-
-            } else {
-                $result += strlen($tokens[$i]);
+            // If we got the target token indicating the structure start
+            if ($tokens[$i][0] === $targetToken && $tokens[$i - 1][0] !== T_PAAMAYIM_NEKUDOTAYIM) {
+                return $tokens[$i][2];
             }
         }
 
-        return $result;
+        // Return that we found nothing
+        return false;
+    }
+
+    /**
+     * Get the ending line of the structure, FALSE if unknown
+     *
+     * @param array $tokens The token array
+     *
+     * @return integer|boolean
+     */
+    protected function getEndLine($tokens)
+    {
+        // Check the tokens for a line number
+        $lastIndex = (count($tokens) - 1);
+        for ($i = $lastIndex; $i >= 0; $i--) {
+            // If we got a token we know about the line number of the last token
+            if (is_array($tokens[$i])) {
+                // we found something already
+                $endLine = $tokens[$i][2];
+                // might be a linebreak as well
+                if ($tokens[$i][0] === T_WHITESPACE) {
+                    $endLine += substr_count($tokens[$i][1], "\n");
+                }
+                return $endLine;
+            }
+        }
+
+        // Return that we found nothing
+        return false;
     }
 
     /**
@@ -226,38 +252,6 @@ abstract class AbstractParser implements ParserInterface
 
         // We are still here? That should not be.
         return false;
-    }
-
-    /**
-     * Will get the count of brackets (round or curly) within a string.
-     * Will return an integer which is calculated as the number of opening brackets against closing ones.
-     * Will return false if the bracket type is not recognized
-     *
-     * @param string $string  The string to search in
-     * @param string $bracket Type of bracket we have. Might be (, ), { or }
-     *
-     * @return boolean|integer
-     */
-    protected function getBracketCount(
-        $string,
-        $bracket
-    ) {
-        $roundBrackets = array_flip(array('(', ')'));
-        $curlyBrackets = array_flip(array('{', '}'));
-
-        if (isset($roundBrackets[$bracket])) {
-            $openingBracket = '(';
-            $closingBracket = ')';
-
-        } elseif (isset($curlyBrackets[$bracket])) {
-            $openingBracket = '{';
-            $closingBracket = '}';
-
-        } else {
-            return false;
-        }
-
-        return substr_count($string, $openingBracket) - substr_count($string, $closingBracket);
     }
 
     /**
