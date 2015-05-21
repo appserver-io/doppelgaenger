@@ -22,8 +22,6 @@ namespace AppserverIo\Doppelgaenger;
 
 // Load the placeholder constants if not already done
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Dictionaries' . DIRECTORY_SEPARATOR . 'Placeholders.php';
-// we also need our Structure definition class
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Entities' . DIRECTORY_SEPARATOR . 'Definitions' . DIRECTORY_SEPARATOR . 'Structure.php';
 
 /**
  * Will provide autoloader functionality as an entry point for parsing and code generation
