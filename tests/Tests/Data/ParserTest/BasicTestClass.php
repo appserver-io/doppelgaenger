@@ -34,4 +34,13 @@ use AppserverIo\Doppelgaenger\Parser\ClassParser;
  */
 class BasicTestClass
 {
+    /**
+     * Test
+     *
+     * @return string
+     */
+    public function test()
+    {
+        return \stdClass::class;
+    }
 }

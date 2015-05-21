@@ -81,12 +81,13 @@ class SkeletonFilter extends AbstractFilter
     /**
      * Will find the index of the last character within a structure
      *
-     * @param unknown $code
-     * @param unknown $structureName
-     * @param unknown $structureType
-     * @return number
+     * @param string $code          The structure code to search in
+     * @param string $structureName Name of the structure to get the last index for
+     * @param string $structureType Type of the structure in question
+     *
+     * @return integer
      */
-    protected function findLastStructureIndex($code, $structureName ,$structureType)
+    protected function findLastStructureIndex($code, $structureName, $structureType)
     {
         // determine which keyword we should search for
         switch ($structureType) {
@@ -107,8 +108,11 @@ class SkeletonFilter extends AbstractFilter
         // cut everything in front of the first bracket so we have a better start
         $matches = array();
         preg_match('/.*' . $structureKeyword . '\s+' . $structureName . '.+?{/s', $code, $matches);
-        $offset = (strlen(reset($matches)) - 1);
+        if (count($matches) != 1) {
+            throw new GeneratorException(sprintf('Could not find last index for stucture %s. Cannot generate proxy skeleton.', $structureName));
+        }
 
+        $offset = (strlen(reset($matches)) - 1);
         // get a parser util and get the bracket span
         $parserUtil = new Parser();
         $structureSpan = $parserUtil->getBracketSpan($code, '{', $offset);

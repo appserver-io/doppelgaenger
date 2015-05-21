@@ -186,10 +186,10 @@ class EnforcementFilter extends AbstractFilter
      * /**
      * Will generate the code needed to enforce any broken assertion checks
      *
-     * @param string  $structureName The name of the structure for which we create the enforcement code
-     * @param string  $target        For which kind of assertion do wee need the processing
-     * @param string  $type          The enforcement processing type to generate code for
-     * @param string  $file          File for which the code gets generated
+     * @param string $structureName The name of the structure for which we create the enforcement code
+     * @param string $target        For which kind of assertion do wee need the processing
+     * @param string $type          The enforcement processing type to generate code for
+     * @param string $file          File for which the code gets generated
      *
      * @return string
      *
@@ -255,9 +255,9 @@ class EnforcementFilter extends AbstractFilter
 
             case 'none':
 
-                    // Create the code
-                    $code .= '\AppserverIo\Doppelgaenger\ContractContext::close();';
-                    break;
+                // Create the code
+                $code .= '\AppserverIo\Doppelgaenger\ContractContext::close();';
+                break;
 
             default:
                 // something went terribly wrong ...

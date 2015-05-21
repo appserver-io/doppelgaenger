@@ -73,7 +73,7 @@ class IntroductionFilter extends AbstractFilter
                 $tokensCount = count($tokens);
                 for ($i = 0; $i < $tokensCount; $i++) {
                     // We need something to hook into, right after class header seems fine
-                    if (is_array($tokens[$i]) && $tokens[$i][0] === T_CLASS) {
+                    if (is_array($tokens[$i]) && $tokens[$i][0] === T_CLASS && $tokens[$i - 1][0] !== T_PAAMAYIM_NEKUDOTAYIM) {
                         for ($j = $i; $j < $tokensCount; $j++) {
                             // If we got the opening bracket we can break
                             if ($tokens[$j] === '{' || $tokens[$j][0] === T_CURLY_OPEN) {

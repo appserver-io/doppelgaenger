@@ -36,14 +36,18 @@ interface ProxyExceptionInterface extends ExceptionInterface
     /**
      * Setter for the file the exception states it has been thrown in
      *
-     * @param string $file
+     * @param string $file The file the exceptions seems to have happened in
+     *
+     * @return void
      */
     public function setFile($file);
 
     /**
      * Setter for the line the exception states it has been thrown/created at
      *
-     * @param integer $line
+     * @param integer $line The line in which the exception seems to have happened
+     *
+     * @return void
      */
     public function setLine($line);
 }

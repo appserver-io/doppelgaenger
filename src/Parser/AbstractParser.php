@@ -170,7 +170,7 @@ abstract class AbstractParser implements ParserInterface
         $tokenCount = count($tokens);
         for ($i = 0; $i < $tokenCount; $i++) {
             // If we got the target token indicating the structure start
-            if ($tokens[$i][0] === $targetToken) {
+            if ($tokens[$i][0] === $targetToken && $tokens[$i - 1][0] !== T_PAAMAYIM_NEKUDOTAYIM) {
                 return $tokens[$i][2];
             }
         }

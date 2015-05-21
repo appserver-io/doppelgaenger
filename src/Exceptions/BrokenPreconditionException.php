@@ -32,7 +32,7 @@ use AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPreconditionException as MopPre
  * @link      https://github.com/appserver-io-psr/mop
  * @link      http://www.appserver.io/
  */
-class BrokenPreconditionException  extends MopPreconditionException implements ProxyExceptionInterface
+class BrokenPreconditionException extends MopPreconditionException implements ProxyExceptionInterface
 {
     /**
      * Allows to alter file and line the exception seems to have been thrown/created in

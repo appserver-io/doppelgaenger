@@ -25,6 +25,7 @@ use AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\CustomProcessingTestClass
 use AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\LocalCustomProcessingTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\TagPlacementTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\RecursionTestClass2;
+use AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\BasicTestClass;
 
 /**
  * This test covers known generator problems
