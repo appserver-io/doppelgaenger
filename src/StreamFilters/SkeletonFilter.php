@@ -25,6 +25,10 @@ use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
 use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 use AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface;
+use AppserverIo\Doppelgaenger\Utils\Parser;
+use AppserverIo\Doppelgaenger\Entities\Definitions\ClassDefinition;
+use AppserverIo\Doppelgaenger\Entities\Definitions\InterfaceDefinition;
+use AppserverIo\Doppelgaenger\Entities\Definitions\TraitDefinition;
 
 /**
  * This filter is the most important one!
@@ -75,6 +79,44 @@ class SkeletonFilter extends AbstractFilter
     }
 
     /**
+     * Will find the index of the last character within a structure
+     *
+     * @param unknown $code
+     * @param unknown $structureName
+     * @param unknown $structureType
+     * @return number
+     */
+    protected function findLastStructureIndex($code, $structureName ,$structureType)
+    {
+        // determine which keyword we should search for
+        switch ($structureType) {
+            case InterfaceDefinition::TYPE:
+                $structureKeyword = 'interface';
+                break;
+
+            case TraitDefinition::TYPE:
+                $structureKeyword = 'trait';
+                break;
+
+            default:
+
+                $structureKeyword = 'class';
+                break;
+        }
+
+        // cut everything in front of the first bracket so we have a better start
+        $matches = array();
+        preg_match('/.*' . $structureKeyword . '\s+' . $structureName . '.+?{/s', $code, $matches);
+        $offset = (strlen(reset($matches)) - 1);
+
+        // get a parser util and get the bracket span
+        $parserUtil = new Parser();
+        $structureSpan = $parserUtil->getBracketSpan($code, '{', $offset);
+
+        return (($structureSpan + $offset) - 1);
+    }
+
+    /**
      * Preparation hook which is intended to be called at the start of the first filter() iteration.
      * We will inject the original path hint here
      *
@@ -89,8 +131,8 @@ class SkeletonFilter extends AbstractFilter
         $this->substituteFunctionHeaders($this->bucketBuffer, $this->structureDefinition);
 
         // mark the end of the structure as this is an important hook for other things to be woven
-        $lastLineIndex = strrpos($this->bucketBuffer, '}');
-        $this->bucketBuffer = substr_replace($this->bucketBuffer, Placeholders::STRUCTURE_END, $lastLineIndex, 0);
+        $lastIndex = $this->findLastStructureIndex($this->bucketBuffer, $this->structureDefinition->getName(), $this->structureDefinition->getType());
+        $this->bucketBuffer = substr_replace($this->bucketBuffer, Placeholders::STRUCTURE_END, $lastIndex, 0);
 
         // inject the code for the function skeletons
         $this->injectFunctionSkeletons($this->bucketBuffer, $this->structureDefinition, true);
@@ -160,9 +202,11 @@ class SkeletonFilter extends AbstractFilter
      *      <FUNCTION_DOCBLOCK>
      *      <FUNCTION_MODIFIERS> function <FUNCTION_NAME>(<FUNCTION_PARAMS>)
      *      {
+     *          $dgStartLine = <FUNCTION_START_LINE>;
+     *          $dgEndLine = <FUNCTION_END_LINE>;
      *          / DOPPELGAENGER_FUNCTION_BEGIN_PLACEHOLDER <FUNCTION_NAME> /
      *          / DOPPELGAENGER_BEFORE_JOINPOINT <FUNCTION_NAME> /
-     *          $doppelgaengerOngoingContract = \AppserverIo\Doppelgaenger\ContractContext::open();
+     *          $dgOngoingContract = \AppserverIo\Doppelgaenger\ContractContext::open();
      *          / DOPPELGAENGER_INVARIANT_PLACEHOLDER /
      *          / DOPPELGAENGER_PRECONDITION_PLACEHOLDER <FUNCTION_NAME> /
      *          / DOPPELGAENGER_OLD_SETUP_PLACEHOLDER <FUNCTION_NAME> /
@@ -170,11 +214,11 @@ class SkeletonFilter extends AbstractFilter
      *          try {
      *              / DOPPELGAENGER_AROUND_JOINPOINT <FUNCTION_NAME> /
      *
-     *          } catch (\Exception $doppelgaengerThrownExceptionObject) {
+     *          } catch (\Exception $dgThrownExceptionObject) {
      *              / DOPPELGAENGER_AFTERTHROWING_JOINPOINT <FUNCTION_NAME> /
      *
      *              // rethrow the exception
-     *              throw $doppelgaengerThrownExceptionObject;
+     *              throw $dgThrownExceptionObject;
      *
      *          } finally {
      *              / DOPPELGAENGER_AFTER_JOINPOINT <FUNCTION_NAME> /
@@ -182,7 +226,7 @@ class SkeletonFilter extends AbstractFilter
      *          }
      *          / DOPPELGAENGER_POSTCONDITION_PLACEHOLDER <FUNCTION_NAME> /
      *          / DOPPELGAENGER_INVARIANT_PLACEHOLDER /
-     *          if ($doppelgaengerOngoingContract) {
+     *          if ($dgOngoingContract) {
      *              \AppserverIo\Doppelgaenger\ContractContext::close();
      *          } / DOPPELGAENGER_AFTERRETURNING_JOINPOINT <FUNCTION_NAME> /
      *
@@ -202,6 +246,8 @@ class SkeletonFilter extends AbstractFilter
         ' . $functionDefinition->getDocBlock() . '
         ' . $functionDefinition->getHeader('definition') . '
         {
+            ' . ReservedKeywords::START_LINE_VARIABLE . ' = ' . (integer) $functionDefinition->getStartLine() . ';
+            ' . ReservedKeywords::END_LINE_VARIABLE . ' = ' . (integer) $functionDefinition->getEndLine() . ';
             ' . Placeholders::FUNCTION_BEGIN . $functionDefinition->getName() . Placeholders::PLACEHOLDER_CLOSE . '
             ';
 
@@ -218,7 +264,7 @@ class SkeletonFilter extends AbstractFilter
         if ($functionDefinition->getVisibility() !== 'private' &&
             !$functionDefinition->isStatic() && $functionDefinition->getName() !== '__construct'
         ) {
-            $code .= Placeholders::INVARIANT . Placeholders::PLACEHOLDER_CLOSE . '
+            $code .= Placeholders::INVARIANT_CALL_START . '
             ';
         }
 
@@ -258,7 +304,7 @@ class SkeletonFilter extends AbstractFilter
         // Invariant is not needed in private or static functions
         if ($functionDefinition->getVisibility() !== 'private' && !$functionDefinition->isStatic()) {
             $code .= '
-            ' . Placeholders::INVARIANT . Placeholders::PLACEHOLDER_CLOSE . '
+            ' . Placeholders::INVARIANT_CALL_END . '
             ';
         }
 

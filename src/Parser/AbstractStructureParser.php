@@ -170,7 +170,7 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
         $name = '';
         $targetToken = $this->getToken();
         for ($i = 0; $i < count($tokens); $i++) {
-            // If we got the class name
+            // If we got the structure name
             if ($tokens[$i][0] === $targetToken) {
                 for ($j = $i + 1; $j < count($tokens); $j++) {
                     if ($tokens[$j] === '{') {

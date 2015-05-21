@@ -33,4 +33,63 @@ namespace AppserverIo\Doppelgaenger\Entities\Definitions;
 abstract class AbstractDefinition
 {
 
+    /**
+     * List of lists of any ancestral invariants
+     *
+     * @var integer|boolean $endLine
+     */
+    protected $endLine = false;
+
+    /**
+     * List of lists of any ancestral invariants
+     *
+     * @var integer|boolean $startLine
+     */
+    protected $startLine = false;
+
+    /**
+     * Getter for the end line of this structure.
+     * FALSE if unknown
+     *
+     * @return integer|boolean
+     */
+    public function getEndLine()
+    {
+        return $this->endLine;
+    }
+
+    /**
+     * Getter for the start line of this structure.
+     * FALSE if unknown
+     *
+     * @return integer|boolean
+     */
+    public function getStartLine()
+    {
+        return $this->startLine;
+    }
+
+    /**
+     * Setter for the end line of this structure
+     *
+     * @param integer|boolean $endLine The line the structure ends in
+     *
+     * @return void
+     */
+    public function setEndLine($endLine)
+    {
+        $this->endLine = $endLine;
+    }
+
+    /**
+     * Setter for the start line of this structure
+     *
+     * @param integer|boolean $startLine The line the structure starts in
+     *
+     * @return void
+     */
+    public function setStartLine($startLine)
+    {
+        $this->startLine = $startLine;
+    }
 }

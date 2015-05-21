@@ -1,7 +1,7 @@
 <?php
 
 /**
- * \AppserverIo\Doppelgaenger\Tests\Data\Annotations\TestTrait1
+ * \AppserverIo\Doppelgaenger\Exceptions\ProxyExceptionTrait
  *
  * NOTICE OF LICENSE
  *
@@ -14,40 +14,43 @@
  * @author    Bernhard Wick <bw@appserver.io>
  * @copyright 2015 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      https://github.com/appserver-io-psr/mop
  * @link      http://www.appserver.io/
  */
 
-namespace AppserverIo\Doppelgaenger\Tests\Data\Annotations;
+namespace AppserverIo\Doppelgaenger\Exceptions;
 
 /**
- * Declaration needed for introduction tests
+ * Abstract base exception which allows to state
+ * a different throwing file and line than the original exception would
  *
  * @author    Bernhard Wick <bw@appserver.io>
  * @copyright 2015 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      https://github.com/appserver-io/doppelgaenger
+ * @link      https://github.com/appserver-io-psr/mop
  * @link      http://www.appserver.io/
  */
-trait TestTrait1
+trait ProxyExceptionTrait
 {
+
     /**
-     * Test1
+     * Setter for the line the exception states it has been thrown/created at
      *
-     * @return mixed
+     * @param integer $line
      */
-    public function test1()
+    public function setLine($line)
     {
-        return \stdClass::class;
+        $this->line = $line;
     }
 
     /**
-     * Test1
+     * Setter for the file the exception states it has been thrown in
      *
-     * @return mixed
+     * @param string $file
      */
-    public function test2()
+    public function setFile($file)
     {
-
+        $this->file = $file;
     }
+
 }

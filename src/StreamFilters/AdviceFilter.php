@@ -235,7 +235,8 @@ class AdviceFilter extends AbstractFilter
         $placeholderHook = Placeholders::AROUND_JOINPOINT . $functionName . Placeholders::PLACEHOLDER_CLOSE;
         $bucketData = str_replace(
             $placeholderHook,
-            $placeholderHook . ReservedKeywords::METHOD_INVOCATION_OBJECT . '->injectResult(' . ReservedKeywords::RESULT . ');',
+            $placeholderHook . '
+            ' . ReservedKeywords::METHOD_INVOCATION_OBJECT . '->injectResult(' . ReservedKeywords::RESULT . ');',
             $bucketData
         );
     }

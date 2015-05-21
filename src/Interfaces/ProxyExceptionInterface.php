@@ -1,7 +1,7 @@
 <?php
 
 /**
- * \AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\CustomProcessingTestClass
+ * \AppserverIo\Doppelgaenger\Interfaces\ProxyExceptionInterface
  *
  * NOTICE OF LICENSE
  *
@@ -18,45 +18,32 @@
  * @link      http://www.appserver.io/
  */
 
-namespace AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest;
+namespace AppserverIo\Doppelgaenger\Interfaces;
 
 /**
- * Class used to test the functionality of the RespectValidation assertion type
+ * An interface defining the functionality of a proxy exception class which is able to state
+ * a different throwing file and line than the original exception would
  *
  * @author    Bernhard Wick <bw@appserver.io>
  * @copyright 2015 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
- *
- * @Processing("logging")
  */
-class CustomProcessingTestClass
+interface ProxyExceptionInterface extends ExceptionInterface
 {
 
     /**
-     * @Ensures("$dgResult === 'This will never work'")
-     * @Processing("exception")
+     * Setter for the file the exception states it has been thrown in
+     *
+     * @param string $file
      */
-    public function iHaveACustomExceptionProcessing()
-    {
-
-    }
+    public function setFile($file);
 
     /**
-     * @Ensures("$dgResult === 'This will never work'")
+     * Setter for the line the exception states it has been thrown/created at
+     *
+     * @param integer $line
      */
-    public function iHaveNoCustomProcessing()
-    {
-
-    }
-
-    /**
-     * @Ensures("$dgResult === 'This will never work'")
-     * @Processing("none")
-     */
-    public function iHaveNoProcessingAtAll()
-    {
-
-    }
+    public function setLine($line);
 }

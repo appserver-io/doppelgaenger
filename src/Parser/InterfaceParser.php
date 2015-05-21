@@ -118,7 +118,7 @@ class InterfaceParser extends AbstractStructureParser
 
         } elseif (!$this->currentDefinition instanceof InterfaceDefinition) {
             throw new GeneratorException(sprintf(
-                'The structure definition %s does not seem to be a trait definition.',
+                'The structure definition %s does not seem to be a interface definition.',
                 $this->currentDefinition->getQualifiedName()
             ));
         }
@@ -132,6 +132,10 @@ class InterfaceParser extends AbstractStructureParser
 
         // For our next step we would like to get the doc comment (if any)
         $this->currentDefinition->setDocBlock($this->getDocBlock($tokens, self::TOKEN));
+
+        // Get start and end line
+        $this->currentDefinition->setStartLine($this->getStartLine($tokens));
+        $this->currentDefinition->setEndLine($this->getEndLine($tokens));
 
         // Get the interface identity
         $this->currentDefinition->setName($this->getName($tokens));

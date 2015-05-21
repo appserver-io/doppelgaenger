@@ -147,6 +147,21 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Will test if we can disable custom enforcement processing on method level using the @Processing annotation
+     *
+     * @return void
+     */
+    public function testCustomMethodNoneProcessing()
+    {
+        $testClass = new CustomProcessingTestClass();
+        try {
+            $testClass->iHaveNoProcessingAtAll();
+        } catch (Exception $e) {
+            $this->fail('There should not be an exception at all');
+        }
+    }
+
+    /**
      * Will test if we can enable custom enforcement processing on method level using the @Processing annotation
      * without any annotation within the class doc block
      *

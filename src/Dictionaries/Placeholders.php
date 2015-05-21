@@ -96,11 +96,25 @@ class Placeholders
     const FUNCTION_BEGIN = '/* DOPPELGAENGER_FUNCTION_BEGIN_PLACEHOLDER ';
 
     /**
-     * Placeholder for inserting the invariant checks
+     * Placeholder for inserting the invariant checks at the end of a construct
      *
-     * @var string INVARIANT
+     * @var string INVARIANT_CALL_END
      */
-    const INVARIANT = '/* DOPPELGAENGER_INVARIANT_PLACEHOLDER ';
+    const INVARIANT_CALL_END = '/* DOPPELGAENGER_INVARIANT_CALL_END_PLACEHOLDER */';
+
+    /**
+     * Placeholder for inserting the invariant checks at random places
+     *
+     * @var string INVARIANT_CALL
+     */
+    const INVARIANT_CALL = '/* DOPPELGAENGER_INVARIANT_CALL_PLACEHOLDER */';
+
+    /**
+     * Placeholder for inserting the invariant checks at the start of a construct
+     *
+     * @var string INVARIANT_CALL_START
+     */
+    const INVARIANT_CALL_START = '/* DOPPELGAENGER_INVARIANT_CALL_START_PLACEHOLDER */';
 
     /**
      * Placeholder for injecting additional logic into generated proxy methods

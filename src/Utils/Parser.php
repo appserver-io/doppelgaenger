@@ -132,4 +132,28 @@ class Parser
 
         return 0;
     }
+
+    /**
+     * Will return the length of the string a token array is based on.
+     *
+     * @param array $tokens The token array
+     *
+     * @return integer
+     */
+    public function getStringLength($tokens)
+    {
+        // Iterator over the tokens and get their length
+        $result = 0;
+        $tokenCount = count($tokens);
+        for ($i = 0; $i < $tokenCount; $i++) {
+            if (is_array($tokens[$i])) {
+                $result += strlen($tokens[$i][1]);
+
+            } else {
+                $result += strlen($tokens[$i]);
+            }
+        }
+
+        return $result;
+    }
 }

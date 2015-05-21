@@ -107,6 +107,10 @@ class TraitParser extends AbstractStructureParser
         // For our next step we would like to get the doc comment (if any)
         $this->currentDefinition->setDocBlock($this->getDocBlock($tokens, $this->getToken()));
 
+        // Get start and end line
+        $this->currentDefinition->setStartLine($this->getStartLine($tokens));
+        $this->currentDefinition->setEndLine($this->getEndLine($tokens));
+
         // So we got our docBlock, now we can parse the invariant annotations from it
         $annotationParser = new AnnotationParser($this->file, $this->config, $this->tokens, $this->currentDefinition);
         $this->currentDefinition->setInvariantConditions(

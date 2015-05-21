@@ -178,10 +178,12 @@ class InvariantFilter extends AbstractFilter
     protected function generateAttributeCode(AttributeDefinitionList $attributeDefinitions)
     {
         // We should create attributes to store our attribute types
-        $code = '/**
+        $code = '
+           /**
             * @var array
             */
-            private $' . ReservedKeywords::ATTRIBUTE_STORAGE . ' = array(';
+            private $' . ReservedKeywords::ATTRIBUTE_STORAGE . ' = array(
+                ';
 
         // After iterate over the attributes and build up our array
         $iterator = $attributeDefinitions->getIterator();
@@ -192,14 +194,18 @@ class InvariantFilter extends AbstractFilter
             // Only enter the attribute if it is used in an invariant and it is not private
             if ($attribute->inInvariant() && $attribute->getVisibility() !== 'private') {
                 $code .= '"' . substr($attribute->getName(), 1) . '"';
-                $code .= ' => array("visibility" => "' . $attribute->getVisibility() . '", ';
+                $code .= ' => array(
+                        "visibility" => "' . $attribute->getVisibility() . '",
+                        ';
                 // Now check if we need any keywords for the variable identity
                 if ($attribute->isStatic()) {
                     $code .= '"static" => true';
                 } else {
                     $code .= '"static" => false';
                 }
-                $code .= '),';
+                $code .= '
+                    ),
+                    ';
             }
 
             // Move the iterator
@@ -261,7 +267,7 @@ class InvariantFilter extends AbstractFilter
 
         $code .= '}
         // Check if the invariant holds
-            ' . Placeholders::INVARIANT . Placeholders::PLACEHOLDER_CLOSE .
+            ' . Placeholders::INVARIANT_CALL .
             '// Now check what kind of visibility we would have
             $attribute = $this->' . ReservedKeywords::ATTRIBUTE_STORAGE . '[$name];
             switch ($attribute["visibility"]) {
@@ -296,7 +302,7 @@ class InvariantFilter extends AbstractFilter
             }
 
             // Check if the invariant holds
-            ' . Placeholders::INVARIANT . Placeholders::PLACEHOLDER_CLOSE .
+            ' . Placeholders::INVARIANT_CALL .
             '\AppserverIo\Doppelgaenger\ContractContext::close();';
 
         // We do not need the method encasing brackets if we inject
@@ -406,15 +412,24 @@ class InvariantFilter extends AbstractFilter
      */
     protected function injectInvariantCall(& $bucketData)
     {
-        $code = 'if (' . ReservedKeywords::CONTRACT_CONTEXT . ' === true) {
-            $this->' . ReservedKeywords::CLASS_INVARIANT . '(__METHOD__);}';
-
-        // Still here? Then inject the clone statement to preserve an instance of the object prior to our call.
-        $bucketData = str_replace(
-            Placeholders::INVARIANT . Placeholders::PLACEHOLDER_CLOSE,
-            $code,
-            $bucketData
+        $tmpMapping = array(
+            Placeholders::INVARIANT_CALL => '\'unknown\'',
+            Placeholders::INVARIANT_CALL_START => ReservedKeywords::START_LINE_VARIABLE,
+            Placeholders::INVARIANT_CALL_END => ReservedKeywords::END_LINE_VARIABLE
         );
+
+        foreach ($tmpMapping as $placeholder => $lineIndicator) {
+            $code = 'if (' . ReservedKeywords::CONTRACT_CONTEXT . ' === true) {
+                $this->' . ReservedKeywords::CLASS_INVARIANT . '(__METHOD__, ' . $lineIndicator . ');
+            }';
+
+            // inject the clone statement to preserve an instance of the object prior to our call.
+            $bucketData = str_replace(
+                $placeholder,
+                $code,
+                $bucketData
+            );
+        }
 
         // Still here? We encountered no error then.
         return true;
@@ -429,11 +444,11 @@ class InvariantFilter extends AbstractFilter
      */
     protected function generateFunctionCode(TypedListList $assertionLists)
     {
-        $code = 'protected function ' . ReservedKeywords::CLASS_INVARIANT . '($callingMethod) {' .
-            ReservedKeywords::CONTRACT_CONTEXT . ' = \AppserverIo\Doppelgaenger\ContractContext::open();
+        $code = 'protected function ' . ReservedKeywords::CLASS_INVARIANT . '(' . ReservedKeywords::INVARIANT_CALLER_VARIABLE . ', ' . ReservedKeywords::ERROR_LINE_VARIABLE . ') {
+            ' . ReservedKeywords::CONTRACT_CONTEXT . ' = \AppserverIo\Doppelgaenger\ContractContext::open();
             if (' . ReservedKeywords::CONTRACT_CONTEXT . ') {
-            ' . ReservedKeywords::FAILURE_VARIABLE . ' = array();
-            ' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ' = array();';
+                ' . ReservedKeywords::FAILURE_VARIABLE . ' = array();
+                ' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ' = array();';
 
         $conditionCounter = 0;
         $invariantIterator = $assertionLists->getIterator();
@@ -452,9 +467,9 @@ class InvariantFilter extends AbstractFilter
 
                 // generate the check for assertions results
                 if ($conditionCounter > 0) {
-                    $code .= 'if (!empty(' . ReservedKeywords::FAILURE_VARIABLE . ') || !empty(' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE .')) {' .
-                        Placeholders::ENFORCEMENT . 'invariant' . Placeholders::PLACEHOLDER_CLOSE . '
-                }';
+                    $code .= 'if (!empty(' . ReservedKeywords::FAILURE_VARIABLE . ') || !empty(' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE .')) {
+                        ' . Placeholders::ENFORCEMENT . 'invariant' . Placeholders::PLACEHOLDER_CLOSE . '
+                    }';
                 }
             }
 
@@ -462,7 +477,9 @@ class InvariantFilter extends AbstractFilter
             $invariantIterator->next();
         }
 
-        $code .= '}\AppserverIo\Doppelgaenger\ContractContext::close();}';
+        $code .= '}
+            \AppserverIo\Doppelgaenger\ContractContext::close();
+        }';
 
         return $code;
     }

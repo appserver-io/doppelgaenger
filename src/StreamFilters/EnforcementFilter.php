@@ -94,11 +94,12 @@ class EnforcementFilter extends AbstractFilter
 
         // Get the code for the processing
         $structureName = $structureDefinition->getQualifiedName();
-        $preconditionCode = $this->generateCode($structureName, 'precondition', $type);
-        $postconditionCode = $this->generateCode($structureName, 'postcondition', $type);
-        $invariantCode = $this->generateCode($structureName, 'invariant', $type);
-        $invalidCode = $this->generateCode($structureName, 'InvalidArgumentException', $type);
-        $missingCode = $this->generateCode($structureName, 'MissingPropertyException', $type);
+        $structurePath = $structureDefinition->getPath();
+        $preconditionCode = $this->generateCode($structureName, 'precondition', $type, $structurePath);
+        $postconditionCode = $this->generateCode($structureName, 'postcondition', $type, $structurePath);
+        $invariantCode = $this->generateCode($structureName, 'invariant', $type, $structurePath);
+        $invalidCode = $this->generateCode($structureName, 'InvalidArgumentException', $type, $structurePath);
+        $missingCode = $this->generateCode($structureName, 'MissingPropertyException', $type, $structurePath);
 
         // Get our buckets from the stream
         while ($bucket = stream_bucket_make_writeable($in)) {
@@ -124,6 +125,7 @@ class EnforcementFilter extends AbstractFilter
                         $this->injectFunctionEnforcement(
                             $bucket->data,
                             $structureName,
+                            $structurePath,
                             $preconditionCode,
                             $postconditionCode,
                             $functionDefinition
@@ -184,15 +186,16 @@ class EnforcementFilter extends AbstractFilter
      * /**
      * Will generate the code needed to enforce any broken assertion checks
      *
-     * @param string $structureName The name of the structure for which we create the enforcement code
-     * @param string $target        For which kind of assertion do wee need the processing
-     * @param string $type          The enforcement processing type to generate code for
+     * @param string  $structureName The name of the structure for which we create the enforcement code
+     * @param string  $target        For which kind of assertion do wee need the processing
+     * @param string  $type          The enforcement processing type to generate code for
+     * @param string  $file          File for which the code gets generated
      *
      * @return string
      *
      * @throws \AppserverIo\Doppelgaenger\Exceptions\GeneratorException
      */
-    protected function generateCode($structureName, $target, $type)
+    protected function generateCode($structureName, $target, $type, $file = 'unknown')
     {
         $code = '';
 
@@ -200,8 +203,13 @@ class EnforcementFilter extends AbstractFilter
         $place = '__METHOD__';
 
         // If we are in an invariant we should tell them about the method we got called from
+        $line = ReservedKeywords::START_LINE_VARIABLE;
         if ($target === 'invariant') {
-            $place = '$callingMethod';
+            $place = ReservedKeywords::INVARIANT_CALLER_VARIABLE;
+            $line = ReservedKeywords::ERROR_LINE_VARIABLE;
+
+        } elseif ($target === 'postcondition') {
+            $line = ReservedKeywords::END_LINE_VARIABLE;
         }
 
         // what we will always need is collection of all errors that occurred
@@ -222,7 +230,12 @@ class EnforcementFilter extends AbstractFilter
                 // Create the code
                 $code .= '\AppserverIo\Doppelgaenger\ContractContext::close();
                     ' . $errorCollectionCode . '
-                    throw new \\' . $exception . '(' . ReservedKeywords::FAILURE_VARIABLE . ');';
+                    $e = new \\' . $exception . '(' . ReservedKeywords::FAILURE_VARIABLE . ');
+                    if ($e instanceof \AppserverIo\Doppelgaenger\Interfaces\ProxyExceptionInterface) {
+                        $e->setLine(' . $line . ');
+                        $e->setFile(\'' . $file . '\');
+                    }
+                    throw $e;';
 
                 break;
 
@@ -239,6 +252,12 @@ class EnforcementFilter extends AbstractFilter
                     }';
 
                 break;
+
+            case 'none':
+
+                    // Create the code
+                    $code .= '\AppserverIo\Doppelgaenger\ContractContext::close();';
+                    break;
 
             default:
                 // something went terribly wrong ...
@@ -262,6 +281,7 @@ class EnforcementFilter extends AbstractFilter
      *
      * @param string             $bucketData         Payload of the currently filtered bucket
      * @param string             $structureName      The name of the structure for which we create the enforcement code
+     * @param string             $structurePath      Path to the file containing the structure
      * @param string             $preconditionCode   Default precondition processing code
      * @param string             $postconditionCode  Default post-condition processing code
      * @param FunctionDefinition $functionDefinition Function definition to create the code for
@@ -271,6 +291,7 @@ class EnforcementFilter extends AbstractFilter
     protected function injectFunctionEnforcement(
         & $bucketData,
         $structureName,
+        $structurePath,
         $preconditionCode,
         $postconditionCode,
         FunctionDefinition $functionDefinition
@@ -282,8 +303,8 @@ class EnforcementFilter extends AbstractFilter
         $localType = $this->filterLocalProcessing($functionDefinition->getDocBlock());
         if ($localType !== false) {
             // we found something, make a backup of default enforcement and generate the new code
-            $preconditionCode = $this->generateCode($structureName, 'precondition', $localType);
-            $postconditionCode = $this->generateCode($structureName, 'postcondition', $localType);
+            $preconditionCode = $this->generateCode($structureName, 'precondition', $localType, $structurePath);
+            $postconditionCode = $this->generateCode($structureName, 'postcondition', $localType, $structurePath);
         }
 
         // Insert the code for the static processing placeholders

@@ -47,6 +47,34 @@ class ReservedKeywords
     const CLASS_INVARIANT = 'dgClassInvariant';
 
     /**
+     * Reserved local variable containing the method calling the invariant
+     *
+     * @var string INVARIANT_CALLER_VARIABLE
+     */
+    const INVARIANT_CALLER_VARIABLE = '$dgCallingMethod';
+
+    /**
+     * Reserved local variable containing the line in which a condition has been broken
+     *
+     * @var string ERROR_LINE_VARIABLE
+     */
+    const ERROR_LINE_VARIABLE = '$dgErrorLine';
+
+    /**
+     * Reserved local variable containing the line the original function starts
+     *
+     * @var string ERROR_LINE_VARIABLE
+     */
+    const START_LINE_VARIABLE = '$dgStartLine';
+
+    /**
+     * Reserved local variable containing the line the original function ends
+     *
+     * @var string ERROR_LINE_VARIABLE
+     */
+    const END_LINE_VARIABLE = '$dgEndLine';
+
+    /**
      * Reserved local variable containing a flag which indications if we currently are within a contract
      *
      * @var string CONTRACT_CONTEXT
