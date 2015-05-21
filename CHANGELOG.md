@@ -1,3 +1,14 @@
+# Version 1.4.0
+
+## Bugfixes
+
+* Fixed [#815](https://github.com/appserver-io/appserver/issues/815) - Local processing does not support "none" value
+* Usage in multithreading context did require bootstrapping of additional classes
+
+## Features
+
+* The debug ability of the code has been extended
+
 # Version 1.3.3
 
 ## Bugfixes
