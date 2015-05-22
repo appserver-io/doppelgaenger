@@ -10,10 +10,8 @@ matrix:
     - php: 7.0
 
 before_install:
-  - pecl install pthreads-1.0.1
   - pecl install xdebug
   - phpenv rehash
-  - wget https://scrutinizer-ci.com/ocular.phar
 
 before_script:
   - composer selfupdate
@@ -21,6 +19,9 @@ before_script:
 script:
   - ant composer-init
   - ant build
+
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover $TRAVIS_BUILD_DIR/target/reports/unit/clover.xml
 
 notifications:
