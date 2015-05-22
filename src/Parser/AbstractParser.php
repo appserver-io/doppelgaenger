@@ -255,44 +255,35 @@ abstract class AbstractParser implements ParserInterface
     }
 
     /**
-     * Will return the DocBlock of a certain entity.
+     * Will return the DocBlock of a certain construct based on the token identifying it
      *
      * @param array   $tokens         The token array to search in
-     * @param integer $structureToken The type of entity we search in front of, use PHP tokens here
+     * @param integer $structureToken The type of entity we search in front of, use PHP tokens here e.g. T_CLASS
      *
-     * @return string
+     * @return string|boolean
      */
-    protected function getDocBlock(
-        $tokens,
-        $structureToken
-    ) {
-        // The general assumption is: if there is a doc block
-        // before the class definition, and the class header follows after it within 6 tokens, then it
-        // is the comment block for this class.
-        $docBlock = '';
-        $passedClass = false;
-        for ($i = 0; $i < count($tokens); $i++) {
-            // If we passed the class token
+    protected function getDocBlock($tokens, $structureToken)
+    {
+        // the general assumption is:
+        // We go to the first occurance of the structure token and traverse back until
+        // we find a DocBlock. This should be the correct block
+        $tokenCount = count($tokens);
+        for ($i = 0; $i < $tokenCount; $i++) {
+            // if we passed the structure token
             if ($tokens[$i][0] === $structureToken) {
-                $passedClass = true;
-            }
-
-            // If we got the docblock without passing the class before
-            if ($tokens[$i][0] === T_DOC_COMMENT && $passedClass === false) {
-                // Check if we are in front of a class definition
-                for ($j = $i + 1; $j < $i + 8; $j++) {
-                    if ($tokens[$j][0] === $structureToken) {
-                        $docBlock = $tokens[$i][1];
-                        break;
+                // traverse back until we find the first DocBlock
+                for ($j = $i; $j >= 0; $j--) {
+                    if ($tokens[$j][0] === T_DOC_COMMENT) {
+                        return $tokens[$j][1];
                     }
                 }
 
-                // Still here?
+                // still here? We did not find anything then
                 break;
             }
         }
 
-        // Return what we did or did not found
-        return $docBlock;
+        // still here? That does not sound right
+        return false;
     }
 }

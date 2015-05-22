@@ -39,7 +39,13 @@ class BasicTestClass
      *
      * @return string
      */
-    public function test()
+
+    /**
+     * Test
+     *
+     * @return integer
+     */
+    public function iWillFailPostcondition()
     {
         return \stdClass::class;
     }

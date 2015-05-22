@@ -35,6 +35,7 @@ use AppserverIo\Doppelgaenger\Tests\Data\MultiRegex\B\Data\RegexTestClass2;
 use AppserverIo\Doppelgaenger\Tests\Data\RegexTest1\RegexTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\ParserTest\MultiClassTokenTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\ParserTest\ErrorLineTestClass;
+use AppserverIo\Doppelgaenger\Tests\Data\ParserTest\BasicTestClass;
 
 /**
  * Will test basic parser usage
@@ -444,5 +445,18 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertEquals(101, $errorLine);
+    }
+
+    /**
+     * Will test whether the
+     *
+     * @return void
+     *
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException
+     */
+    public function testAssignmentOfCorrectFunctionDocBlock()
+    {
+        $testClass = new BasicTestClass();
+        $testClass->iWillFailPostcondition();
     }
 }
