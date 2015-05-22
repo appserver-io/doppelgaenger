@@ -255,26 +255,38 @@ abstract class AbstractParser implements ParserInterface
     }
 
     /**
-     * Will return the DocBlock of a certain construct based on the token identifying it
+     * Will return the DocBlock of a certain construct based on the token identifying it.
+     * Will return an empty string if none is found
      *
      * @param array   $tokens         The token array to search in
      * @param integer $structureToken The type of entity we search in front of, use PHP tokens here e.g. T_CLASS
      *
-     * @return string|boolean
+     * @return string
      */
     protected function getDocBlock($tokens, $structureToken)
     {
+        // we need tokens which woudl break the construct and the DocBlock apart
+        $blockBreakers = array_flip(array(T_CLASS, T_TRAIT, T_INTERFACE, T_FUNCTION));
+
         // the general assumption is:
         // We go to the first occurance of the structure token and traverse back until
-        // we find a DocBlock. This should be the correct block
+        // we find a DocBlock without passing any breaks in the flow. This should be the correct block
         $tokenCount = count($tokens);
         for ($i = 0; $i < $tokenCount; $i++) {
             // if we passed the structure token
             if ($tokens[$i][0] === $structureToken) {
                 // traverse back until we find the first DocBlock
-                for ($j = $i; $j >= 0; $j--) {
+                for ($j = ($i - 1); $j >= 0; $j--) {
                     if ($tokens[$j][0] === T_DOC_COMMENT) {
                         return $tokens[$j][1];
+
+                    } elseif (isset($blockBreakers[$tokens[$j][0]])) {
+                        // if we pass any other construct tokens or breaks we will fail
+                        break;
+
+                    } elseif ($tokens[$j][0] === T_WHITESPACE && substr_count($tokens[$j][1], "\n") > 1) {
+                        // if there is a bigger linebreak in between construct and block we will fail too
+                        break;
                     }
                 }
 
@@ -284,6 +296,6 @@ abstract class AbstractParser implements ParserInterface
         }
 
         // still here? That does not sound right
-        return false;
+        return '';
     }
 }

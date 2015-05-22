@@ -1,7 +1,7 @@
 <?php
 
 /**
- * \AppserverIo\Doppelgaenger\Tests\Data\ParserTest\BasicTestClass
+ * \AppserverIo\Doppelgaenger\Tests\Data\ParserTest\DocBlockPositioningTestClass
  *
  * NOTICE OF LICENSE
  *
@@ -20,11 +20,8 @@
 
 namespace AppserverIo\Doppelgaenger\Tests\Data\ParserTest;
 
-use AppserverIo\Doppelgaenger\Config;
-use AppserverIo\Doppelgaenger\Parser\ClassParser;
-
 /**
- * Test class for testing class support
+ * Test class for testing DocBlock positioning
  *
  * @author    Bernhard Wick <bw@appserver.io>
  * @copyright 2015 TechDivision GmbH - <info@appserver.io>
@@ -32,15 +29,37 @@ use AppserverIo\Doppelgaenger\Parser\ClassParser;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
-class BasicTestClass
+class DocBlockPositioningTestClass
 {
-
     /**
      * Test
      *
      * @return string
      */
-    public function test()
+
+    /**
+     * Test
+     *
+     * @return integer
+     */
+    public function iWillFailPostcondition()
+    {
+        return \stdClass::class;
+    }
+
+    public function iDontHaveADocBlock1()
+    {
+        return \stdClass::class;
+    }
+
+    /**
+     * Test
+     *
+     * @return integer
+     */
+
+
+    public function iDontHaveADocBlock2()
     {
         return \stdClass::class;
     }
