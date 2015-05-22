@@ -35,6 +35,8 @@ use AppserverIo\Doppelgaenger\Tests\Data\MultiRegex\B\Data\RegexTestClass2;
 use AppserverIo\Doppelgaenger\Tests\Data\RegexTest1\RegexTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\ParserTest\MultiClassTokenTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\ParserTest\ErrorLineTestClass;
+use AppserverIo\Doppelgaenger\Tests\Data\ParserTest\BasicTestClass;
+use AppserverIo\Doppelgaenger\Tests\Data\ParserTest\DocBlockPositioningTestClass;
 
 /**
  * Will test basic parser usage
@@ -444,5 +446,39 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertEquals(101, $errorLine);
+    }
+
+    /**
+     * Will test whether the correct DocBlock is taken or not
+     *
+     * @return void
+     *
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException
+     */
+    public function testAssignmentOfCorrectFunctionDocBlock()
+    {
+        $testClass = new DocBlockPositioningTestClass();
+        $testClass->iWillFailPostcondition();
+    }
+
+    /**
+     * Will test if a function without a DocBlock gets treated as such
+     *
+     * @return void
+     */
+    public function testRecognitionOfSingleBlocklessConstructs()
+    {
+        $testClass = new DocBlockPositioningTestClass();
+        try {
+            $testClass->iDontHaveADocBlock1();
+        } catch (\Exception $e) {
+            $this->fail('There should not be an exception at all');
+        }
+
+        try {
+            $testClass->iDontHaveADocBlock2();
+        } catch (\Exception $e) {
+            $this->fail('There should not be an exception at all');
+        }
     }
 }

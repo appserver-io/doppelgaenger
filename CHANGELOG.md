@@ -1,3 +1,13 @@
+# Version 1.4.1
+
+## Bugfixes
+
+* Fixed [#824](https://github.com/appserver-io/appserver/issues/824) - Several comment blocks break docBlock assignment
+
+## Features
+
+* None
+
 # Version 1.4.0
 
 ## Bugfixes

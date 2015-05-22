@@ -157,7 +157,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         $testClass = new CustomProcessingTestClass();
         try {
             $testClass->iHaveNoProcessingAtAll();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->fail('There should not be an exception at all');
         }
     }
