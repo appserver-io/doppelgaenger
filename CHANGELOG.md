@@ -1,3 +1,13 @@
+# Version 1.4.2
+
+## Bugfixes
+
+* Fixed [#842](https://github.com/appserver-io/appserver/issues/842) - Cannot use Traits
+
+## Features
+
+* None
+
 # Version 1.4.1
 
 ## Bugfixes

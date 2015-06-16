@@ -51,7 +51,7 @@ trait PropertyParserTrait
      *
      * @return AttributeDefinitionList
      */
-    protected function getAttributes(array $tokens, TypedListList $invariants = null)
+    public function getAttributes(array $tokens, TypedListList $invariants = null)
     {
         // Check the tokens
         $attributes = new AttributeDefinitionList();
