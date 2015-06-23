@@ -1,3 +1,14 @@
+# Version 1.4.3
+
+## Bugfixes
+
+* Fixed a bug with complex type hints which are imported by a `use` statement
+* Fixed inverted assetion string in log message of failed raw assertions
+
+## Features
+
+* None
+
 # Version 1.4.2
 
 ## Bugfixes

@@ -197,7 +197,7 @@ class AssertionFactory
 
         // check if we know the simple type
         $validScalarTypes = array_flip($this->validScalarTypes);
-        if (isset($validScalarTypes[$string])) {
+        if (isset($validScalarTypes[strtolower($string)])) {
             return false;
         }
 
@@ -210,6 +210,11 @@ class AssertionFactory
 
         // check if we have a namespace separator
         if (strpos($string, '\\') !== false) {
+            return $string;
+        }
+
+        // check if we start with upper case and do only contain valid characters
+        if (ctype_upper($string[0]) && preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $string)) {
             return $string;
         }
 

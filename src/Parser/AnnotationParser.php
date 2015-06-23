@@ -368,6 +368,7 @@ class AnnotationParser extends AbstractParser
     protected function filterMethodCalls($docString)
     {
         // We will be regex ninjas here
+        $results = array();
         preg_match_all('/->(.*?)\(/', $docString, $results);
 
         // Return the clean output
@@ -384,6 +385,7 @@ class AnnotationParser extends AbstractParser
     protected function filterAttributes($docString)
     {
         // We will be regex ninjas here
+        $tmp = array();
         preg_match_all('/(this->|self::)([a-zA-Z0-9_]*?)[=!\s<>,\)\[\]]/', $docString, $tmp);
 
         $results = array();
