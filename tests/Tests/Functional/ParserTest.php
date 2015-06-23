@@ -37,6 +37,8 @@ use AppserverIo\Doppelgaenger\Tests\Data\ParserTest\MultiClassTokenTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\ParserTest\ErrorLineTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\ParserTest\BasicTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\ParserTest\DocBlockPositioningTestClass;
+use AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\UseStatementTestClass;
+use AppserverIo\Doppelgaenger\Tests\Data\ParserTest\ComplexTypehintTestClass;
 
 /**
  * Will test basic parser usage
@@ -480,5 +482,56 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         } catch (\Exception $e) {
             $this->fail('There should not be an exception at all');
         }
+    }
+
+    /**
+     * Tests if a method which return value is not fully qualified but rather stated in an use statement can still be
+     * called without problems
+     *
+     * @return void
+     *
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException
+     */
+    public function testUseStatementTypehint()
+    {
+        $testClass = new ComplexTypehintTestClass();
+        $testClass->iHaveAShortReturnComment();
+    }
+
+    /**
+     * Tests if a method which return value is not fully qualified but within the current namespace can still be
+     * called without problems
+     *
+     * @return void
+     *
+     * @expectedException \AppserverIo\Psr\MetaobjectProtocol\Dbc\BrokenPostconditionException
+     */
+    public function testIdenticalNamespaceTypehint()
+    {
+        $testClass = new ComplexTypehintTestClass();
+        $testClass->iHaveALocalClassReturnComment();
+    }
+
+    /**
+     * Tests if a method which return value is not fully qualified but within the current namespace can still be
+     * called without problems
+     *
+     * @return void
+     */
+    public function testIdenticalNamespaceTypehintThatSucceeds()
+    {
+        $testClass = new ComplexTypehintTestClass();
+        $testClass->iHaveALocalClassReturnCommentAndSucceed();
+    }
+
+    /**
+     * Tests if a method which return value fully qualified can still be called without problems
+     *
+     * @return void
+     */
+    public function testFullyQualifiedTypehintThatSucceeds()
+    {
+        $testClass = new ComplexTypehintTestClass();
+        $testClass->iHaveAQualifiedReturnCommentAndSucceed();
     }
 }
