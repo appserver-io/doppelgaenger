@@ -205,7 +205,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests if we can catch potential endless recursions based on a call like parent::<METHOD_NAME>
+     * Tests if we can generate proxies for all possible method definition headers e.g. final public statc function test()
      *
      * @return void
      */
