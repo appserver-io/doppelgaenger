@@ -182,7 +182,6 @@ class SkeletonFilter extends AbstractFilter
         // generate the skeleton code for all known functions
         $functionSkeletonsCode = '';
         foreach ($structureDefinition->getFunctionDefinitions() as $functionDefinition) {
-
             // we do not have to act on abstract methods
             if ($functionDefinition->isAbstract()) {
                 continue;
