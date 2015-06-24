@@ -182,6 +182,12 @@ class SkeletonFilter extends AbstractFilter
         // generate the skeleton code for all known functions
         $functionSkeletonsCode = '';
         foreach ($structureDefinition->getFunctionDefinitions() as $functionDefinition) {
+
+            // we do not have to act on abstract methods
+            if ($functionDefinition->isAbstract()) {
+                continue;
+            }
+
             // __get and __set need some special steps so we can inject our own logic into them
             $injectNeeded = false;
             if ($functionDefinition->getName() === '__get' || $functionDefinition->getName() === '__set') {
@@ -343,10 +349,15 @@ class SkeletonFilter extends AbstractFilter
             return true;
         }
 
-        // first of all we have to collect all functions we now about
+        // first of all we have to collect all functions we have to substitute
         $functionSubstitutes = array();
         $functionPatterns = array();
         foreach ($structureDefinition->getFunctionDefinitions() as $functionDefinition) {
+            // we do not have to act on abstract methods
+            if ($functionDefinition->isAbstract()) {
+                continue;
+            }
+
             $functionPatterns[] = '/function\s' . $functionDefinition->getName() . '\s*\(/';
             $functionSubstitutes[] = 'function ' . $functionDefinition->getName() . ReservedKeywords::ORIGINAL_FUNCTION_SUFFIX . '(';
         }
