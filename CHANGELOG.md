@@ -1,3 +1,13 @@
+# Version 1.4.4
+
+## Bugfixes
+
+* Fixed a bug related to the generation of abstract function
+
+## Features
+
+* None
+
 # Version 1.4.3
 
 ## Bugfixes

@@ -26,6 +26,7 @@ use AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\LocalCustomProcessingTest
 use AppserverIo\Doppelgaenger\Tests\Data\TagPlacementTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\RecursionTestClass2;
 use AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\BasicTestClass;
+use AppserverIo\Doppelgaenger\Tests\Data\GeneratorTest\MethodVariantionsTestClass;
 
 /**
  * This test covers known generator problems
@@ -201,5 +202,15 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         $testClass->iDontWantToBeRecursive();
 
         $this->assertEquals(1, $testClass->recursionCounter);
+    }
+
+    /**
+     * Tests if we can generate proxies for all possible method definition headers e.g. final public statc function test()
+     *
+     * @return void
+     */
+    public function testMethodVariantFatalErrors()
+    {
+        $testClass = new MethodVariantionsTestClass();
     }
 }
