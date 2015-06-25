@@ -147,7 +147,7 @@ trait PropertyParserTrait
      *
      * @return AttributeDefinition
      */
-    protected function getAttributeProperties(array $tokens, $attributePosition)
+    public function getAttributeProperties(array $tokens, $attributePosition)
     {
         // We got the tokens and the position of the attribute, so look in front of it for visibility and a
         // possible static keyword
