@@ -1,11 +1,11 @@
 # doppelgaenger
 
 Make PHP structure definition clones which look the same but behave differently
-
+[![Build Status](https://ci.appserver.io/buildStatus/icon?job=github_appserver-io_doppelgaenger)](https://ci.appserver.io/job/github_appserver-io_doppelgaenger)
 [![Latest Stable Version](https://img.shields.io/packagist/v/appserver-io/doppelgaenger.svg?style=flat-square)](https://packagist.org/packages/appserver-io/doppelgaenger) 
  [![Total Downloads](https://img.shields.io/packagist/dt/appserver-io/doppelgaenger.svg?style=flat-square)](https://packagist.org/packages/appserver-io/doppelgaenger)
  [![License](https://img.shields.io/packagist/l/appserver-io/doppelgaenger.svg?style=flat-square)](https://packagist.org/packages/appserver-io/doppelgaenger)
-[![Build Status](https://ci.appserver.io/buildStatus/icon?job=github_appserver-io_doppelgaenger)](https://ci.appserver.io/job/github_appserver-io_doppelgaenger/)
+ [![Build Status](https://ci.appserver.io/buildStatus/icon?job=github_appserver-io_doppelgaenger)](https://ci.appserver.io/job/github_appserver-io_doppelgaenger/)
  [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/appserver-io/doppelgaenger/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/?branch=master)
  [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/appserver-io/doppelgaenger/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/appserver-io/doppelgaenger/?branch=master)
 
