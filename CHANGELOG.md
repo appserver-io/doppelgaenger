@@ -1,3 +1,14 @@
+
+# Version 1.4.5
+
+## Bugfixes
+
+* Fixed [#855](https://github.com/appserver-io/appserver/issues/855) - Call to a protected method errors due to context mismatch
+
+## Features
+
+* None
+
 # Version 1.4.4
 
 ## Bugfixes
