@@ -25,8 +25,7 @@
 	},
 	"require-dev" : {
 		"appserver-io/build" : "~1.0",
-		"respect/validation" : "0.8.*",
-		"squizlabs/php_codesniffer" : "dev-master as 2.1.0"
+		"respect/validation" : "0.8.*"
 	},
 	"autoload" : {
 		"psr-4" : {
