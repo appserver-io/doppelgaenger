@@ -66,6 +66,19 @@ class Formatting
     }
 
     /**
+     * Will turn any wrongly used directory separator in the OS specific one
+     *
+     * @param string $path      The path to sanitize
+     * @param string $separator The separator to sanitize with, DIRECTORY_SEPARATOR by default
+     *
+     * @return string
+     */
+    public function sanitizeSeparators($path, $separator = DIRECTORY_SEPARATOR)
+    {
+        return str_replace(array('/', '\\'), $separator, $path);
+    }
+
+    /**
      * Converts a string by escaping all regex relevant characters in it.
      *
      * @param string $string The string to convert

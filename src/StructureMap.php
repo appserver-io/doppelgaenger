@@ -120,9 +120,11 @@ class StructureMap implements MapInterface
         $this->rootPaths = array_merge($autoloaderPaths, $enforcementPaths);
 
         // Build up the path of the serialized map.
-        $this->mapPath = $this->config->getValue('cache/dir') . DIRECTORY_SEPARATOR . md5(
+        // Get ourselves a format utility
+        $formattingUtil = new Formatting();
+        $this->mapPath = $formattingUtil->sanitizeSeparators($this->config->getValue('cache/dir') . DIRECTORY_SEPARATOR . md5(
             implode('', $autoloaderPaths) . implode('', $enforcementPaths)
-        );
+        ));
     }
 
     /**

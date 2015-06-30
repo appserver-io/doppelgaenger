@@ -302,7 +302,7 @@ class Config implements ConfigInterface
             // Iterate over all dir entries and normalize the paths
             foreach ($configArray[$configAspect . self::VALUE_NAME_DELIMITER . 'dirs'] as $key => $projectDir) {
                 // Do the normalization
-                $tmp = $formattingUtil->normalizePath($projectDir);
+                $tmp = $formattingUtil->sanitizeSeparators($formattingUtil->normalizePath($projectDir));
 
                 if (is_readable($tmp)) {
                     $configArray[$configAspect . self::VALUE_NAME_DELIMITER . 'dirs'][$key] = $tmp;

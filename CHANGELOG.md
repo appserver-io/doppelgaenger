@@ -1,4 +1,14 @@
 
+# Version 1.4.6
+
+## Bugfixes
+
+* Fixed file system related warning by sanitizing file pathes for OS specific use
+
+## Features
+
+* None
+
 # Version 1.4.5
 
 ## Bugfixes
