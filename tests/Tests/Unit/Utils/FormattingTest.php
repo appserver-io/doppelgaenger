@@ -45,4 +45,36 @@ class FormattingTest extends \PHPUnit_Framework_TestCase
         $testString = '$()*[] /';
         $this->assertEquals('\$\(\)\*\[\]\s*\/', $formatter->toRegex($testString));
     }
+
+    /**
+     * Will provide test pathes for our sanitation
+     *
+     * @return array
+     */
+    public function sanitizeSeparatorsProvider()
+    {
+        return  array(
+            array('C:\test/testinger/test', '/', 'C:/test/testinger/test'),
+            array('C:\test/testinger/test', '\\', 'C:\test\testinger\test'),
+            array('/var\tmp', '\\', '\var\tmp'),
+            array('/var\tmp', '/', '/var/tmp')
+        );
+    }
+
+    /**
+     * Will test if we can sanitize different pathes
+     *
+     * @param string $testPath       The path to sanitize
+     * @param string $separator      The separator
+     * @param string $expectedResult The expected result
+     *
+     * @return void
+     *
+     * @dataProvider sanitizeSeparatorsProvider
+     */
+    public function testSanitizeSeparators($testPath, $separator, $expectedResult)
+    {
+        $formatter = new Formatting();
+        $this->assertEquals($expectedResult, $formatter->sanitizeSeparators($testPath, $separator));
+    }
 }
