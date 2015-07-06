@@ -45,7 +45,7 @@ class TypeSafetyTestClass
      * @param   array $array1
      * @param   array $array2
      */
-    public function iNeedArrays($array1, $array2)
+    public function iNeedArrays($array1 = ['test' => 'jehaa'], $array2 = array())
     {
 
     }

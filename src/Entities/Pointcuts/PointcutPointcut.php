@@ -66,6 +66,18 @@ class PointcutPointcut extends AbstractPointcut
     protected $referencedPointcuts;
 
     /**
+     * Magic __clone method to allow for deep clones of pointcut instances
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        foreach ($this->referencedPointcuts as $key => $referencedPointcut) {
+            $this->referencedPointcuts[$key] = clone $referencedPointcut;
+        }
+    }
+
+    /**
      * Returns a string representing a boolean condition which can be used to determine if
      * the pointcut has to be executed
      *

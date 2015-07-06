@@ -54,7 +54,7 @@ class BasicTestClass
      *
      * @return string
      */
-    public function concatSomeStuff($param1, $param2, \Exception $param3)
+    public function concatSomeStuff($param1 = 123123, $param2, \Exception $param3)
     {
         return (string)$param1 . $param2 . $param3->getMessage();
     }
@@ -66,7 +66,7 @@ class BasicTestClass
      *
      * @return array
      */
-    public function stringToArray($param1)
+    public function stringToArray($param1 = 'test')
     {
         return array($param1);
     }
