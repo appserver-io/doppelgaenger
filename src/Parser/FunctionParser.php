@@ -292,11 +292,12 @@ class FunctionParser extends AbstractParser
         // Check the tokens
         $parameterString = '';
         $parameterDefinitionList = new ParameterDefinitionList();
-        for ($i = 0; $i < count($tokens); $i++) {
+        $tokenCount = count($tokens);
+        for ($i = 0; $i < $tokenCount; $i++) {
             // If we got the function definition, no scan everything from the first ( to the next )
             if ($tokens[$i][0] === T_FUNCTION) {
                 $bracketPassed = null;
-                for ($j = $i; $j < count($tokens); $j++) {
+                for ($j = $i; $j < $tokenCount; $j++) {
                     // If we got the function definition, no scan everything from the first ( to the closing )
                     if ($tokens[$j] === '(') {
                         if ($bracketPassed === null) {
@@ -358,7 +359,8 @@ class FunctionParser extends AbstractParser
 
                 // check if we got a default value for overloading
                 if (isset($nameArray[1])) {
-                    $parameterDefinition->defaultValue = $nameArray[1];
+                    unset($nameArray[0]);
+                    $parameterDefinition->defaultValue = trim(implode('=', $nameArray));
                 }
             }
 
