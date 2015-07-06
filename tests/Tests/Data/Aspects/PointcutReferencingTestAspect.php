@@ -248,4 +248,27 @@ class PointcutReferencingTestAspect
         $param++;
         $methodInvocation->setParameters(array('param' => $param));
     }
+
+    /**
+     * Pointcut which "or" combines two call based pointcuts which are both using wildcards
+     *
+     * @Pointcut("call(\AppserverIo\Doppelgaenger\Tests\Data\Advised\PointcutWildcardTestClass1->do*()) || call(\AppserverIo\Doppelgaenger\Tests\Data\Advised\PointcutWildcardTestClass2->do*())")
+     */
+    public function PointcutReferencingSeveralRegexedMethods()
+    {}
+
+    /**
+     * Basic Around advice always returning TRUE. Used to test if methods got wrapped correctly
+     *
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Aop\MethodInvocationInterface $methodInvocation Initially invoked method
+     *
+     * @return boolean
+     *
+     * @Around("pointcut(PointcutReferencingSeveralRegexedMethods)")
+     */
+    public static function severalRegexedMethodsAdvice(MethodInvocationInterface $methodInvocation)
+    {
+        $methodInvocation->proceed();
+        return true;
+    }
 }

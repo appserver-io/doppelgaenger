@@ -87,6 +87,17 @@ abstract class AbstractConnectorPointcut extends AbstractPointcut
     }
 
     /**
+     * Magic __clone method to allow for deep clones of pointcut instances
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        $this->leftPointcut = clone $this->leftPointcut;
+        $this->rightPointcut = clone $this->rightPointcut;
+    }
+
+    /**
      * Will return a chain of callbacks which can be used to call woven code in an onion like manner
      *
      * @param \AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition $functionDefinition Definition of the function to inject invocation code into

@@ -21,6 +21,8 @@
 namespace AppserverIo\Doppelgaenger\Tests\Functional;
 
 use AppserverIo\Doppelgaenger\Tests\Data\Advised\PointcutReferencingTestClass;
+use AppserverIo\Doppelgaenger\Tests\Data\Advised\PointcutWildcardTestClass1;
+use AppserverIo\Doppelgaenger\Tests\Data\Advised\PointcutWildcardTestClass2;
 
 /**
  * Test class which will test if we can reference the correct methods using pointcuts
@@ -197,5 +199,21 @@ class PointcutReferencingTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(2, $this->testClass->iHaveASimpleBeforeAdvice1(1));
         $this->assertEquals(2, $this->testClass->iHaveASimpleBeforeAdvice2(1));
+    }
+
+    /**
+     * Tests
+     *
+     * @return void
+     */
+    public function testPointcutWithSeveralRegexedClasses()
+    {
+        $testClass = new PointcutWildcardTestClass1();
+        $this->assertTrue($testClass->doSomething());
+        $this->assertTrue($testClass->doOtherThings());
+
+        $testClass = new PointcutWildcardTestClass2();
+        $this->assertTrue($testClass->doStuff());
+        $this->assertTrue($testClass->doWhatever());
     }
 }

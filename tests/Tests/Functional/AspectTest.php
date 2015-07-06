@@ -25,6 +25,8 @@ use AppserverIo\Doppelgaenger\Tests\Data\Advised\AdvisedRegexClass;
 use AppserverIo\Doppelgaenger\Tests\Data\Advised\AdvisedTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\Advised\ChildOfAbstractTestClass;
 use AppserverIo\Doppelgaenger\Tests\Data\Aspects\MainAspectTestClass;
+use AppserverIo\Doppelgaenger\Tests\Data\Advised\PointcutWildcardTestClass1;
+use AppserverIo\Doppelgaenger\Tests\Data\Advised\PointcutWildcardTestClass2;
 
 /**
  * Some functional tests for the aspect based advise workflow
@@ -50,7 +52,7 @@ class AspectTest extends \PHPUnit_Framework_TestCase
     /**
      * Test if a single and directly annotated pointcut works (around advice used)
      *
-     * @return null
+     * @return void
      */
     public function testSingleDirectPointcut()
     {
@@ -63,7 +65,7 @@ class AspectTest extends \PHPUnit_Framework_TestCase
     /**
      * Test if a pointcut containing a regular expression in the class name will find its target
      *
-     * @return null
+     * @return void
      */
     public function testRegexAdvisedClass()
     {
@@ -76,7 +78,7 @@ class AspectTest extends \PHPUnit_Framework_TestCase
     /**
      * Test if a pointcut containing a regular expression in the method name will find its target
      *
-     * @return null
+     * @return void
      */
     public function testRegexAdvisedMethod()
     {
@@ -89,7 +91,7 @@ class AspectTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests if around advice chaining works at all
      *
-     * @return null
+     * @return void
      */
     public function testAroundAdviceChainingWorks()
     {
@@ -104,7 +106,7 @@ class AspectTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests if around advice chaining works in the correct order of advices
      *
-     * @return null
+     * @return void
      */
     public function testAroundAdviceChainingOrder()
     {
@@ -119,7 +121,7 @@ class AspectTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests if a method of an abstract class can be targeted by direct advice referencing
      *
-     * @return null
+     * @return void
      */
     public function testDirectAbstractMethodWeaving()
     {
@@ -130,7 +132,7 @@ class AspectTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests if a method of an abstract class can be targeted by pointcuts
      *
-     * @return null
+     * @return void
      */
     public function testPointcutBasedAbstractMethodWeaving()
     {

@@ -1,4 +1,15 @@
 
+# Version 1.4.7
+
+## Bugfixes
+
+* Fixed a bug with the parsing of parameter default values
+* Fixed a bug with shallow cloning resulting in permanently straightened child pointcut expressions
+
+## Features
+
+* None
+
 # Version 1.4.6
 
 ## Bugfixes
