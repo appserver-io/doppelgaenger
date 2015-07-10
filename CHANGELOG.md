@@ -1,3 +1,12 @@
+# Version 1.4.8
+
+## Bugfixes
+
+* Fix wrong classname in InstanceAssertion error message
+
+## Features
+
+* None
 
 # Version 1.4.7
 
