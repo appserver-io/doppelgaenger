@@ -109,7 +109,7 @@ class InstanceAssertion extends AbstractAssertion
                         \'%s must be an instance of %s, %s found instead.\',
                         \'' . str_replace(ReservedKeywords::RESULT, 'The returned object', $this->operand) . '\',
                         \'' . $this->class . '\',
-                        get_class(' . $this->operand . ')
+                        ' . $this->operand . ' === null ? \'null\' : get_class(' . $this->operand . ')
                     );
                 }';
     }
