@@ -301,7 +301,7 @@ class FunctionParser extends AbstractParser
                     // If we got the function definition, no scan everything from the first ( to the closing )
                     if ($tokens[$j] === '(') {
                         if ($bracketPassed === null) {
-                            $bracketPassed = 0;
+                            $bracketPassed = 1;
                             // We do not want to get this token as well.
                             continue;
 
@@ -315,7 +315,7 @@ class FunctionParser extends AbstractParser
                         $bracketPassed--;
                     }
 
-                    if ($bracketPassed >= 0 && $bracketPassed !== null) {
+                    if ($bracketPassed > 0 && $bracketPassed !== null) {
                         // Collect what we get
                         if (is_array($tokens[$j])) {
                             $parameterString .= $tokens[$j][1];

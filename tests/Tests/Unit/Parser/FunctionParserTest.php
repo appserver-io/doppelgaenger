@@ -123,7 +123,7 @@ class FunctionParserTest extends \PHPUnit_Framework_TestCase
     protected $tokensFixture = array(
         array(
             0 => array(
-                0 => 345,
+                0 => T_PUBLIC,
                 1 => 'public',
                 2 => 1
             ),
@@ -133,7 +133,7 @@ class FunctionParserTest extends \PHPUnit_Framework_TestCase
                 2 => 1
             ),
             2 => array(
-                0 => 335,
+                0 => T_FUNCTION,
                 1 => 'function',
                 2 => 1
             ),

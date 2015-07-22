@@ -210,6 +210,9 @@ class EnforcementFilter extends AbstractFilter
 
         } elseif ($target === 'postcondition') {
             $line = ReservedKeywords::END_LINE_VARIABLE;
+
+        } elseif ($target === 'InvalidArgumentException' || $target === 'MissingPropertyException') {
+            $line = 'isset($this->' . ReservedKeywords::ATTRIBUTE_STORAGE . '[$name])?$this->' . ReservedKeywords::ATTRIBUTE_STORAGE . '[$name][\'line\']:\'unknown\'';
         }
 
         // what we will always need is collection of all errors that occurred

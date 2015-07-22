@@ -63,6 +63,13 @@ class AttributeDefinition implements DefinitionInterface
     protected $name;
 
     /**
+     * Line of the class attribute's definition
+     *
+     * @var string $line
+     */
+    protected $line;
+
+    /**
      * Name of the structure containing this attribute
      *
      * @var string $structureName
@@ -84,6 +91,7 @@ class AttributeDefinition implements DefinitionInterface
         $this->visibility = 'public';
         $this->isStatic = false;
         $this->name = '';
+        $this->line = 0;
         $this->defaultValue = null;
         $this->inInvariant = false;
         $this->structureName = '';
@@ -107,6 +115,16 @@ class AttributeDefinition implements DefinitionInterface
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Getter method for the $line property
+     *
+     * @return string
+     */
+    public function getLine()
+    {
+        return $this->line;
     }
 
     /**
@@ -224,6 +242,18 @@ class AttributeDefinition implements DefinitionInterface
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * Setter method for the $line property
+     *
+     * @param string $line Line of the attribute's definition
+     *
+     * @return null
+     */
+    public function setLine($line)
+    {
+        $this->line = $line;
     }
 
     /**

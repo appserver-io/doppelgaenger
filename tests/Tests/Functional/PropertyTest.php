@@ -75,7 +75,7 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      *
-     * @expectedException \InvalidArgumentException
+     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\InvalidArgumentException
      */
     public function testPrivatePropertyWrite()
     {
@@ -87,7 +87,7 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      *
-     * @expectedException \InvalidArgumentException
+     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\InvalidArgumentException
      */
     public function testPrivatePropertyRead()
     {
@@ -99,7 +99,7 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      *
-     * @expectedException \InvalidArgumentException
+     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\InvalidArgumentException
      */
     public function testPrivateCheckedPropertyWrite()
     {
@@ -111,7 +111,7 @@ class PropertyTest extends \PHPUnit_Framework_TestCase
      *
      * @return null
      *
-     * @expectedException \InvalidArgumentException
+     * @expectedException \AppserverIo\Doppelgaenger\Exceptions\InvalidArgumentException
      */
     public function testPrivateCheckedPropertyRead()
     {

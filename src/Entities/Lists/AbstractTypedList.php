@@ -235,8 +235,7 @@ abstract class AbstractTypedList implements TypedListInterface, \Iterator
      */
     public function key()
     {
-
-        return $this->keyTracker[$this->currentPosition];
+        return isset($this->keyTracker[$this->currentPosition])?$this->keyTracker[$this->currentPosition]:$this->currentPosition;
     }
 
     /**
@@ -246,7 +245,6 @@ abstract class AbstractTypedList implements TypedListInterface, \Iterator
      */
     public function next()
     {
-
         ++$this->currentPosition;
     }
 
@@ -257,7 +255,6 @@ abstract class AbstractTypedList implements TypedListInterface, \Iterator
      */
     public function rewind()
     {
-
         $this->currentPosition = 0;
     }
 

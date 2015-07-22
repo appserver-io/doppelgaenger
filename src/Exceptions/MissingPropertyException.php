@@ -21,6 +21,7 @@
 namespace AppserverIo\Doppelgaenger\Exceptions;
 
 use AppserverIo\Doppelgaenger\Interfaces\ExceptionInterface;
+use AppserverIo\Doppelgaenger\Interfaces\ProxyExceptionInterface;
 
 /**
  * This exception will be thrown if we come across a missing member
@@ -31,7 +32,12 @@ use AppserverIo\Doppelgaenger\Interfaces\ExceptionInterface;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
-class MissingPropertyException extends \Exception implements ExceptionInterface
+class MissingPropertyException extends \Exception implements ExceptionInterface, ProxyExceptionInterface
 {
-
+    /**
+     * Allows to alter file and line the exception seems to have been thrown/created in
+     *
+     * @var \AppserverIo\Doppelgaenger\Exceptions\ProxyExceptionTrait
+     */
+    use ProxyExceptionTrait;
 }

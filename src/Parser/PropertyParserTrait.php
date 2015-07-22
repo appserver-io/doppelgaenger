@@ -153,6 +153,7 @@ trait PropertyParserTrait
         // possible static keyword
         $attribute = new AttributeDefinition();
         $attribute->setName($tokens[$attributePosition][1]);
+        $attribute->setLine($tokens[$attributePosition][2]);
         $attribute->setStructureName($this->currentDefinition->getQualifiedName());
 
         for ($i = $attributePosition; $i > $attributePosition - 6; $i--) {

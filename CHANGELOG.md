@@ -1,3 +1,13 @@
+# Version 1.5.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Closed [#609](https://github.com/appserver-io/appserver/issues/609) - Extend the debug abilities of produced code
+
 # Version 1.4.8
 
 ## Bugfixes
