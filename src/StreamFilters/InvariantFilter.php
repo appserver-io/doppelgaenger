@@ -196,6 +196,7 @@ class InvariantFilter extends AbstractFilter
                 $code .= '"' . substr($attribute->getName(), 1) . '"';
                 $code .= ' => array(
                         "visibility" => "' . $attribute->getVisibility() . '",
+                        "line" => "' . $attribute->getLine() . '",
                         ';
                 // Now check if we need any keywords for the variable identity
                 if ($attribute->isStatic()) {

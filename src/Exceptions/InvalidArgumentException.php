@@ -1,7 +1,7 @@
 <?php
 
 /**
- * \AppserverIo\Doppelgaenger\Exceptions\IllegalAccessException
+ * \AppserverIo\Doppelgaenger\Exceptions\InvalidArgumentException
  *
  * NOTICE OF LICENSE
  *
@@ -24,7 +24,7 @@ use AppserverIo\Doppelgaenger\Interfaces\ExceptionInterface;
 use AppserverIo\Doppelgaenger\Interfaces\ProxyExceptionInterface;
 
 /**
- * This exception will be thrown if logic gets accessed in an illegal way
+ * This exception will be thrown if an invalid argument was supplied on process invocation
  *
  * @author    Bernhard Wick <bw@appserver.io>
  * @copyright 2015 TechDivision GmbH - <info@appserver.io>
@@ -32,7 +32,7 @@ use AppserverIo\Doppelgaenger\Interfaces\ProxyExceptionInterface;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
-class IllegalAccessException extends \Exception implements ExceptionInterface, ProxyExceptionInterface
+class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface, ProxyExceptionInterface
 {
     /**
      * Allows to alter file and line the exception seems to have been thrown/created in
