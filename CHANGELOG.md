@@ -1,4 +1,3 @@
-
 # Version 1.5.0
 
 ## Bugfixes
@@ -8,6 +7,16 @@
 ## Features
 
 * Closed [#609](https://github.com/appserver-io/appserver/issues/609) - Extend the debug abilities of produced code
+
+# Version 1.4.8
+
+## Bugfixes
+
+* Fix wrong classname in InstanceAssertion error message
+
+## Features
+
+* None
 
 # Version 1.4.7
 
