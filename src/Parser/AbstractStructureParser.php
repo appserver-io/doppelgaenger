@@ -250,6 +250,22 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
     }
 
     /**
+     * Will check if a certain token describes a structure
+     *
+     * @param mixed $token The token to test
+     *
+     * @return boolean
+     */
+    protected function isStructureToken($token)
+    {
+        if (is_array($token) && ($token[0] === T_CLASS || $token[0] === T_INTERFACE || $token[0] === T_TRAIT)) {
+            return true;
+        }
+        // We are still here? That should not be.
+        return false;
+    }
+
+    /**
      * Will return a subset of our main token array. This subset includes all tokens belonging to a certain structure.
      * Might return false on failure
      *
@@ -327,7 +343,11 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
         // Check the tokens
         $structures = array();
         for ($i = 0; $i < $this->tokenCount; $i++) {
-            // If we got a use statement
+            // break as soon as we pass a structure keyword as "use" imports must be globally
+            if ($this->isStructureToken($this->tokens[$i])) {
+                break;
+            }
+            // if we got a use statement
             if ($this->tokens[$i][0] === T_USE) {
                 $structure = '';
                 for ($j = $i + 1; $j < count($this->tokens); $j++) {

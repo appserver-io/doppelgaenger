@@ -34,6 +34,8 @@ use AppserverIo\Doppelgaenger\Parser\ClassParser;
  */
 class BasicTestClass
 {
+    // use a basic trait here to check for the correct parsing of "use" statements
+    use BasicTestTrait;
 
     /**
      * Test
@@ -43,5 +45,32 @@ class BasicTestClass
     public function test()
     {
         return \stdClass::class;
+    }
+
+    /**
+     * Test method containing a method call with an anonymous callback function as parameter.
+     * Contains an "use" statement
+     *
+     * @return void
+     */
+    public function methodWithAnAnonymousCallback()
+    {
+        $test = 'test';
+        $this->test(function($param) use($test) {
+            // do nothing
+        });
+    }
+
+    /**
+     * Test method containing a method call with an anonymous callback function as parameter.
+     * Contains no "use" statement
+     *
+     * @return void
+     */
+    public function methodWithAnotherAnonymousCallback()
+    {
+        $this->test(function () {
+            // do nothing
+        });
     }
 }

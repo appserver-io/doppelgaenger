@@ -1,3 +1,14 @@
+# Version 1.5.1
+
+## Bugfixes
+
+* Fixed [#943](https://github.com/appserver-io/appserver/issues/943) - Inline Functions in Session Beans
+* Fixed bug with parsing of different "use" keywords (namespace import, trait usage, closure scoping, ...)
+
+## Features
+
+* None
+
 # Version 1.5.0
 
 ## Bugfixes
@@ -204,7 +215,7 @@
 
 ## Bugfixes
 
-* Always assumed complex type elements in typed array collections 
+* Always assumed complex type elements in typed array collections
 
 ## Features
 

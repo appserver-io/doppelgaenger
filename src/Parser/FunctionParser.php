@@ -453,9 +453,8 @@ class FunctionParser extends AbstractParser
      *
      * @return array|boolean
      */
-    protected function getFunctionTokens(
-        array $tokens
-    ) {
+    protected function getFunctionTokens(array $tokens)
+    {
         // Iterate over all the tokens and filter the different function portions out
         $result = array();
         for ($i = 0; $i < count($tokens); $i++) {
@@ -464,7 +463,7 @@ class FunctionParser extends AbstractParser
             // a function name.
             // Otherwise anonymous functions will make us go crazy.
             if (is_array($tokens[$i]) && $tokens[$i][0] === T_FUNCTION &&
-                !empty($tokens[$i + 2]) && $tokens[$i + 2] !== '('
+                !empty($tokens[$i + 2]) && $tokens[$i + 2] !== '(' && $tokens[$i + 1] !== '('
             ) {
                 // The lower bound should be the last semicolon|closing curly bracket|PHP tag before the function
                 $lowerBound = 0;
