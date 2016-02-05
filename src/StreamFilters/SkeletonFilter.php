@@ -100,7 +100,6 @@ class SkeletonFilter extends AbstractFilter
                 break;
 
             default:
-
                 $structureKeyword = 'class';
                 break;
         }

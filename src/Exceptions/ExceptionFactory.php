@@ -71,22 +71,18 @@ class ExceptionFactory
         // What kind of exception do we need?
         switch ($type) {
             case 'precondition':
-
                 $name = 'AppserverIo\Doppelgaenger\Exceptions\BrokenPreconditionException';
                 break;
 
             case 'postcondition':
-
                 $name = 'AppserverIo\Doppelgaenger\Exceptions\BrokenPostconditionException';
                 break;
 
             case 'invariant':
-
                 $name = 'AppserverIo\Doppelgaenger\Exceptions\BrokenInvariantException';
                 break;
 
             default:
-
                 $name = $type;
                 break;
         }

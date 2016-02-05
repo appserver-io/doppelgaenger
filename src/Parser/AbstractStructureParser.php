@@ -224,22 +224,18 @@ abstract class AbstractStructureParser extends AbstractParser implements Structu
         for ($i = 0; $i < $this->tokenCount; $i++) {
             switch ($this->tokens[$i][0]) {
                 case T_CLASS:
-
                     return 'class';
                     break;
 
                 case T_INTERFACE:
-
                     return 'interface';
                     break;
 
                 case T_TRAIT:
-
                     return 'trait';
                     break;
 
                 default:
-
                     continue;
                     break;
             }

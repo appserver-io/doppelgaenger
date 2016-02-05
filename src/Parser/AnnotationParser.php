@@ -300,8 +300,7 @@ class AnnotationParser extends AbstractParser
         if ($this->config->getValue('enforcement/enforce-default-type-safety') === true) {
             // lets switch the
 
-            switch ($conditionKeyword)
-            {
+            switch ($conditionKeyword) {
                 case Ensures::ANNOTATION:
                     // we have to consider @return annotations as well
 

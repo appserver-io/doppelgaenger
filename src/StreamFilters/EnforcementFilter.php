@@ -226,7 +226,6 @@ class EnforcementFilter extends AbstractFilter
         // what kind of processing should we create?
         switch ($type) {
             case 'exception':
-
                 $exceptionFactory = new ExceptionFactory();
                 $exception = $exceptionFactory->getClassName($target);
 
@@ -243,7 +242,6 @@ class EnforcementFilter extends AbstractFilter
                 break;
 
             case 'logging':
-
                 // Create the code
                 $code .= $errorCollectionCode .
                     '$container = new \AppserverIo\Doppelgaenger\Utils\InstanceContainer();
@@ -257,7 +255,6 @@ class EnforcementFilter extends AbstractFilter
                 break;
 
             case 'none':
-
                 // Create the code
                 $code .= '\AppserverIo\Doppelgaenger\ContractContext::close();';
                 break;
