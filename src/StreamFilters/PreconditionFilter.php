@@ -21,6 +21,7 @@
 namespace AppserverIo\Doppelgaenger\StreamFilters;
 
 use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
+use AppserverIo\Doppelgaenger\Entities\Lists\FunctionDefinitionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
 use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
@@ -49,67 +50,53 @@ class PreconditionFilter extends AbstractFilter
     protected $dependencies = array('SkeletonFilter');
 
     /**
-     * The main filter method.
-     * Implemented according to \php_user_filter class. Will loop over all stream buckets, buffer them and perform
-     * the needed actions.
+     * Filter a chunk of data by adding precondition checks
      *
-     * @param resource $in       Incoming bucket brigade we need to filter
-     * @param resource $out      Outgoing bucket brigade with already filtered content
-     * @param integer  $consumed The count of altered characters as buckets pass the filter
-     * @param boolean  $closing  Is the stream about to close?
+     * @param string                 $chunk               The data chunk to be filtered
+     * @param FunctionDefinitionList $functionDefinitions Definition of the structure the chunk belongs to
      *
-     * @throws \AppserverIo\Doppelgaenger\Exceptions\GeneratorException
-     *
-     * @return integer
-     *
-     * @link http://www.php.net/manual/en/php-user-filter.filter.php
+     * @return string
      */
-    public function filter($in, $out, &$consumed, $closing)
+    public function filterChunk($chunk, FunctionDefinitionList $functionDefinitions)
     {
-        // Get our buckets from the stream
-        while ($bucket = stream_bucket_make_writeable($in)) {
-            // Get the tokens
-            $tokens = token_get_all($bucket->data);
+        // Get the tokens
+        $tokens = token_get_all($chunk);
 
-            // Go through the tokens and check what we found
-            $tokensCount = count($tokens);
-            for ($i = 0; $i < $tokensCount; $i++) {
-                // Did we find a function? If so check if we know that thing and insert the code of its preconditions.
-                if (is_array($tokens[$i]) && $tokens[$i][0] === T_FUNCTION && is_array($tokens[$i + 2])) {
-                    // Get the name of the function
-                    $functionName = $tokens[$i + 2][1];
+        // Go through the tokens and check what we found
+        $tokensCount = count($tokens);
+        for ($i = 0; $i < $tokensCount; $i++) {
+            // Did we find a function? If so check if we know that thing and insert the code of its preconditions.
+            if (is_array($tokens[$i]) && $tokens[$i][0] === T_FUNCTION && is_array($tokens[$i + 2])) {
+                // Get the name of the function
+                $functionName = $tokens[$i + 2][1];
 
-                    // Check if we got the function in our list, if not continue
-                    $functionDefinition = $this->params->get($functionName);
+                // Check if we got the function in our list, if not continue
+                $functionDefinition = $functionDefinitions->get($functionName);
 
-                    if (!$functionDefinition instanceof FunctionDefinition) {
-                        continue;
+                if (!$functionDefinition instanceof FunctionDefinition) {
+                    continue;
 
-                    } else {
-                        // Get the code for the assertions
-                        $code = $this->generateCode($functionDefinition->getAllPreconditions(), $functionName);
+                } else {
+                    // Get the code for the assertions
+                    $code = $this->generateCode($functionDefinition->getAllPreconditions(), $functionName);
 
-                        // Insert the code
-                        $bucket->data = str_replace(
-                            Placeholders::PRECONDITION . $functionDefinition->getName() .
-                            Placeholders::PLACEHOLDER_CLOSE,
-                            $code,
-                            $bucket->data
-                        );
+                    // Insert the code
+                    $chunk = str_replace(
+                        Placeholders::PRECONDITION . $functionDefinition->getName() .
+                        Placeholders::PLACEHOLDER_CLOSE,
+                        $code,
+                        $chunk
+                    );
 
-                        // "Destroy" code and function definition
-                        $code = null;
-                        $functionDefinition = null;
-                    }
+                    // "Destroy" code and function definition
+                    $code = null;
+                    $functionDefinition = null;
                 }
             }
-
-            // Tell them how much we already processed, and stuff it back into the output
-            $consumed += $bucket->datalen;
-            stream_bucket_append($out, $bucket);
         }
 
-        return PSFS_PASS_ON;
+        // Tell them how much we already processed, and stuff it back into the output
+        return $chunk;
     }
 
     /**

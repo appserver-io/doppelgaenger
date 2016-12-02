@@ -20,10 +20,12 @@
 
 namespace AppserverIo\Doppelgaenger\StreamFilters;
 
+use AppserverIo\Doppelgaenger\AspectRegister;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 use AppserverIo\Doppelgaenger\Entities\Definitions\FunctionDefinition;
 use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
 use AppserverIo\Doppelgaenger\Entities\Joinpoint;
+use AppserverIo\Doppelgaenger\Entities\Lists\FunctionDefinitionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\PointcutExpressionList;
 use AppserverIo\Doppelgaenger\Entities\Pointcuts\AdvisePointcut;
 use AppserverIo\Doppelgaenger\Entities\Pointcuts\AndPointcut;
@@ -62,80 +64,67 @@ class AdviceFilter extends AbstractFilter
     protected $dependencies = array('SkeletonFilter');
 
     /**
-     * The main filter method.
-     * Implemented according to \php_user_filter class. Will loop over all stream buckets, buffer them and perform
-     * the needed actions.
+     * Filter a chunk of data by adding postcondition checks
      *
-     * @param resource $in       Incoming bucket brigade we need to filter
-     * @param resource $out      Outgoing bucket brigade with already filtered content
-     * @param integer  $consumed The count of altered characters as buckets pass the filter
-     * @param boolean  $closing  Is the stream about to close?
+     * @param string                 $chunk               The data chunk to be filtered
+     * @param FunctionDefinitionList $functionDefinitions Definition of the structure the chunk belongs to
+     * @param AspectRegister         $aspectRegister      The register containing potential aspects
      *
-     * @return integer
-     *
-     * @link http://www.php.net/manual/en/php-user-filter.filter.php
+     * @return string
      */
-    public function filter($in, $out, &$consumed, $closing)
+    public function filterChunk($chunk, FunctionDefinitionList $functionDefinitions, AspectRegister $aspectRegister)
     {
-        // get our buckets from the stream
-        while ($bucket = stream_bucket_make_writeable($in)) {
-            // get the tokens
-            $tokens = token_get_all($bucket->data);
+        $this->aspectRegister = $aspectRegister;
 
-            $functionDefinitions = $this->params['functionDefinitions'];
-            $this->aspectRegister = $this->params['aspectRegister'];
+        // get the tokens
+        $tokens = token_get_all($chunk);
 
-            // go through the tokens and check what we found
-            $tokensCount = count($tokens);
-            for ($i = 0; $i < $tokensCount; $i++) {
-                // did we find a function? If so check if we know that thing and insert the code of its preconditions.
-                if (is_array($tokens[$i]) && $tokens[$i][0] === T_FUNCTION && is_array($tokens[$i + 2])) {
-                    // get the name of the function
-                    $functionName = $tokens[$i + 2][1];
+        // go through the tokens and check what we found
+        $tokensCount = count($tokens);
+        for ($i = 0; $i < $tokensCount; $i++) {
+            // did we find a function? If so check if we know that thing and insert the code of its preconditions.
+            if (is_array($tokens[$i]) && $tokens[$i][0] === T_FUNCTION && is_array($tokens[$i + 2])) {
+                // get the name of the function
+                $functionName = $tokens[$i + 2][1];
 
-                    // check if we got the function in our list, if not continue
-                    $functionDefinition = $functionDefinitions->get($functionName);
+                // check if we got the function in our list, if not continue
+                $functionDefinition = $functionDefinitions->get($functionName);
 
-                    if (!$functionDefinition instanceof FunctionDefinition) {
-                        continue;
+                if (!$functionDefinition instanceof FunctionDefinition) {
+                    continue;
 
-                    } else {
-                        // collect all pointcut expressions, advice based as well as directly defined ones
-                        $pointcutExpressions = $functionDefinition->getPointcutExpressions();
-                        $pointcutExpressions->attach($this->findAdvicePointcutExpressions($functionDefinition));
+                } else {
+                    // collect all pointcut expressions, advice based as well as directly defined ones
+                    $pointcutExpressions = $functionDefinition->getPointcutExpressions();
+                    $pointcutExpressions->attach($this->findAdvicePointcutExpressions($functionDefinition));
 
-                        if ($pointcutExpressions->count() > 0) {
-                            // sort all relevant pointcut expressions by their joinpoint code hooks
-                            $sortedFunctionPointcuts = $this->sortPointcutExpressions($pointcutExpressions);
+                    if ($pointcutExpressions->count() > 0) {
+                        // sort all relevant pointcut expressions by their joinpoint code hooks
+                        $sortedFunctionPointcuts = $this->sortPointcutExpressions($pointcutExpressions);
 
-                            // get all the callbacks for around advices to build a proper advice chain
-                            $callbackChain = $this->generateAdviceCallbacks($sortedFunctionPointcuts, $functionDefinition);
+                        // get all the callbacks for around advices to build a proper advice chain
+                        $callbackChain = $this->generateAdviceCallbacks($sortedFunctionPointcuts, $functionDefinition);
 
-                            // before we weave in any advice code we have to make a MethodInvocation object ready
-                            $this->injectInvocationCode($bucket->data, $functionDefinition, $callbackChain);
+                        // before we weave in any advice code we have to make a MethodInvocation object ready
+                        $this->injectInvocationCode($chunk, $functionDefinition, $callbackChain);
 
-                            // as we need the result of the method invocation we have to collect it
-                            $this->injectResultInjection($bucket->data, $functionName);
+                        // as we need the result of the method invocation we have to collect it
+                        $this->injectResultInjection($chunk, $functionName);
 
-                            // we need the exception (if any) within our method invocation object
-                            $this->injectExceptionInjection($bucket->data, $functionName);
+                        // we need the exception (if any) within our method invocation object
+                        $this->injectExceptionInjection($chunk, $functionName);
 
-                            // inject the advice code
-                            $this->injectAdviceCode($bucket->data, $sortedFunctionPointcuts, $functionDefinition);
-                        }
-
-                        // "destroy" function definition
-                        $functionDefinition = null;
+                        // inject the advice code
+                        $this->injectAdviceCode($chunk, $sortedFunctionPointcuts, $functionDefinition);
                     }
+
+                    // "destroy" function definition
+                    $functionDefinition = null;
                 }
             }
-
-            // tell them how much we already processed, and stuff it back into the output
-            $consumed += $bucket->datalen;
-            stream_bucket_append($out, $bucket);
         }
 
-        return PSFS_PASS_ON;
+        return $chunk;
     }
 
     /**
@@ -187,10 +176,13 @@ class AdviceFilter extends AbstractFilter
                         foreach ($functionDefinition->getParameterDefinitions() as $parameterDefinition) {
                             $parameterNames[] = $parameterDefinition->name;
                         }
-                        $parameterAssignmentCode = 'list(' .
-                            implode(',', $parameterNames) .
-                            ') = array_values(' . ReservedKeywords::METHOD_INVOCATION_OBJECT . '->getParameters());';
-
+                        // only expose parameter values if there are any as of PHP 7.0 empty list() calls are forbidden
+                        // @see http://php.net/manual/en/migration70.incompatible.php#migration70.incompatible.variable-handling.list.empty
+                        if (count($parameterNames) > 0) {
+                            $parameterAssignmentCode = 'list(' .
+                                implode(',', $parameterNames) .
+                                ') = array_values(' . ReservedKeywords::METHOD_INVOCATION_OBJECT . '->getParameters());';
+                        }
                         // insert the actual before code
                         $bucketData = str_replace(
                             $placeholderHook,

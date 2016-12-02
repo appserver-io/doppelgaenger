@@ -57,32 +57,18 @@ class EnforcementFilter extends AbstractFilter
     protected $dependencies = array(array('PreconditionFilter', 'PostconditionFilter', 'InvariantFilter'));
 
     /**
-     * The main filter method.
-     * Implemented according to \php_user_filter class. Will loop over all stream buckets, buffer them and perform
-     * the needed actions.
+     * Filter a chunk of data by adding a doppelgaenger skeleton to it
      *
-     * @param resource $in       Incoming bucket brigade we need to filter
-     * @param resource $out      Outgoing bucket brigade with already filtered content
-     * @param integer  $consumed The count of altered characters as buckets pass the filter
-     * @param boolean  $closing  Is the stream about to close?
+     * @param string                       $chunk               The data chunk to be filtered
+     * @param StructureDefinitionInterface $structureDefinition Definition of the structure the chunk belongs to
+     * @param Config                       $config              Configuration for the doppelgaenger library
      *
-     * @throws \AppserverIo\Doppelgaenger\Exceptions\GeneratorException
+     * @return string
      *
-     * @return integer
-     *
-     * @link http://www.php.net/manual/en/php-user-filter.filter.php
+     * @throws GeneratorException
      */
-    public function filter($in, $out, &$consumed, $closing)
+    public function filterChunk($chunk, StructureDefinitionInterface $structureDefinition, Config $config)
     {
-        // Lets check if we got the config we wanted
-        $config = $this->params['config'];
-        $structureDefinition = $this->params['structureDefinition'];
-
-        // check if we got what we need for proper processing
-        if (!$config instanceof Config || !$structureDefinition instanceof StructureDefinitionInterface) {
-            throw new GeneratorException('The enforcement filter needs the configuration as well as the definition of the currently filtered structure. At least one of these requirements is missing.');
-        }
-
         // we need a valid configuration as well
         if (!$config->hasValue('enforcement/processing')) {
             throw new GeneratorException('Configuration does not contain the needed processing section.');
@@ -101,59 +87,52 @@ class EnforcementFilter extends AbstractFilter
         $invalidCode = $this->generateCode($structureName, 'InvalidArgumentException', $type, $structurePath);
         $missingCode = $this->generateCode($structureName, 'MissingPropertyException', $type, $structurePath);
 
-        // Get our buckets from the stream
-        while ($bucket = stream_bucket_make_writeable($in)) {
-            // Get the tokens
-            $tokens = token_get_all($bucket->data);
+        // Get the tokens
+        $tokens = token_get_all($chunk);
 
-            // Go through the tokens and check what we found
-            $tokensCount = count($tokens);
-            for ($i = 0; $i < $tokensCount; $i++) {
-                // Did we find a function? If so check if we know that thing and insert the code of its preconditions.
-                if (is_array($tokens[$i]) && $tokens[$i][0] === T_FUNCTION && is_array($tokens[$i + 2])) {
-                    // Get the name of the function
-                    $functionName = $tokens[$i + 2][1];
+        // Go through the tokens and check what we found
+        $tokensCount = count($tokens);
+        for ($i = 0; $i < $tokensCount; $i++) {
+            // Did we find a function? If so check if we know that thing and insert the code of its preconditions.
+            if (is_array($tokens[$i]) && $tokens[$i][0] === T_FUNCTION && is_array($tokens[$i + 2])) {
+                // Get the name of the function
+                $functionName = $tokens[$i + 2][1];
 
-                    // Check if we got the function in our list, if not continue
-                    $functionDefinition = $structureDefinition->getFunctionDefinitions()->get($functionName);
+                // Check if we got the function in our list, if not continue
+                $functionDefinition = $structureDefinition->getFunctionDefinitions()->get($functionName);
 
-                    if (!$functionDefinition instanceof FunctionDefinition) {
-                        continue;
+                if (!$functionDefinition instanceof FunctionDefinition) {
+                    continue;
 
-                    } else {
-                        // manage the injection of the enforcement code into the found function
-                        $this->injectFunctionEnforcement(
-                            $bucket->data,
-                            $structureName,
-                            $structurePath,
-                            $preconditionCode,
-                            $postconditionCode,
-                            $functionDefinition
-                        );
+                } else {
+                    // manage the injection of the enforcement code into the found function
+                    $this->injectFunctionEnforcement(
+                        $chunk,
+                        $structureName,
+                        $structurePath,
+                        $preconditionCode,
+                        $postconditionCode,
+                        $functionDefinition
+                    );
 
-                        // "Destroy" code and function definition
-                        $functionDefinition = null;
-                    }
+                    // "Destroy" code and function definition
+                    $functionDefinition = null;
                 }
             }
-
-            // Insert the code for the static processing placeholders
-            $bucket->data = str_replace(
-                array(
-                    Placeholders::ENFORCEMENT . 'invariant' . Placeholders::PLACEHOLDER_CLOSE,
-                    Placeholders::ENFORCEMENT . 'InvalidArgumentException' . Placeholders::PLACEHOLDER_CLOSE,
-                    Placeholders::ENFORCEMENT . 'MissingPropertyException' . Placeholders::PLACEHOLDER_CLOSE
-                ),
-                array($invariantCode, $invalidCode, $missingCode),
-                $bucket->data
-            );
-
-            // Tell them how much we already processed, and stuff it back into the output
-            $consumed += $bucket->datalen;
-            stream_bucket_append($out, $bucket);
         }
 
-        return PSFS_PASS_ON;
+        // Insert the code for the static processing placeholders
+        $chunk = str_replace(
+            array(
+                Placeholders::ENFORCEMENT . 'invariant' . Placeholders::PLACEHOLDER_CLOSE,
+                Placeholders::ENFORCEMENT . 'InvalidArgumentException' . Placeholders::PLACEHOLDER_CLOSE,
+                Placeholders::ENFORCEMENT . 'MissingPropertyException' . Placeholders::PLACEHOLDER_CLOSE
+            ),
+            array($invariantCode, $invalidCode, $missingCode),
+            $chunk
+        );
+
+        return $chunk;
     }
 
     /**
