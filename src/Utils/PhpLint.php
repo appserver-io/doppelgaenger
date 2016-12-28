@@ -56,7 +56,7 @@ class PhpLint
     public function check($code)
     {
         // Save the current error reporting level and set level to 0.
-        // We would get errors shown to the use if we did not do that.
+        // We would get errors shown to the user if we did not do that.
         $level = error_reporting();
         error_reporting(0);
 
@@ -73,6 +73,7 @@ class PhpLint
         } catch (\Exception $e) {
             // Set the error reporting to the intended level and fail
             error_reporting($level);
+            error_log($e->getMessage());
             throw $e;
         }
 

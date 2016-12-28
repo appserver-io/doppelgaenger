@@ -57,4 +57,13 @@
         <antcall target="composer-update"/>
     </target>
 
+    <!-- ==================================================================== -->
+    <!-- Runs the PHPUnit tests on Travis-CI and generates a report           -->
+    <!-- ==================================================================== -->
+    <target name="run-tests" description="Runs the PHPUnit tests on Travis-CI and generates a report.">
+        <exec executable="${vendor.dir}/bin/phpunit" dir="${basedir}" failonerror="true">
+            <arg line="--debug --bootstrap bootstrap.php --configuration phpunit.xml" />
+        </exec>
+    </target>
+
 </project>

@@ -329,8 +329,8 @@ class Generator
         }
 
         // Whatever the enforcement level is, we will always need the skeleton filter.
-        $filters['SkeletonFilter'] = Filter\append($res, function ($chunk) use ($structureDefinition) {
-            $skeletonFilter = new SkeletonFilter();
+        $skeletonFilter = new SkeletonFilter();
+        $filters['SkeletonFilter'] = Filter\append($res, function ($chunk) use ($structureDefinition, $skeletonFilter) {
             return $skeletonFilter->filterChunk($chunk, $structureDefinition);
         });
 
