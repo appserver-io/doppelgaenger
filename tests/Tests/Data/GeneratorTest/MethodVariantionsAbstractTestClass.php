@@ -45,18 +45,4 @@ abstract class MethodVariantionsAbstractTestClass
      * @return void
      */
     abstract protected function iAmAbstractAndProtected();
-
-    /**
-     * An abstract public static method
-     *
-     * @return void
-     */
-    abstract public static function iAmAbstractAndPublicAndStatic();
-
-    /**
-     * An abstract protected static method
-     *
-     * @return void
-    */
-    abstract protected static function iAmAbstractAndProtectedAndStatic();
 }
