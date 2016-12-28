@@ -25,6 +25,7 @@ use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
 use AppserverIo\Doppelgaenger\Exceptions\GeneratorException;
 use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
+use AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface;
 
 /**
  * This filter will buffer the input stream and add all invariant related information at prepared locations
@@ -50,25 +51,15 @@ class InvariantFilter extends AbstractFilter
     protected $dependencies = array('SkeletonFilter');
 
     /**
-     * The main filter method.
-     * Implemented according to \php_user_filter class. Will loop over all stream buckets, buffer them and perform
-     * the needed actions.
+     * Filter a chunk of data by adding introductions to it
      *
-     * @param resource $in       Incoming bucket brigade we need to filter
-     * @param resource $out      Outgoing bucket brigade with already filtered content
-     * @param integer  $consumed The count of altered characters as buckets pass the filter
-     * @param boolean  $closing  Is the stream about to close?
+     * @param string                       $chunk               The data chunk to be filtered
+     * @param StructureDefinitionInterface $structureDefinition Definition of the structure the chunk belongs to
      *
-     * @throws \AppserverIo\Doppelgaenger\Exceptions\GeneratorException
-     *
-     * @return integer
-     *
-     * @link http://www.php.net/manual/en/php-user-filter.filter.php
+     * @return string
      */
-    public function filter($in, $out, &$consumed, $closing)
+    public function filterChunk($chunk, StructureDefinitionInterface $structureDefinition)
     {
-        $structureDefinition = $this->params;
-
         // After iterate over the attributes and build up our array of attributes we have to include in our
         // checking mechanism.
         $obsoleteProperties = array();
@@ -91,81 +82,76 @@ class InvariantFilter extends AbstractFilter
 
         // Get our buckets from the stream
         $functionHook = '';
-        while ($bucket = stream_bucket_make_writeable($in)) {
-            // We only have to do that once!
-            if (empty($functionHook)) {
-                $functionHook = Placeholders::STRUCTURE_END;
+        // We only have to do that once!
+        if (empty($functionHook)) {
+            $functionHook = Placeholders::STRUCTURE_END;
 
-                // Get the code for our attribute storage
-                $attributeCode = $this->generateAttributeCode($structureDefinition->getAttributeDefinitions());
+            // Get the code for our attribute storage
+            $attributeCode = $this->generateAttributeCode($structureDefinition->getAttributeDefinitions());
 
-                // Get the code for the assertions
-                $code = $this->generateFunctionCode($structureDefinition->getInvariants());
+            // Get the code for the assertions
+            $code = $this->generateFunctionCode($structureDefinition->getInvariants());
 
-                // Insert the code
-                $bucket->data = str_replace(
-                    array(
-                        $functionHook,
-                        $functionHook
-                    ),
-                    array(
-                        $functionHook . $attributeCode,
-                        $functionHook . $code
-                    ),
-                    $bucket->data
+            // Insert the code
+            $chunk = str_replace(
+                array(
+                    $functionHook,
+                    $functionHook
+                ),
+                array(
+                    $functionHook . $attributeCode,
+                    $functionHook . $code
+                ),
+                $chunk
+            );
+
+            // Determine if we need the __set method to be injected
+            if ($structureDefinition->getFunctionDefinitions()->entryExists('__set')) {
+                // Get the code for our __set() method
+                $setCode = $this->generateSetCode($structureDefinition->hasParents(), true);
+                $chunk = str_replace(
+                    Placeholders::METHOD_INJECT . '__set' . Placeholders::PLACEHOLDER_CLOSE,
+                    $setCode,
+                    $chunk
                 );
 
-                // Determine if we need the __set method to be injected
-                if ($structureDefinition->getFunctionDefinitions()->entryExists('__set')) {
-                    // Get the code for our __set() method
-                    $setCode = $this->generateSetCode($structureDefinition->hasParents(), true);
-                    $bucket->data = str_replace(
-                        Placeholders::METHOD_INJECT . '__set' . Placeholders::PLACEHOLDER_CLOSE,
-                        $setCode,
-                        $bucket->data
-                    );
-
-                } else {
-                    $setCode = $this->generateSetCode($structureDefinition->hasParents());
-                    $bucket->data = str_replace(
-                        $functionHook,
-                        $functionHook . $setCode,
-                        $bucket->data
-                    );
-                }
-
-                // Determine if we need the __get method to be injected
-                if ($structureDefinition->getFunctionDefinitions()->entryExists('__get')) {
-                    // Get the code for our __set() method
-                    $getCode = $this->generateGetCode($structureDefinition->hasParents(), true);
-                    $bucket->data = str_replace(
-                        Placeholders::METHOD_INJECT . '__get' . Placeholders::PLACEHOLDER_CLOSE,
-                        $getCode,
-                        $bucket->data
-                    );
-
-                } else {
-                    $getCode = $this->generateGetCode($structureDefinition->hasParents());
-                    $bucket->data = str_replace(
-                        $functionHook,
-                        $functionHook . $getCode,
-                        $bucket->data
-                    );
-                }
+            } else {
+                $setCode = $this->generateSetCode($structureDefinition->hasParents());
+                $chunk = str_replace(
+                    $functionHook,
+                    $functionHook . $setCode,
+                    $chunk
+                );
             }
 
-            // We need the code to call the invariant
-            $this->injectInvariantCall($bucket->data);
+            // Determine if we need the __get method to be injected
+            if ($structureDefinition->getFunctionDefinitions()->entryExists('__get')) {
+                // Get the code for our __set() method
+                $getCode = $this->generateGetCode($structureDefinition->hasParents(), true);
+                $chunk = str_replace(
+                    Placeholders::METHOD_INJECT . '__get' . Placeholders::PLACEHOLDER_CLOSE,
+                    $getCode,
+                    $chunk
+                );
 
-            // Remove all the properties we will take care of with our magic setter and getter
-            $bucket->data = preg_replace($obsoleteProperties, $propertyReplacements, $bucket->data, 1);
-
-            // Tell them how much we already processed, and stuff it back into the output
-            $consumed += $bucket->datalen;
-            stream_bucket_append($out, $bucket);
+            } else {
+                $getCode = $this->generateGetCode($structureDefinition->hasParents());
+                $chunk = str_replace(
+                    $functionHook,
+                    $functionHook . $getCode,
+                    $chunk
+                );
+            }
         }
 
-        return PSFS_PASS_ON;
+        // We need the code to call the invariant
+        $this->injectInvariantCall($chunk);
+
+        // Remove all the properties we will take care of with our magic setter and getter
+        $chunk = preg_replace($obsoleteProperties, $propertyReplacements, $chunk, 1);
+
+
+        return $chunk;
     }
 
     /**
@@ -468,7 +454,7 @@ class InvariantFilter extends AbstractFilter
 
                 // generate the check for assertions results
                 if ($conditionCounter > 0) {
-                    $code .= 'if (!empty(' . ReservedKeywords::FAILURE_VARIABLE . ') || !empty(' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE .')) {
+                    $code .= 'if (!empty(' . ReservedKeywords::FAILURE_VARIABLE . ') || !empty(' . ReservedKeywords::UNWRAPPED_FAILURE_VARIABLE . ')) {
                         ' . Placeholders::ENFORCEMENT . 'invariant' . Placeholders::PLACEHOLDER_CLOSE . '
                     }';
                 }

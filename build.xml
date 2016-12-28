@@ -1,22 +1,22 @@
 <?xml version="1.0"?>
 <!DOCTYPE project>
 <project name="appserver-io/doppelgaenger" default="composer-init" basedir=".">
-    
+
     <!-- initialize ENV variable -->
     <property environment="env" />
-    
+
     <!-- initialize file based properties -->
     <property file="${basedir}/build.properties"/>
     <property file="${basedir}/build.default.properties"/>
     <property file="${basedir}/build.${os.family}.properties"/>
-    
+
     <!-- initialize the library specific properties -->
     <property name="codepool" value="vendor"/>
-    
+
     <!-- initialize the directory where we can find the real build files -->
     <property name="vendor.dir" value ="${basedir}/${codepool}" />
     <property name="build.dir" value="${vendor.dir}/appserver-io/build" />
-    
+
     <!-- ==================================================================== -->
     <!-- Import the common build configuration file                           -->
     <!-- ==================================================================== -->
@@ -30,7 +30,7 @@
             <available file="${build.dir}" type="dir"/>
         </condition>
     </target>
-    
+
     <!-- ==================================================================== -->
     <!-- Installs all dependencies defined in composer.json                   -->
     <!-- ==================================================================== -->
@@ -55,6 +55,15 @@
     <target name="composer-init">
         <antcall target="composer-install"/>
         <antcall target="composer-update"/>
+    </target>
+
+    <!-- ==================================================================== -->
+    <!-- Runs the PHPUnit tests on Travis-CI and generates a report           -->
+    <!-- ==================================================================== -->
+    <target name="run-tests" description="Runs the PHPUnit tests on Travis-CI and generates a report.">
+        <exec executable="${vendor.dir}/bin/phpunit" dir="${basedir}" failonerror="true">
+            <arg line="--debug --bootstrap bootstrap.php --configuration phpunit.xml" />
+        </exec>
     </target>
 
 </project>

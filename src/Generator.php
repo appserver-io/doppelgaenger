@@ -30,6 +30,15 @@ use AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface;
 use AppserverIo\Doppelgaenger\Entities\Definitions\Structure;
 use AppserverIo\Doppelgaenger\Parser\StructureParserFactory;
 use AppserverIo\Doppelgaenger\Dictionaries\Placeholders;
+use AppserverIo\Doppelgaenger\StreamFilters\AdviceFilter;
+use AppserverIo\Doppelgaenger\StreamFilters\EnforcementFilter;
+use AppserverIo\Doppelgaenger\StreamFilters\IntroductionFilter;
+use AppserverIo\Doppelgaenger\StreamFilters\InvariantFilter;
+use AppserverIo\Doppelgaenger\StreamFilters\PostconditionFilter;
+use AppserverIo\Doppelgaenger\StreamFilters\PreconditionFilter;
+use AppserverIo\Doppelgaenger\StreamFilters\ProcessingFilter;
+use AppserverIo\Doppelgaenger\StreamFilters\SkeletonFilter;
+use Clue\StreamFilter as Filter;
 
 /**
  * This class initiates the creation of enforced structure definitions.
@@ -320,11 +329,10 @@ class Generator
         }
 
         // Whatever the enforcement level is, we will always need the skeleton filter.
-        $filters['SkeletonFilter'] = $this->appendFilter(
-            $res,
-            'AppserverIo\Doppelgaenger\StreamFilters\SkeletonFilter',
-            $structureDefinition
-        );
+        $skeletonFilter = new SkeletonFilter();
+        $filters['SkeletonFilter'] = Filter\append($res, function ($chunk) use ($structureDefinition, $skeletonFilter) {
+            return $skeletonFilter->filterChunk($chunk, $structureDefinition);
+        });
 
         // Now lets register and append the filters if they are mapped to a 1
         // Lets have a look at the precondition filter first
@@ -340,11 +348,10 @@ class Generator
             }
 
             if ($filterNeeded) {
-                $filters['PreconditionFilter'] = $this->appendFilter(
-                    $res,
-                    'AppserverIo\Doppelgaenger\StreamFilters\PreconditionFilter',
-                    $structureDefinition->getFunctionDefinitions()
-                );
+                $preconditionFilter = new PreconditionFilter();
+                $filters['PreconditionFilter'] = Filter\append($res, function ($chunk) use ($preconditionFilter, $structureDefinition) {
+                    return $preconditionFilter->filterChunk($chunk, $structureDefinition->getFunctionDefinitions());
+                });
             }
         }
 
@@ -361,11 +368,10 @@ class Generator
             }
 
             if ($filterNeeded) {
-                $filters['PostconditionFilter'] = $this->appendFilter(
-                    $res,
-                    'AppserverIo\Doppelgaenger\StreamFilters\PostconditionFilter',
-                    $structureDefinition->getFunctionDefinitions()
-                );
+                $postconditionFilter = new PostconditionFilter();
+                $filters['PostconditionFilter'] = Filter\append($res, function ($chunk) use ($postconditionFilter, $structureDefinition) {
+                    return $postconditionFilter->filterChunk($chunk, $structureDefinition->getFunctionDefinitions());
+                });
             }
         }
 
@@ -373,47 +379,39 @@ class Generator
         if (isset($levelArray[2]) && $levelArray[2] == 1) {
             // Do we even got any invariants?
             if ($structureDefinition->getInvariants()->count(true) !== 0) {
-                $filters['InvariantFilter'] = $this->appendFilter(
-                    $res,
-                    'AppserverIo\Doppelgaenger\StreamFilters\InvariantFilter',
-                    $structureDefinition
-                );
+                $invariantFilter = new InvariantFilter();
+                $filters['InvariantFilter'] = Filter\append($res, function ($chunk) use ($invariantFilter, $structureDefinition) {
+                    return $invariantFilter->filterChunk($chunk, $structureDefinition);
+                });
             }
         }
 
         // introductions make only sense for classes
         if ($structureDefinition instanceof ClassDefinition) {
             // add the filter used for introductions
-            $filters['IntroductionFilter'] = $this->appendFilter(
-                $res,
-                'AppserverIo\Doppelgaenger\StreamFilters\IntroductionFilter',
-                $structureDefinition->getIntroductions()
-            );
+            $introductionFilter = new IntroductionFilter();
+            $filters['IntroductionFilter'] = Filter\append($res, function ($chunk) use ($introductionFilter, $structureDefinition) {
+                return $introductionFilter->filterChunk($chunk, $structureDefinition->getIntroductions());
+            });
         }
 
         // add the filter we need for our AOP advices
-        $filters['AdviceFilter'] = $this->appendFilter(
-            $res,
-            'AppserverIo\Doppelgaenger\StreamFilters\AdviceFilter',
-            array('functionDefinitions' => $structureDefinition->getFunctionDefinitions(), 'aspectRegister' => $this->aspectRegister)
-        );
+        $adviceFilter = new AdviceFilter();
+        $filters['AdviceFilter'] = Filter\append($res, function ($chunk) use ($adviceFilter, $structureDefinition) {
+            return $adviceFilter->filterChunk($chunk, $structureDefinition->getFunctionDefinitions(), $this->aspectRegister);
+        });
 
         // add the filter used to proxy to the actual implementation
-        $filters['ProcessingFilter'] = $this->appendFilter(
-            $res,
-            'AppserverIo\Doppelgaenger\StreamFilters\ProcessingFilter',
-            $structureDefinition->getFunctionDefinitions()
-        );
+        $processingFilter = new ProcessingFilter();
+        $filters['ProcessingFilter'] = Filter\append($res, function ($chunk) use ($processingFilter, $structureDefinition) {
+            return $processingFilter->filterChunk($chunk, $structureDefinition->getFunctionDefinitions());
+        });
 
         // We ALWAYS need the enforcement filter. Everything else would not make any sense
-        $filters['EnforcementFilter'] = $this->appendFilter(
-            $res,
-            'AppserverIo\Doppelgaenger\StreamFilters\EnforcementFilter',
-            array('structureDefinition' => $structureDefinition, 'config' => $this->config)
-        );
-
-        // at last we want to make the output beatiful and detect sysntax errors
-        // $filters['BeautifyFilter'] = $this->appendFilter($res, 'AppserverIo\Doppelgaenger\StreamFilters\BeautifyFilter', array());
+        $enforcementFilter = new EnforcementFilter();
+        $filters['EnforcementFilter'] = Filter\append($res, function ($chunk) use ($enforcementFilter, $structureDefinition) {
+            return $enforcementFilter->filterChunk($chunk, $structureDefinition, $this->config);
+        });
 
         return $filters;
     }
@@ -444,7 +442,7 @@ class Generator
         return stream_filter_append(
             $res,
             $filterName,
-            STREAM_FILTER_WRITE,
+            STREAM_FILTER_ALL,
             $params
         );
     }

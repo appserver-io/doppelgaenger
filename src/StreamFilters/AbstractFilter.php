@@ -32,7 +32,7 @@ use Monolog\Handler\error_log;
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
-abstract class AbstractFilter extends \php_user_filter implements StreamFilterInterface
+abstract class AbstractFilter implements StreamFilterInterface
 {
     /**
      * Other filters on which we depend

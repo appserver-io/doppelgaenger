@@ -20,6 +20,8 @@
 
 namespace AppserverIo\Doppelgaenger\StreamFilters;
 
+use AppserverIo\Doppelgaenger\Entities\Lists\IntroductionList;
+
 /**
  * This filter will add given interfaces to already defined classes
  *
@@ -40,101 +42,84 @@ class IntroductionFilter extends AbstractFilter
     const FILTER_ORDER = 00;
 
     /**
-     * The main filter method.
-     * Implemented according to \php_user_filter class. Will loop over all stream buckets, buffer them and perform
-     * the needed actions.
+     * Filter a chunk of data by adding introductions to it
      *
-     * @param resource $in       Incoming bucket brigade we need to filter
-     * @param resource $out      Outgoing bucket brigade with already filtered content
-     * @param integer  $consumed The count of altered characters as buckets pass the filter
-     * @param boolean  $closing  Is the stream about to close?
+     * @param string           $chunk         The data chunk to be filtered
+     * @param IntroductionList $introductions List of introductions
      *
-     * @throws \AppserverIo\Doppelgaenger\Exceptions\GeneratorException
-     *
-     * @return integer
-     *
-     * @link http://www.php.net/manual/en/php-user-filter.filter.php
+     * @return string
      */
-    public function filter($in, $out, & $consumed, $closing)
+    public function filterChunk($chunk, IntroductionList $introductions)
     {
-        // get all the introductions of a structure definition
-        $introductions = $this->params;
-
         // Get our buckets from the stream
         $interfaceHook = '';
         $keywordNeeded = true;
-        while ($bucket = stream_bucket_make_writeable($in)) {
-            // Has to be done only once at the beginning of the definition
-            if (empty($interfaceHook) && $introductions->count() > 0) {
-                // Get the tokens
-                $tokens = token_get_all($bucket->data);
+        // Has to be done only once at the beginning of the definition
+        if (empty($interfaceHook) && $introductions->count() > 0) {
+            // Get the tokens
+            $tokens = token_get_all($chunk);
 
-                // Go through the tokens and check what we found
-                $tokensCount = count($tokens);
-                for ($i = 0; $i < $tokensCount; $i++) {
-                    // We need something to hook into, right after class header seems fine
-                    if (is_array($tokens[$i]) && $tokens[$i][0] === T_CLASS && $tokens[$i - 1][0] !== T_PAAMAYIM_NEKUDOTAYIM) {
-                        for ($j = $i; $j < $tokensCount; $j++) {
-                            // If we got the opening bracket we can break
-                            if ($tokens[$j] === '{' || $tokens[$j][0] === T_CURLY_OPEN) {
-                                break;
-                            }
-
-                            if (is_array($tokens[$j])) {
-                                // we have to check if there already are interfaces
-                                if ($tokens[$j][0] === T_IMPLEMENTS) {
-                                    $keywordNeeded = false;
-                                }
-
-                                $interfaceHook .= $tokens[$j][1];
-
-                            } else {
-                                $interfaceHook .= $tokens[$j];
-                            }
+            // Go through the tokens and check what we found
+            $tokensCount = count($tokens);
+            for ($i = 0; $i < $tokensCount; $i++) {
+                // We need something to hook into, right after class header seems fine
+                if (is_array($tokens[$i]) && $tokens[$i][0] === T_CLASS && $tokens[$i - 1][0] !== T_PAAMAYIM_NEKUDOTAYIM) {
+                    for ($j = $i; $j < $tokensCount; $j++) {
+                        // If we got the opening bracket we can break
+                        if ($tokens[$j] === '{' || $tokens[$j][0] === T_CURLY_OPEN) {
+                            break;
                         }
 
-                        // build up the injected code and make the injection
-                        if ($keywordNeeded) {
-                            $implementsCode = ' implements ';
+                        if (is_array($tokens[$j])) {
+                            // we have to check if there already are interfaces
+                            if ($tokens[$j][0] === T_IMPLEMENTS) {
+                                $keywordNeeded = false;
+                            }
+
+                            $interfaceHook .= $tokens[$j][1];
 
                         } else {
-                            $implementsCode = ', ';
+                            $interfaceHook .= $tokens[$j];
                         }
-                        $useCode = '';
-                        $interfaces = array();
-                        foreach ($introductions as $introduction) {
-                            $interfaces[] = $introduction->getInterface();
-
-                            // build up code for the trait usage
-                            $useCode .= 'use ' . $introduction->getImplementation() . ';
-                            ';
-                        }
-                        $implementsCode .= implode(', ', $interfaces);
-
-                        // add the "use" code
-                        $bucket->data = str_replace(
-                            $interfaceHook . '{',
-                            $interfaceHook . '{' . $useCode,
-                            $bucket->data
-                        );
-
-                        // add the "implements" code
-                        $bucket->data = str_replace(
-                            $interfaceHook,
-                            $interfaceHook . $implementsCode,
-                            $bucket->data
-                        );
                     }
-                }
 
+                    // build up the injected code and make the injection
+                    if ($keywordNeeded) {
+                        $implementsCode = ' implements ';
+
+                    } else {
+                        $implementsCode = ', ';
+                    }
+                    $useCode = '';
+                    $interfaces = array();
+                    foreach ($introductions as $introduction) {
+                        $interfaces[] = $introduction->getInterface();
+
+                        // build up code for the trait usage
+                        $useCode .= 'use ' . $introduction->getImplementation() . ';
+                            ';
+                    }
+                    $implementsCode .= implode(', ', $interfaces);
+
+                    // add the "use" code
+                    $chunk = str_replace(
+                        $interfaceHook . '{',
+                        $interfaceHook . '{' . $useCode,
+                        $chunk
+                    );
+
+                    // add the "implements" code
+                    $chunk = str_replace(
+                        $interfaceHook,
+                        $interfaceHook . $implementsCode,
+                        $chunk
+                    );
+                }
             }
 
-            // Tell them how much we already processed, and stuff it back into the output
-            $consumed += $bucket->datalen;
-            stream_bucket_append($out, $bucket);
         }
 
-        return PSFS_PASS_ON;
+        return $chunk;
     }
 
     /**

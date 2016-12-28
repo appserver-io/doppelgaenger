@@ -33,7 +33,7 @@ use Respect\Validation\Validator as v;
  *
  * @Invariant(
  *    type="RespectValidation",
- *    constraint="v::attribute('name', v::string()->length(1,32))->attribute('birthday', v::date()->minimumAge(50))->assert($this->iHaveTwoProperties)"
+ *    constraint="v::attribute('name', v::stringType()->length(1,32))->attribute('birthday', v::age(50))->assert($this->iHaveTwoProperties)"
  * )
  */
 class RespectValidationTestClass
@@ -58,7 +58,7 @@ class RespectValidationTestClass
     }
 
     /**
-     * @Requires(type="RespectValidation", constraint="v::int()->check($value)")
+     * @Requires(type="RespectValidation", constraint="v::intType()->check($value)")
      */
     public function iRequireOneInteger($value)
     {
@@ -66,7 +66,7 @@ class RespectValidationTestClass
     }
 
     /**
-     * @Requires(type="RespectValidation", constraint="v::object()->check($value)")
+     * @Requires(type="RespectValidation", constraint="v::objectType()->check($value)")
      */
     public function iRequireOneObject($value)
     {
@@ -74,8 +74,8 @@ class RespectValidationTestClass
     }
 
     /**
-     * @Requires(type="RespectValidation", constraint="v::string()->check($value1)")
-     * @Requires(type="RespectValidation", constraint="v::string()->check($value2)")
+     * @Requires(type="RespectValidation", constraint="v::stringType()->check($value1)")
+     * @Requires(type="RespectValidation", constraint="v::stringType()->check($value2)")
      */
     public function iRequireTwoStrings($value1, $value2)
     {
@@ -83,7 +83,7 @@ class RespectValidationTestClass
     }
 
     /**
-     * @Ensures(type="RespectValidation", constraint="v::object()->check($dgResult)")
+     * @Ensures(type="RespectValidation", constraint="v::objectType()->check($dgResult)")
      */
     public function iEnsureOneObjectAndFail()
     {
@@ -91,7 +91,7 @@ class RespectValidationTestClass
     }
 
     /**
-     * @Ensures(type="RespectValidation", constraint="v::object()->check($dgResult)")
+     * @Ensures(type="RespectValidation", constraint="v::objectType()->check($dgResult)")
      */
     public function iEnsureOneObjectAndSucceed()
     {
@@ -99,7 +99,7 @@ class RespectValidationTestClass
     }
 
     /**
-     * @Ensures(type="RespectValidation", constraint="v::string()->check($dgResult)")
+     * @Ensures(type="RespectValidation", constraint="v::stringType()->check($dgResult)")
      */
     public function iEnsureOneStringAndFail()
     {
@@ -107,7 +107,7 @@ class RespectValidationTestClass
     }
 
     /**
-     * @Ensures(type="RespectValidation", constraint="v::string()->check($dgResult)")
+     * @Ensures(type="RespectValidation", constraint="v::stringType()->check($dgResult)")
      */
     public function iEnsureOneStringAndSucceed()
     {

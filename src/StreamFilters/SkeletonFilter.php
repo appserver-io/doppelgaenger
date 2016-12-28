@@ -120,50 +120,29 @@ class SkeletonFilter extends AbstractFilter
     }
 
     /**
-     * Preparation hook which is intended to be called at the start of the first filter() iteration.
-     * We will inject the original path hint here
+     * Filter a chunk of data by adding a doppelgaenger skeleton to it
      *
-     * @return void
+     * @param string                       $chunk               The data chunk to be filtered
+     * @param StructureDefinitionInterface $structureDefinition Definition of the structure the chunk belongs to
+     *
+     * @return string
      */
-    public function finish()
+    public function filterChunk($chunk, StructureDefinitionInterface $structureDefinition)
     {
         // we have to substitute magic __DIR__ and __FILE__ constants
-        $this->substituteLocationConstants($this->bucketBuffer, $this->structureDefinition->getPath());
+        $this->substituteLocationConstants($chunk, $structureDefinition->getPath());
 
         // substitute the original function declarations for the renamed ones
-        $this->substituteFunctionHeaders($this->bucketBuffer, $this->structureDefinition);
+        $this->substituteFunctionHeaders($chunk, $structureDefinition);
 
         // mark the end of the structure as this is an important hook for other things to be woven
-        $lastIndex = $this->findLastStructureIndex($this->bucketBuffer, $this->structureDefinition->getName(), $this->structureDefinition->getType());
-        $this->bucketBuffer = substr_replace($this->bucketBuffer, Placeholders::STRUCTURE_END, $lastIndex, 0);
+        $lastIndex = $this->findLastStructureIndex($chunk, $structureDefinition->getName(), $structureDefinition->getType());
+        $chunk = substr_replace($chunk, Placeholders::STRUCTURE_END, $lastIndex, 0);
 
         // inject the code for the function skeletons
-        $this->injectFunctionSkeletons($this->bucketBuffer, $this->structureDefinition, true);
-    }
+        $this->injectFunctionSkeletons($chunk, $structureDefinition, true);
 
-    /**
-     * The main filter method.
-     * Implemented according to \php_user_filter class. Will loop over all stream buckets, buffer them and perform
-     * the needed actions.
-     *
-     * @param resource $in       Incoming bucket brigade we need to filter
-     * @param resource $out      Outgoing bucket brigade with already filtered content
-     * @param integer  $consumed The count of altered characters as buckets pass the filter
-     * @param boolean  $closing  Is the stream about to close?
-     *
-     * @throws \AppserverIo\Doppelgaenger\Exceptions\GeneratorException
-     *
-     * @return integer
-     *
-     * @link http://www.php.net/manual/en/php-user-filter.filter.php
-     */
-    public function filter($in, $out, &$consumed, $closing)
-    {
-        // make the params more prominent
-        $this->structureDefinition = $this->params;
-
-        // use the parent filter method to allow for proper hook usage
-        return parent::filter($in, $out, $consumed, $closing);
+        return $chunk;
     }
 
     /**
