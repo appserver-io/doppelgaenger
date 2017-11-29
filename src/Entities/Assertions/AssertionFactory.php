@@ -22,6 +22,7 @@ namespace AppserverIo\Doppelgaenger\Entities\Assertions;
 
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 use AppserverIo\Doppelgaenger\Entities\Lists\AssertionList;
+use AppserverIo\Doppelgaenger\Interfaces\AssertionInterface;
 use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Ensures;
 use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Invariant;
 use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Requires;
@@ -314,11 +315,20 @@ class AssertionFactory
             case Requires::ANNOTATION:
                 // complex annotations leave us with two possibilities: raw or custom assertions
 
-                if (isset($annotation->values['type'])) {
+                if (isset($annotation->values['type'], $annotation->values['constraint'])) {
                     // we need a custom assertion here
 
+                    $potentialAssertion = $annotation->values['type'];
+                    if (class_exists($potentialAssertion)) {
+                        $assertionInstance = new $potentialAssertion($annotation->values['constraint']);
+                        if (!$assertionInstance instanceof AssertionInterface) {
+                            throw new \Exception('Assertions have to include the AssertionInterface');
+                        }
+                        return $assertionInstance;
+                    }
+
                     $potentialAssertion = '\AppserverIo\Doppelgaenger\Entities\Assertions\\' . $annotation->values['type'] . 'Assertion';
-                    if (class_exists($potentialAssertion) && isset($annotation->values['constraint'])) {
+                    if (class_exists($potentialAssertion)) {
                         // we know the class! Create an instance using the passed constraint
                         /** @var \AppserverIo\Doppelgaenger\Interfaces\AssertionInterface $assertionInstance */
                         $assertionInstance = new $potentialAssertion($annotation->values['constraint']);
