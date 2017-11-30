@@ -322,7 +322,13 @@ class AssertionFactory
                     if (class_exists($potentialAssertion)) {
                         $assertionInstance = new $potentialAssertion($annotation->values['constraint']);
                         if (!$assertionInstance instanceof AssertionInterface) {
-                            throw new \Exception('Assertions have to include the AssertionInterface');
+                            throw new \Exception(
+                                sprintf(
+                                    'Specified assertion of type %s does not implement %s', 
+                                    $potentialAssertion, 
+                                    AssertionInterface::class
+                                )
+                            );
                         }
                         return $assertionInstance;
                     }
