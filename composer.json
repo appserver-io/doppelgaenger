@@ -21,7 +21,7 @@
 	"require" : {
 		"php" : ">=5.4.0",
 		"herrera-io/annotations" : "~1.0",
-		"appserver-io-psr/mop" : "~1.1"
+		"appserver-io-psr/mop" : "~1.2"
 	},
 	"require-dev" : {
 		"appserver-io/build" : "~1.0",
