@@ -324,8 +324,8 @@ class AssertionFactory
                         if (!$assertionInstance instanceof AssertionInterface) {
                             throw new \Exception(
                                 sprintf(
-                                    'Specified assertion of type %s does not implement %s', 
-                                    $potentialAssertion, 
+                                    'Specified assertion of type %s does not implement %s',
+                                    $potentialAssertion,
                                     AssertionInterface::class
                                 )
                             );
