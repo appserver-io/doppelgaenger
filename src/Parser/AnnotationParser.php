@@ -32,7 +32,7 @@ use AppserverIo\Doppelgaenger\Config;
 use AppserverIo\Doppelgaenger\Entities\Lists\PointcutExpressionList;
 use AppserverIo\Doppelgaenger\Entities\PointcutExpression;
 use AppserverIo\Doppelgaenger\Exceptions\ParserException;
-use AppserverIo\Doppelgaenger\Interfaces\AssertionInterface;
+use AppserverIo\Psr\MetaobjectProtocol\Dbc\Assertions\AssertionInterface;
 use AppserverIo\Doppelgaenger\Interfaces\PropertiedStructureInterface;
 use AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface;
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
@@ -400,7 +400,7 @@ class AnnotationParser extends AbstractParser
      * Will try to figure out if the passed assertion has a private context or not.
      * This information will be entered into the assertion which will then be returned.
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\AssertionInterface $assertion The assertion we need the context for
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Dbc\Assertions\AssertionInterface $assertion The assertion we need the context for
      *
      * @return void
      */
@@ -460,7 +460,7 @@ class AnnotationParser extends AbstractParser
      * Will try to figure out if the passed assertion has a private context or not.
      * This information will be entered into the assertion which will then be returned.
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\AssertionInterface $assertion The assertion we need the minimal scope for
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Dbc\Assertions\AssertionInterface $assertion The assertion we need the minimal scope for
      *
      * @return void
      */

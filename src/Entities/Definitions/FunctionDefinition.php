@@ -25,7 +25,7 @@ use AppserverIo\Doppelgaenger\Entities\Lists\ParameterDefinitionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\PointcutExpressionList;
 use AppserverIo\Doppelgaenger\Entities\Lists\TypedListList;
 use AppserverIo\Doppelgaenger\Entities\Lists\PointcutList;
-use AppserverIo\Doppelgaenger\Interfaces\AssertionInterface;
+use AppserverIo\Psr\MetaobjectProtocol\Dbc\Assertions\AssertionInterface;
 
 /**
  * Provides a definition of a (generally speaking) function.
@@ -439,7 +439,7 @@ class FunctionDefinition extends AbstractDefinition
     /**
      * This method will check if a certain assertion mismatches the scope of this function.
      *
-     * @param \AppserverIo\Doppelgaenger\Interfaces\AssertionInterface $assertion The assertion to check for a possible mismatch
+     * @param \AppserverIo\Psr\MetaobjectProtocol\Dbc\Assertions\AssertionInterface $assertion The assertion to check for a possible mismatch
      *          within this function context
      *
      * @return boolean

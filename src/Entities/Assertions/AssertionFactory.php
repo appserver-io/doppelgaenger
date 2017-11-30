@@ -22,7 +22,7 @@ namespace AppserverIo\Doppelgaenger\Entities\Assertions;
 
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 use AppserverIo\Doppelgaenger\Entities\Lists\AssertionList;
-use AppserverIo\Doppelgaenger\Interfaces\AssertionInterface;
+use AppserverIo\Psr\MetaobjectProtocol\Dbc\Assertions\AssertionInterface;
 use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Ensures;
 use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Invariant;
 use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Requires;
@@ -129,7 +129,7 @@ class AssertionFactory
      *
      * @param \stdClass $annotation The annotation to create simple assertions from
      *
-     * @return boolean|\AppserverIo\Doppelgaenger\Interfaces\AssertionInterface
+     * @return boolean|\AppserverIo\Psr\MetaobjectProtocol\Dbc\Assertions\AssertionInterface
      *
      * @throws \AppserverIo\Doppelgaenger\Exceptions\ParserException
      */
@@ -304,7 +304,7 @@ class AssertionFactory
      *
      * @param \stdClass $annotation Annotation object to generate assertion from
      *
-     * @return \AppserverIo\Doppelgaenger\Interfaces\AssertionInterface
+     * @return \AppserverIo\Psr\MetaobjectProtocol\Dbc\Assertions\AssertionInterface
      * @throws \Exception
      */
     public function getInstance(\stdClass $annotation)
@@ -330,12 +330,12 @@ class AssertionFactory
                     $potentialAssertion = '\AppserverIo\Doppelgaenger\Entities\Assertions\\' . $annotation->values['type'] . 'Assertion';
                     if (class_exists($potentialAssertion)) {
                         // we know the class! Create an instance using the passed constraint
-                        /** @var \AppserverIo\Doppelgaenger\Interfaces\AssertionInterface $assertionInstance */
+                        /** @var \AppserverIo\Psr\MetaobjectProtocol\Dbc\Assertions\AssertionInterface $assertionInstance */
                         $assertionInstance = new $potentialAssertion($annotation->values['constraint']);
                         return $assertionInstance;
 
                     } else {
-                        throw new \Exception(sprintf('Cannot create complex assertion of type %s'), $annotation->values['type']);
+                        throw new \Exception(sprintf('Cannot create complex assertion of type %s', $annotation->values['type']));
                     }
 
                 } else {
