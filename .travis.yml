@@ -12,6 +12,7 @@ matrix:
 before_install:
   - phpenv config-rm xdebug.ini
   - phpenv rehash
+  - php -v
 
 before_script:
   - composer selfupdate
