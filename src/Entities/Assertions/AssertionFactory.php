@@ -338,7 +338,7 @@ class AssertionFactory
     /**
      * Tries to create assertion of $assertionType
      * @param string $assertionType the assertion type
-     * @param string $constraint the constraint to validate
+     * @param string $constraint    the constraint to validate
      * @return null|AssertionInterface
      * @throws \Exception
      */
