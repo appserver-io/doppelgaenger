@@ -10,12 +10,10 @@ matrix:
     - php: 7.0
 
 before_install:
-  - pecl install xdebug
   - phpenv rehash
 
 before_script:
   - composer selfupdate
-  - phpenv config-rm xdebug.ini
 
 script:
   - ant composer-init
