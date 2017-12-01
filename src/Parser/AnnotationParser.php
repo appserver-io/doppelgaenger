@@ -326,6 +326,9 @@ class AnnotationParser extends AbstractParser
 
         // lets build up the result array
         $assertionFactory = new AssertionFactory();
+        if ($this->currentDefinition) {
+            $assertionFactory->setCurrentDefinition($this->currentDefinition);
+        }
         $result = new AssertionList();
         foreach ($annotations as $annotation) {
             // try to create assertion instances for all annotations
