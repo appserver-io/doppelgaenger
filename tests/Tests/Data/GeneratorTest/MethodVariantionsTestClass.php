@@ -139,22 +139,4 @@ class MethodVariantionsTestClass extends MethodVariantionsAbstractTestClass
     protected function iAmAbstractAndprotected()
     {
     }
-
-    /**
-     * An abstract public static method
-     *
-     * @return void
-     */
-    public static function iAmAbstractAndPublicAndStatic()
-    {
-    }
-
-    /**
-     * An abstract protected static method
-     *
-     * @return void
-    */
-    protected static function iAmAbstractAndProtectedAndStatic()
-    {
-    }
 }
