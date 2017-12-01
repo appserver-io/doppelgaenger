@@ -22,7 +22,7 @@ namespace AppserverIo\Doppelgaenger\Entities\Assertions;
 
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 use AppserverIo\Doppelgaenger\Exceptions\ParserException;
-use AppserverIo\Doppelgaenger\Interfaces\AssertionInterface;
+use AppserverIo\Psr\MetaobjectProtocol\Dbc\Assertions\AssertionInterface;
 use AppserverIo\Doppelgaenger\Utils\PhpLint;
 
 /**

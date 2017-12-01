@@ -38,6 +38,6 @@ class AssertionList extends AbstractTypedList
     {
         parent::__construct();
 
-        $this->itemType = 'AppserverIo\Doppelgaenger\Interfaces\AssertionInterface';
+        $this->itemType = 'AppserverIo\Psr\MetaobjectProtocol\Dbc\Assertions\AssertionInterface';
     }
 }
