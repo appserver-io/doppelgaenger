@@ -77,6 +77,8 @@ class AssertionFactory
     );
 
     /**
+     * The definition of the structure we are currently iterating through
+     *
      * @var StructureDefinitionInterface
      */
     protected $currentDefinition;
@@ -326,10 +328,12 @@ class AssertionFactory
                 }
                 // RawAssertion is sufficient
                 return new RawAssertion(array_pop($annotation->values));
+                break;
             case 'param':
             case 'return':
                 // simple assertions leave with a wide range of type assertions
                 return $this->createSimpleAssertion($annotation);
+                break;
             default:
                 break;
         }
@@ -342,9 +346,10 @@ class AssertionFactory
      * @return null|AssertionInterface
      * @throws \Exception
      */
-    public function createAssertion($assertionType, $constraint)
+    protected function createAssertion($assertionType, $constraint)
     {
-        if (null === ($assertionClassPath = $this->getAssertionClassPath($assertionType))) {
+        $assertionClassPath = $this->getAssertionClassPath($assertionType);
+        if (null === $assertionClassPath) {
             throw new \Exception(
                 sprintf(
                     'Cannot create complex assertion of type %s',
@@ -373,7 +378,7 @@ class AssertionFactory
      * @param string $assertionType the assertion type
      * @return null|string
      */
-    private function getAssertionClassPath($assertionType)
+    protected function getAssertionClassPath($assertionType)
     {
         if (class_exists($assertionType)) {
             return $assertionType;
@@ -403,7 +408,7 @@ class AssertionFactory
      * @param string $assertionType the assertion type
      * @return null|string
      */
-    private function resolveUsedAssertionStructure($assertionType)
+    protected function resolveUsedAssertionStructure($assertionType)
     {
         if (!$this->getCurrentDefinition()) {
             return null;
