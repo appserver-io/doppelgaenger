@@ -79,7 +79,7 @@ class AssertionFactory
     /**
      * The definition of the structure we are currently iterating through
      *
-     * @var StructureDefinitionInterface
+     * @var StructureDefinitionInterface $currentDefinition
      */
     protected $currentDefinition;
 
@@ -344,6 +344,7 @@ class AssertionFactory
      *
      * @param string $assertionType the assertion type
      * @param string $constraint    the constraint to validate
+     *
      * @return null|AssertionInterface
      * @throws \Exception
      */
@@ -378,6 +379,7 @@ class AssertionFactory
      * or null if $assertionType cannot be resolved to an accessible class
      *
      * @param string $assertionType the assertion type
+     *
      * @return null|string
      */
     protected function getAssertionClassPath($assertionType)
@@ -409,6 +411,7 @@ class AssertionFactory
      * returns the fully qualified namespace to the Assertion or null if none is found
      *
      * @param string $assertionType the assertion type
+     *
      * @return null|string
      */
     protected function resolveUsedAssertionStructure($assertionType)
@@ -440,6 +443,7 @@ class AssertionFactory
      * Sets the instance of the current definition
      *
      * @param StructureDefinitionInterface $currentDefinition the definition of the current structure
+     *
      * @return void
      */
     public function setCurrentDefinition(StructureDefinitionInterface $currentDefinition)
