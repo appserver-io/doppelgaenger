@@ -22,6 +22,7 @@ namespace AppserverIo\Doppelgaenger\Entities\Assertions;
 
 use AppserverIo\Doppelgaenger\Dictionaries\ReservedKeywords;
 use AppserverIo\Doppelgaenger\Entities\Lists\AssertionList;
+use AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface;
 use AppserverIo\Psr\MetaobjectProtocol\Dbc\Assertions\AssertionInterface;
 use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Ensures;
 use AppserverIo\Psr\MetaobjectProtocol\Dbc\Annotations\Invariant;
@@ -74,6 +75,13 @@ class AssertionFactory
         'boolean',
         'void'
     );
+
+    /**
+     * The definition of the structure we are currently iterating through
+     *
+     * @var StructureDefinitionInterface $currentDefinition
+     */
+    protected $currentDefinition;
 
     /**
      * Parse assertions which are a collection of others
@@ -314,52 +322,111 @@ class AssertionFactory
             case Invariant::ANNOTATION:
             case Requires::ANNOTATION:
                 // complex annotations leave us with two possibilities: raw or custom assertions
-
                 if (isset($annotation->values['type'], $annotation->values['constraint'])) {
                     // we need a custom assertion here
-
-                    $potentialAssertion = $annotation->values['type'];
-                    if (class_exists($potentialAssertion)) {
-                        $assertionInstance = new $potentialAssertion($annotation->values['constraint']);
-                        if (!$assertionInstance instanceof AssertionInterface) {
-                            throw new \Exception(
-                                sprintf(
-                                    'Specified assertion of type %s does not implement %s',
-                                    $potentialAssertion,
-                                    AssertionInterface::class
-                                )
-                            );
-                        }
-                        return $assertionInstance;
-                    }
-
-                    $potentialAssertion = '\AppserverIo\Doppelgaenger\Entities\Assertions\\' . $annotation->values['type'] . 'Assertion';
-                    if (class_exists($potentialAssertion)) {
-                        // we know the class! Create an instance using the passed constraint
-                        /** @var \AppserverIo\Psr\MetaobjectProtocol\Dbc\Assertions\AssertionInterface $assertionInstance */
-                        $assertionInstance = new $potentialAssertion($annotation->values['constraint']);
-                        return $assertionInstance;
-
-                    } else {
-                        throw new \Exception(sprintf('Cannot create complex assertion of type %s', $annotation->values['type']));
-                    }
-
-                } else {
-                    // a RawAssertion is sufficient
-
-                    return new RawAssertion(array_pop($annotation->values));
+                    return $this->createAssertion($annotation->values['type'], $annotation->values['constraint']);
                 }
+                // RawAssertion is sufficient
+                return new RawAssertion(array_pop($annotation->values));
                 break;
-
             case 'param':
             case 'return':
                 // simple assertions leave with a wide range of type assertions
                 return $this->createSimpleAssertion($annotation);
                 break;
-
             default:
                 break;
         }
+    }
+
+    /**
+     * Tries to create assertion of $assertionType
+     *
+     * @param string $assertionType the assertion type
+     * @param string $constraint    the constraint to validate
+     *
+     * @return null|AssertionInterface
+     * @throws \Exception
+     */
+    protected function createAssertion($assertionType, $constraint)
+    {
+        $assertionClassPath = $this->getAssertionClassPath($assertionType);
+        if (null === $assertionClassPath) {
+            throw new \Exception(
+                sprintf(
+                    'Cannot create complex assertion of type %s',
+                    $assertionType
+                )
+            );
+        }
+
+        $potentialAssertion = new $assertionClassPath($constraint);
+        if (!$potentialAssertion instanceof AssertionInterface) {
+            throw new \Exception(
+                sprintf(
+                    'Specified assertion of type %s does not implement %s',
+                    $potentialAssertion,
+                    AssertionInterface::class
+                )
+            );
+        }
+
+        return $potentialAssertion;
+    }
+
+    /**
+     * Resolves and returns the fully qualified namespace of $assertionType
+     * or null if $assertionType cannot be resolved to an accessible class
+     *
+     * @param string $assertionType the assertion type
+     *
+     * @return null|string
+     */
+    protected function getAssertionClassPath($assertionType)
+    {
+        if (class_exists($assertionType)) {
+            return $assertionType;
+        }
+
+        $potentialAssertion = $this->resolveUsedAssertionStructure($assertionType);
+        if (class_exists($potentialAssertion)) {
+            return $potentialAssertion;
+        }
+
+        $potentialAssertion = '\AppserverIo\Doppelgaenger\Entities\Assertions\\' . $assertionType;
+        if (class_exists($potentialAssertion)) {
+            return $potentialAssertion;
+        }
+
+        $potentialAssertion .= 'Assertion';
+        if (class_exists($potentialAssertion)) {
+            return $potentialAssertion;
+        }
+
+        return null;
+    }
+
+    /**
+     * Iterates through the 'use' operators of the current structure and
+     * returns the fully qualified namespace to the Assertion or null if none is found
+     *
+     * @param string $assertionType the assertion type
+     *
+     * @return null|string
+     */
+    protected function resolveUsedAssertionStructure($assertionType)
+    {
+        if (!$this->getCurrentDefinition()) {
+            return null;
+        }
+
+        foreach ($this->getCurrentDefinition()->getUsedStructures() as $structure) {
+            if (preg_match('/\w+$/', $structure, $matches) && $matches[0] === $assertionType) {
+                return $structure;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -370,5 +437,27 @@ class AssertionFactory
     public function getValidScalarTypes()
     {
         return $this->validScalarTypes;
+    }
+
+    /**
+     * Sets the instance of the current definition
+     *
+     * @param StructureDefinitionInterface $currentDefinition the definition of the current structure
+     *
+     * @return void
+     */
+    public function setCurrentDefinition(StructureDefinitionInterface $currentDefinition)
+    {
+        $this->currentDefinition = $currentDefinition;
+    }
+
+    /**
+     * Returns the instance of the current definition
+     *
+     * @return null|StructureDefinitionInterface
+     */
+    public function getCurrentDefinition()
+    {
+        return $this->currentDefinition;
     }
 }
