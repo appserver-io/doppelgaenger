@@ -10,7 +10,7 @@
 		"AOP",
 		"aspect oriented"
 	],
-	"license" : "OSL 3.0",
+	"license" : "OSL-3.0",
 	"authors" : [{
 			"name" : "Bernhard Wick",
 			"email" : "bw@appserver.io",
