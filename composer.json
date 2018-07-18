@@ -1,40 +1,41 @@
 {
-	"name" : "appserver-io/doppelgaenger",
-	"description" : "Make PHP structure definition clones which look the same but behave differently",
-	"keywords" : [
-		"remote proxy",
-		"twin",
-		"doppelgaenger",
-		"proxy",
-		"remote method call",
-		"AOP",
-		"aspect oriented"
-	],
-	"license" : "OSL-3.0",
-	"authors" : [{
-			"name" : "Bernhard Wick",
-			"email" : "bw@appserver.io",
-			"homepage" : "https://github.com/wick-ed",
-			"role" : "Developer"
-		}
-	],
-	"require" : {
-		"php" : ">=5.4.0",
-		"herrera-io/annotations" : "~1.0",
-		"appserver-io-psr/mop" : "~1.2"
-	},
-	"require-dev" : {
-		"appserver-io/build" : "~1.0",
-		"respect/validation" : "0.8.*"
-	},
-	"autoload" : {
-		"psr-4" : {
-			"AppserverIo\\Doppelgaenger\\" : "src/"
-		}
-	},
-	"autoload-dev" : {
-		"psr-4" : {
-			"AppserverIo\\Doppelgaenger\\" : "tests/"
-		}
-	}
+    "name": "appserver-io/doppelgaenger",
+    "description": "Make PHP structure definition clones which look the same but behave differently",
+    "keywords": [
+        "remote proxy",
+        "twin",
+        "doppelgaenger",
+        "proxy",
+        "remote method call",
+        "AOP",
+        "aspect oriented"
+    ],
+    "license": "OSL-3.0",
+    "authors": [
+        {
+            "name": "Bernhard Wick",
+            "email": "bw@appserver.io",
+            "homepage": "https://github.com/wick-ed",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "herrera-io/annotations": "~1.0",
+        "appserver-io-psr/mop": "~1.2"
+    },
+    "require-dev": {
+        "appserver-io/build": "~1.0",
+        "respect/validation": "0.8.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "AppserverIo\\Doppelgaenger\\" : "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AppserverIo\\Doppelgaenger\\" : "tests/"
+        }
+    }
 }

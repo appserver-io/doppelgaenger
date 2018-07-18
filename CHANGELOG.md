@@ -1,3 +1,13 @@
+# Version 1.7.2
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to appserver-io-psr/mop version ~2.0
+
 # Version 1.7.1
 
 ## Bugfixes
