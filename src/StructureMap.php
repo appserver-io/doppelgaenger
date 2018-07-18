@@ -688,85 +688,70 @@ class StructureMap implements MapInterface
     protected function findIdentifier($file)
     {
 
-        $rsc = fopen($file, 'r');
+        $code = file_get_contents($file);
 
         // if we could not open the file tell them
-        if ($rsc === false) {
+        if ($code === false) {
             throw new ParserException(sprintf('Could not open file %s for type inspection.', $file));
         }
 
         // some variables we will need
-        $buffer = '';
+        $namespace = '';
         $type = '';
         $stuctureName = '';
 
-        // get the buffer step by step
-        for ($k = 0; $k < 20; $k++) {
-            // clear collected things on every iteration, so we will not chain them on in case of several needed loops
-            $namespace = '';
+        // get the tokens and their count
+        $tokens = @token_get_all($code);
+        $count = count($tokens);
 
-            // break if we reached the end of the file
-            if (feof($rsc)) {
-                break;
-            }
+        // iterate over the current set of tokens and filter out what we found
+        for ($i = 0; $i < $count; $i++) {
+            if ($tokens[$i][0] == T_NAMESPACE) {
+                // we passed the namespace token, lets collect the name
+                for ($j = $i; $j < $count; $j++) {
+                    if ($tokens[$j][0] === T_STRING) {
+                        // collect all strings and connect them
+                        $namespace .= '\\' . $tokens[$j][1];
 
-            // fill the buffer piece by piece
-            $buffer .= fread($rsc, 2048);
-
-            // get the tokens and their count
-            $tokens = @token_get_all($buffer);
-            $count = count($tokens);
-
-            // iterate over the current set of tokens and filter out what we found
-            for ($i = 0; $i < $count; $i++) {
-                if ($tokens[$i][0] == T_NAMESPACE) {
-                    // we passed the namespace token, lets collect the name
-                    for ($j = $i; $j < $count; $j++) {
-                        if ($tokens[$j][0] === T_STRING) {
-                            // collect all strings and connect them
-                            $namespace .= '\\' . $tokens[$j][1];
-
-                        } elseif ($tokens[$j] === '{' || $tokens[$j] === ';') {
-                            // break if we clearly reached the end of the namespace declaration
-                            break;
-                        }
+                    } elseif ($tokens[$j] === '{' || $tokens[$j] === ';') {
+                        // break if we clearly reached the end of the namespace declaration
+                        break;
                     }
-
-                    continue;
-
-                } elseif ($i > 1
-                    && $tokens[$i - 2][0] === T_CLASS
-                    && $tokens[$i - 1][0] === T_WHITESPACE
-                    && $tokens[$i][0] === T_STRING
-                ) {
-                    if ($this->findAnnotations($file, array(Aspect::ANNOTATION))) {
-                        $type = 'aspect';
-
-                    } else {
-                        $type = 'class';
-                    }
-
-                    $stuctureName = $tokens[$i][1];
-                    break 2;
-
-                } elseif ($i > 1
-                    && $tokens[$i - 2][0] === T_TRAIT
-                    && $tokens[$i - 1][0] === T_WHITESPACE
-                    && $tokens[$i][0] === T_STRING
-                ) {
-                    $type = 'trait';
-                    $stuctureName = $tokens[$i][1];
-                    break 2;
-
-                } elseif ($i > 1
-                    && $tokens[$i - 2][0] === T_INTERFACE
-                    && $tokens[$i - 1][0] === T_WHITESPACE
-                    && $tokens[$i][0] === T_STRING
-                ) {
-                    $type = 'interface';
-                    $stuctureName = $tokens[$i][1];
-                    break 2;
                 }
+                continue;
+
+            } elseif ($i > 1
+                && $tokens[$i - 2][0] === T_CLASS
+                && $tokens[$i - 1][0] === T_WHITESPACE
+                && $tokens[$i][0] === T_STRING
+            ) {
+                if ($this->findAnnotations($file, array(Aspect::ANNOTATION))) {
+                    $type = 'aspect';
+
+                } else {
+                    $type = 'class';
+                }
+
+                $stuctureName = $tokens[$i][1];
+                break;
+
+            } elseif ($i > 1
+                && $tokens[$i - 2][0] === T_TRAIT
+                && $tokens[$i - 1][0] === T_WHITESPACE
+                && $tokens[$i][0] === T_STRING
+            ) {
+                $type = 'trait';
+                $stuctureName = $tokens[$i][1];
+                break;
+
+            } elseif ($i > 1
+                && $tokens[$i - 2][0] === T_INTERFACE
+                && $tokens[$i - 1][0] === T_WHITESPACE
+                && $tokens[$i][0] === T_STRING
+            ) {
+                $type = 'interface';
+                $stuctureName = $tokens[$i][1];
+                break;
             }
         }
 
