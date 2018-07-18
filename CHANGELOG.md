@@ -1,3 +1,33 @@
+# Version 1.7.1
+
+## Bugfixes
+
+* Fixed bug with building up the structure map and structure names that fall on the read-in buffer size
+
+## Features
+
+* None
+
+# Version 1.7.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Allowed importing assertion type namespaces with the `use` statement
+
+# Version 1.6.0
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Allowed usage of fully qualified class names of assertions with condition types 
+
 # Version 1.5.1
 
 ## Bugfixes
