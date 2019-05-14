@@ -339,6 +339,8 @@ class SkeletonFilter extends AbstractFilter
      * @param \AppserverIo\Doppelgaenger\Interfaces\StructureDefinitionInterface $structureDefinition The original path we have to place as our constants
      *
      * @return boolean
+     *
+     * @throws GeneratorException
      */
     protected function substituteFunctionHeaders(& $bucketData, StructureDefinitionInterface $structureDefinition)
     {
@@ -361,7 +363,21 @@ class SkeletonFilter extends AbstractFilter
         }
 
         // do the actual replacing and propagate the result in success
-        $result = preg_replace($functionPatterns, $functionSubstitutes, $bucketData);
+        $replacementCounter = 0;
+        $result = preg_replace($functionPatterns, $functionSubstitutes, $bucketData, -1, $replacementCounter);
+
+        // if we have more (or less) things to substitute than substitutes, something has gone wrong
+        if ($replacementCounter !== count($functionPatterns)) {
+            throw new GeneratorException(
+                sprintf(
+                    'Failed to substitute original function headers for "%s": Mismatching count of found and substituted function headers. Expected %s, got %s',
+                    $structureDefinition->getQualifiedName(),
+                    count($functionPatterns),
+                    $replacementCounter
+                )
+            );
+        }
+
         if (!is_null($result)) {
             $bucketData = $result;
             return true;
