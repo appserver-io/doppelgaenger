@@ -356,7 +356,7 @@ class SkeletonFilter extends AbstractFilter
                 continue;
             }
 
-            $functionPatterns[] = '/function\s' . $functionDefinition->getName() . '\s*\(/';
+            $functionPatterns[] = '/function\s+' . $functionDefinition->getName() . '\s*\(/';
             $functionSubstitutes[] = 'function ' . $functionDefinition->getName() . ReservedKeywords::ORIGINAL_FUNCTION_SUFFIX . '(';
         }
 
