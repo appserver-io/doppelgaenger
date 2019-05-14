@@ -1,7 +1,7 @@
 <?php
 
 /**
- * \AppserverIo\Doppelgaenger\Tests\Functional\Parser\ClassParserTest
+ * \AppserverIo\Doppelgaenger\Tests\Functional\Filter\SkeletonFilterTest
  *
  * NOTICE OF LICENSE
  *
@@ -12,23 +12,21 @@
  * PHP version 5
  *
  * @author    Bernhard Wick <bw@appserver.io>
- * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @copyright 2019 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
  */
 
-namespace AppserverIo\Doppelgaenger\Tests\Functional\Parser;
+namespace AppserverIo\Doppelgaenger\Tests\Functional\Filter;
 
-use AppserverIo\Doppelgaenger\Config;
-use AppserverIo\Doppelgaenger\Parser\ClassParser;
-use AppserverIo\Doppelgaenger\Tests\Data\ParserTest\SkeletonFilterTestClass;
+use AppserverIo\Doppelgaenger\Tests\Data\Filter\SkeletonFilterTestClass;
 
 /**
  * Some functional tests for the class parser
  *
  * @author    Bernhard Wick <bw@appserver.io>
- * @copyright 2015 TechDivision GmbH - <info@appserver.io>
+ * @copyright 2019 TechDivision GmbH - <info@appserver.io>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://github.com/appserver-io/doppelgaenger
  * @link      http://www.appserver.io/
