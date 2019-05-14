@@ -1,3 +1,13 @@
+# Version 1.7.3
+
+## Bugfixes
+
+* Fixed [#1121](https://github.com/appserver-io/appserver/issues/1121) - DOPPELGAENGER process fails to handle spaces between function and the function name
+
+## Features
+
+* None
+
 # Version 1.7.2
 
 ## Bugfixes
